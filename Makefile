@@ -1,4 +1,7 @@
 #!/usr/bin/make -f
 
-test:
+test: fmt
 	go test -v ./...
+
+fmt:
+	goimports -d -w $(find . -type f -name '*.go')

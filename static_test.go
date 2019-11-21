@@ -7,11 +7,11 @@ import (
 )
 
 func TestNothingFixture(t *testing.T) {
-    gunit.Run(new(NothingFixture), t)
+	gunit.Run(new(NothingFixture), t)
 }
 
 type NothingFixture struct {
-    *gunit.Fixture
+	*gunit.Fixture
 }
 
 func (this *NothingFixture) Setup() {
