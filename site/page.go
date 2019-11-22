@@ -19,9 +19,8 @@ func ParsePages(files map[contracts.Path]contracts.File) (pages []contracts.Page
 	return pages
 }
 
-func ParsePage(file contracts.File) contracts.Page {
+func ParsePage(file contracts.File) (page contracts.Page) {
 	frontMatter, content := splitFrontMatterFromContent(string(file))
-	var page contracts.Page
 	_, page.ParseError = toml.Decode(frontMatter, &page.FrontMatter)
 	if page.ParseError == nil {
 		page.OriginalContent = content
