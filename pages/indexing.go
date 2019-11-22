@@ -6,29 +6,29 @@ import (
 	"github.com/mdwhatcott/static/contracts"
 )
 
-func OrganizePages(pages []contracts.Page) contracts.SiteListings {
-	byTag := make(map[string][]contracts.Page)
-	for _, tag := range allTags(pages) {
-		byTag[tag] = filterByTag(pages, tag)
+func OrganizeContent(articles []contracts.Article) contracts.ContentListing {
+	byTag := make(map[string][]contracts.Article)
+	for _, tag := range allTags(articles) {
+		byTag[tag] = filterByTag(articles, tag)
 	}
-	return contracts.SiteListings{
-		All:   orderByMostRecentDate(pages),
+	return contracts.ContentListing{
+		All:   orderByMostRecentDate(articles),
 		ByTag: byTag,
 	}
 }
-func orderByMostRecentDate(pages []contracts.Page) (ordered []contracts.Page) {
-	for _, page := range pages {
-		ordered = append(ordered, page)
+func orderByMostRecentDate(articles []contracts.Article) (ordered []contracts.Article) {
+	for _, article := range articles {
+		ordered = append(ordered, article)
 	}
 	sort.Slice(ordered, func(i, j int) bool {
 		return ordered[i].Date.After(ordered[j].Date)
 	})
 	return ordered
 }
-func allTags(pages []contracts.Page) (tags []string) {
+func allTags(articles []contracts.Article) (tags []string) {
 	all := make(map[string]struct{})
-	for _, page := range pages {
-		for _, tag := range page.Tags {
+	for _, article := range articles {
+		for _, tag := range article.Tags {
 			all[tag] = struct{}{}
 		}
 	}
@@ -38,10 +38,10 @@ func allTags(pages []contracts.Page) (tags []string) {
 	sort.Strings(tags)
 	return tags
 }
-func filterByTag(pages []contracts.Page, tag string) (filtered []contracts.Page) {
-	for _, page := range pages {
-		if contains(page.Tags, tag) {
-			filtered = append(filtered, page)
+func filterByTag(articles []contracts.Article, tag string) (filtered []contracts.Article) {
+	for _, article := range articles {
+		if contains(article.Tags, tag) {
+			filtered = append(filtered, article)
 		}
 	}
 	return orderByMostRecentDate(filtered)

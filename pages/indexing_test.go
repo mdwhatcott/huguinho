@@ -18,13 +18,13 @@ type IndexingFixture struct {
 	*gunit.Fixture
 }
 
-func titles(ordered []contracts.Page) (titles []string) {
+func titles(ordered []contracts.Article) (titles []string) {
 	for _, page := range ordered {
 		titles = append(titles, page.Title)
 	}
 	return titles
 }
-func allKeys(data map[string][]contracts.Page) (keys []string) {
+func allKeys(data map[string][]contracts.Article) (keys []string) {
 	for key := range data {
 		keys = append(keys, key)
 	}
@@ -33,7 +33,7 @@ func allKeys(data map[string][]contracts.Page) (keys []string) {
 }
 
 func (this *IndexingFixture) TestOrganizePages() {
-	all := []contracts.Page{
+	all := []contracts.Article{
 		{FrontMatter: contracts.FrontMatter{Title: "1", Date: nu.UTCDate(2000, 1, 1), Tags: []string{"a"}}},
 		{FrontMatter: contracts.FrontMatter{Title: "2", Date: nu.UTCDate(2000, 1, 2), Tags: []string{"b"}}},
 		{FrontMatter: contracts.FrontMatter{Title: "3", Date: nu.UTCDate(2000, 1, 3), Tags: []string{"a", "c"}}},
@@ -41,7 +41,7 @@ func (this *IndexingFixture) TestOrganizePages() {
 		{FrontMatter: contracts.FrontMatter{Title: "5", Date: nu.UTCDate(2000, 1, 5), Tags: []string{"a"}}},
 	}
 
-	listings := OrganizePages(all)
+	listings := OrganizeContent(all)
 
 	this.So(titles(listings.All), should.Resemble, []string{"5", "4", "3", "2", "1"})
 	this.So(allKeys(listings.ByTag), should.Resemble, []string{"a", "b", "c"})

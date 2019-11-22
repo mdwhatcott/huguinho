@@ -10,23 +10,23 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-func ParseAll(files map[contracts.Path]contracts.File) (pages []contracts.Page) {
+func ParseAll(files map[contracts.Path]contracts.File) (articles []contracts.Article) {
 	for path, file := range files {
-		page := Parse(file)
-		page.Path = path
-		pages = append(pages, page)
+		article := Parse(file)
+		article.Path = path
+		articles = append(articles, article)
 	}
-	return pages
+	return articles
 }
 
-func Parse(file contracts.File) (page contracts.Page) {
+func Parse(file contracts.File) (article contracts.Article) {
 	frontMatter, content := splitFrontMatterFromContent(string(file))
-	_, page.ParseError = toml.Decode(frontMatter, &page.FrontMatter)
-	if page.ParseError == nil {
-		page.OriginalContent = content
-		page.HTMLContent = string(blackfriday.Run([]byte(content))) // TODO: footnotes option
+	_, article.ParseError = toml.Decode(frontMatter, &article.FrontMatter)
+	if article.ParseError == nil {
+		article.OriginalContent = content
+		article.HTMLContent = string(blackfriday.Run([]byte(content))) // TODO: footnotes option
 	}
-	return page
+	return article
 }
 
 func splitFrontMatterFromContent(file string) (string, string) {

@@ -2,7 +2,7 @@ package contracts
 
 import "time"
 
-type Page struct {
+type Article struct {
 	FrontMatter
 	Path            Path
 	OriginalContent string
@@ -16,4 +16,9 @@ type FrontMatter struct {
 	Date        time.Time `toml:"date"`
 	Tags        []string  `toml:"tags"`
 	IsDraft     bool      `toml:"draft"`
+}
+
+type ContentListing struct {
+	All   []Article
+	ByTag map[string][]Article
 }

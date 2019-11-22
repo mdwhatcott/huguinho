@@ -10,39 +10,39 @@ import (
 	"github.com/smartystreets/gunit"
 )
 
-func TestPageFixture(t *testing.T) {
-	gunit.Run(new(PageFixture), t)
+func TestArticleFixture(t *testing.T) {
+	gunit.Run(new(ArticleFixture), t)
 }
 
-type PageFixture struct {
+type ArticleFixture struct {
 	*gunit.Fixture
 }
 
-func (this *PageFixture) TestParseEmptyFileToPage() {
+func (this *ArticleFixture) TestParseEmptyFileToPage() {
 	file := contracts.File("")
 	page := Parse(file)
-	this.So(page, should.Resemble, contracts.Page{})
+	this.So(page, should.Resemble, contracts.Article{})
 }
 
-func (this *PageFixture) TestParseContentOnlyFileToPage() {
+func (this *ArticleFixture) TestParseContentOnlyFileToPage() {
 	file := contracts.File("I have some content")
 	page := Parse(file)
-	this.So(page, should.Resemble, contracts.Page{
+	this.So(page, should.Resemble, contracts.Article{
 		OriginalContent: "I have some content",
 		HTMLContent:     "<p>I have some content</p>\n",
 	})
 }
 
-func (this *PageFixture) TestParseEmptyFrontMatterAndContentToPage() {
+func (this *ArticleFixture) TestParseEmptyFrontMatterAndContentToPage() {
 	file := contracts.File("+++\n\n+++\nI have some content")
 	page := Parse(file)
-	this.So(page, should.Resemble, contracts.Page{
+	this.So(page, should.Resemble, contracts.Article{
 		OriginalContent: "I have some content",
 		HTMLContent:     "<p>I have some content</p>\n",
 	})
 }
 
-func (this *PageFixture) TestParseFrontMatterAndContentToPage() {
+func (this *ArticleFixture) TestParseFrontMatterAndContentToPage() {
 	file := contracts.File(`+++
 title = "The Title"
 description = "The Description"
@@ -54,7 +54,7 @@ draft = true
 The Content
 `)
 	page := Parse(file)
-	this.So(page, should.Resemble, contracts.Page{
+	this.So(page, should.Resemble, contracts.Article{
 		FrontMatter: contracts.FrontMatter{
 			Title:       "The Title",
 			Description: "The Description",
@@ -67,7 +67,7 @@ The Content
 	})
 }
 
-func (this *PageFixture) TestParseFrontMatterMalformed() {
+func (this *ArticleFixture) TestParseFrontMatterMalformed() {
 	file := contracts.File(`+++
 I am not front matter at all.
 +++
@@ -79,7 +79,7 @@ The Content
 	this.Println(page.ParseError)
 }
 
-func (this *PageFixture) TestDeriveSlug() {
+func (this *ArticleFixture) TestDeriveSlug() {
 	files := map[contracts.Path]contracts.File{
 		"/a/b/c": "Hello",
 		"/1/2/3": "World",
@@ -90,7 +90,7 @@ func (this *PageFixture) TestDeriveSlug() {
 		return pages[i].OriginalContent < pages[j].OriginalContent
 	})
 
-	this.So(pages, should.Resemble, []contracts.Page{
+	this.So(pages, should.Resemble, []contracts.Article{
 		{
 			Path:            "/a/b/c",
 			OriginalContent: "Hello",
