@@ -5,18 +5,21 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/BurntSushi/toml"
 	"github.com/mdwhatcott/static/contracts"
 	"github.com/russross/blackfriday"
 )
 
 // TODO: translate map[fs.Path]fs.File to map[fs.Path]Page (parse front-matter, render md)
 
-func ConvertToPage(file contracts.File) contracts.Page {
-	_, content := splitFrontMatterFromContent(string(file))
+func ParsePage(file contracts.File) contracts.Page {
+	frontMatter, content := splitFrontMatterFromContent(string(file))
 	var page contracts.Page
-	// TODO: decode TOML in front matter
-	page.OriginalContent = content
-	page.HTMLContent = string(blackfriday.Run([]byte(content))) // TODO: footnotes option
+	_, page.ParseError = toml.Decode(frontMatter, &page.FrontMatter)
+	if page.ParseError == nil {
+		page.OriginalContent = content
+		page.HTMLContent = string(blackfriday.Run([]byte(content))) // TODO: footnotes option
+	}
 	return page
 }
 
