@@ -8,4 +8,5 @@ require (
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/smartystreets/assertions v1.0.1
 	github.com/smartystreets/gunit v1.1.1
+	github.com/smartystreets/nu v1.0.1
 )
