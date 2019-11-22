@@ -1,4 +1,4 @@
-package pages
+package content
 
 import (
 	"sort"
@@ -41,7 +41,7 @@ func (this *IndexingFixture) TestOrganizePages() {
 		{FrontMatter: contracts.FrontMatter{Title: "5", Date: nu.UTCDate(2000, 1, 5), Tags: []string{"a"}}},
 	}
 
-	listings := OrganizeContent(all)
+	listings := organizeContent(all)
 
 	this.So(titles(listings.All), should.Resemble, []string{"5", "4", "3", "2", "1"})
 	this.So(allKeys(listings.ByTag), should.Resemble, []string{"a", "b", "c"})

@@ -1,4 +1,4 @@
-package pages
+package content
 
 import (
 	"sort"
@@ -6,7 +6,7 @@ import (
 	"github.com/mdwhatcott/static/contracts"
 )
 
-func OrganizeContent(articles []contracts.Article) contracts.ContentListing {
+func organizeContent(articles []contracts.Article) contracts.ContentListing {
 	byTag := make(map[string][]contracts.Article)
 	for _, tag := range allTags(articles) {
 		byTag[tag] = filterByTag(articles, tag)

@@ -1,4 +1,4 @@
-package pages
+package content
 
 import (
 	"sort"
@@ -85,7 +85,7 @@ func (this *ArticleFixture) TestDeriveSlug() {
 		"/1/2/3": "World",
 	}
 
-	pages := ParseAll(files)
+	pages := parseAll(files)
 	sort.Slice(pages, func(i, j int) bool {
 		return pages[i].OriginalContent < pages[j].OriginalContent
 	})

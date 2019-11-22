@@ -4,29 +4,30 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/mdwhatcott/static/content"
 	"github.com/mdwhatcott/static/fs"
-	"github.com/mdwhatcott/static/pages"
 )
+
+const contentRoot = "/Users/mike/src/github.com/mdwhatcott/blog/content"
 
 func main() {
 	root := "./rendered"
 	_ = os.Mkdir(root, 0755)
 
-	content := fs.LoadFiles("/Users/mike/src/github.com/mdwhatcott/blog/content")
-	parsed := pages.ParseAll(content)
-	listings := pages.OrganizeContent(parsed)
+	files := fs.LoadFiles(contentRoot)
+	listing := content.ParseAll(files)
 
 	fmt.Println("--", "ALL", "--")
-	for _, post := range listings.All {
+	for _, article := range listing.All {
 		// populate index file
-		fmt.Println(post.Date.Format("2006-01-02"), post.Path, post.Title, post.Description)
+		fmt.Println(article.Date.Format("2006-01-02"), article.Path, article.Title, article.Description)
 	}
 
-	for tag, posts := range listings.ByTag {
+	for tag, articles := range listing.ByTag {
 		fmt.Println("--", tag, "--")
-		for _, page := range posts {
+		for _, article := range articles {
 			// populate tag listing file
-			fmt.Println(page.Date.Format("2006-01-02"), page.Path, page.Title, page.Description)
+			fmt.Println(article.Date.Format("2006-01-02"), article.Path, article.Title, article.Description)
 		}
 	}
 }

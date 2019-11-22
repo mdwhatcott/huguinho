@@ -1,4 +1,4 @@
-package pages
+package content
 
 import (
 	"bufio"
@@ -10,7 +10,11 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-func ParseAll(files map[contracts.Path]contracts.File) (articles []contracts.Article) {
+func ParseAll(files map[contracts.Path]contracts.File) contracts.ContentListing {
+	return organizeContent(parseAll(files))
+}
+
+func parseAll(files map[contracts.Path]contracts.File) (articles []contracts.Article) {
 	for path, file := range files {
 		article := Parse(file)
 		article.Path = path
