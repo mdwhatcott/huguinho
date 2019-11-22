@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/mdwhatcott/static/contracts"
 )
@@ -15,7 +16,7 @@ func LoadContent(folder string) map[contracts.Path]contracts.File {
 			return nil
 		}
 		data, _ := ioutil.ReadFile(path)
-		content[contracts.Path(path)] = contracts.File(data)
+		content[contracts.Path(strings.TrimPrefix(path, folder))] = contracts.File(data)
 		return nil
 	})
 	return content
