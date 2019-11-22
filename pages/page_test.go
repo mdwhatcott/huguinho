@@ -1,4 +1,4 @@
-package site
+package pages
 
 import (
 	"sort"
@@ -20,13 +20,13 @@ type PageFixture struct {
 
 func (this *PageFixture) TestParseEmptyFileToPage() {
 	file := contracts.File("")
-	page := ParsePage(file)
+	page := Parse(file)
 	this.So(page, should.Resemble, contracts.Page{})
 }
 
 func (this *PageFixture) TestParseContentOnlyFileToPage() {
 	file := contracts.File("I have some content")
-	page := ParsePage(file)
+	page := Parse(file)
 	this.So(page, should.Resemble, contracts.Page{
 		OriginalContent: "I have some content",
 		HTMLContent:     "<p>I have some content</p>\n",
@@ -35,7 +35,7 @@ func (this *PageFixture) TestParseContentOnlyFileToPage() {
 
 func (this *PageFixture) TestParseEmptyFrontMatterAndContentToPage() {
 	file := contracts.File("+++\n\n+++\nI have some content")
-	page := ParsePage(file)
+	page := Parse(file)
 	this.So(page, should.Resemble, contracts.Page{
 		OriginalContent: "I have some content",
 		HTMLContent:     "<p>I have some content</p>\n",
@@ -53,7 +53,7 @@ draft = true
 
 The Content
 `)
-	page := ParsePage(file)
+	page := Parse(file)
 	this.So(page, should.Resemble, contracts.Page{
 		FrontMatter: contracts.FrontMatter{
 			Title:       "The Title",
@@ -74,7 +74,7 @@ I am not front matter at all.
 
 The Content
 `)
-	page := ParsePage(file)
+	page := Parse(file)
 	this.So(page.ParseError, should.NotBeNil)
 	this.Println(page.ParseError)
 }
@@ -85,7 +85,7 @@ func (this *PageFixture) TestDeriveSlug() {
 		"/1/2/3": "World",
 	}
 
-	pages := ParsePages(files)
+	pages := ParseAll(files)
 	sort.Slice(pages, func(i, j int) bool {
 		return pages[i].OriginalContent < pages[j].OriginalContent
 	})

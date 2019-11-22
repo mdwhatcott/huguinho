@@ -1,4 +1,4 @@
-package site
+package pages
 
 import (
 	"sort"

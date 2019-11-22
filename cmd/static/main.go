@@ -4,22 +4,22 @@ import (
 	"fmt"
 
 	"github.com/mdwhatcott/static/fs"
-	"github.com/mdwhatcott/static/site"
+	"github.com/mdwhatcott/static/pages"
 )
 
 func main() {
 	content := fs.LoadContent("/Users/mike/src/github.com/mdwhatcott/blog/content")
-	pages := site.ParsePages(content)
-	listings := site.OrganizePages(pages)
+	parsed := pages.ParseAll(content)
+	listings := pages.OrganizePages(parsed)
 
 	fmt.Println("--", "ALL", "--")
-	for _, page := range listings.All {
-		fmt.Println(page.Date.Format("2006-01-02"), page.Path, page.Title, page.Description)
+	for _, post := range listings.All {
+		fmt.Println(post.Date.Format("2006-01-02"), post.Path, post.Title, post.Description)
 	}
 
-	for tag, pages := range listings.ByTag {
+	for tag, posts := range listings.ByTag {
 		fmt.Println("--", tag, "--")
-		for _, page := range pages {
+		for _, page := range posts {
 			fmt.Println(page.Date.Format("2006-01-02"), page.Path, page.Title, page.Description)
 		}
 	}

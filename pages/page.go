@@ -1,4 +1,4 @@
-package site
+package pages
 
 import (
 	"bufio"
@@ -10,16 +10,16 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-func ParsePages(files map[contracts.Path]contracts.File) (pages []contracts.Page) {
+func ParseAll(files map[contracts.Path]contracts.File) (pages []contracts.Page) {
 	for path, file := range files {
-		page := ParsePage(file)
+		page := Parse(file)
 		page.Path = path
 		pages = append(pages, page)
 	}
 	return pages
 }
 
-func ParsePage(file contracts.File) (page contracts.Page) {
+func Parse(file contracts.File) (page contracts.Page) {
 	frontMatter, content := splitFrontMatterFromContent(string(file))
 	_, page.ParseError = toml.Decode(frontMatter, &page.FrontMatter)
 	if page.ParseError == nil {
