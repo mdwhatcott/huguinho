@@ -11,15 +11,15 @@ import (
 const contentRoot = "/Users/mike/src/github.com/mdwhatcott/blog/content"
 
 func main() {
-	root := "./rendered"
-	_ = os.Mkdir(root, 0755)
+	outputRoot := "./rendered"
+	_ = os.Mkdir(outputRoot, 0755)
 
-	files := fs.LoadFiles(contentRoot)
-	listing := content.ParseAll(files)
+	listing := content.ParseAll(fs.LoadFiles(contentRoot))
 
 	fmt.Println("--", "ALL", "--")
+	// populate index file
 	for _, article := range listing.All {
-		// populate index file
+		// populate article file
 		fmt.Println(article.Date.Format("2006-01-02"), article.Path, article.Title, article.Description)
 	}
 

@@ -20,13 +20,13 @@ type ArticleFixture struct {
 
 func (this *ArticleFixture) TestParseEmptyFileToPage() {
 	file := contracts.File("")
-	page := Parse(file)
+	page := parse(file)
 	this.So(page, should.Resemble, contracts.Article{})
 }
 
 func (this *ArticleFixture) TestParseContentOnlyFileToPage() {
 	file := contracts.File("I have some content")
-	page := Parse(file)
+	page := parse(file)
 	this.So(page, should.Resemble, contracts.Article{
 		OriginalContent: "I have some content",
 		HTMLContent:     "<p>I have some content</p>\n",
@@ -35,7 +35,7 @@ func (this *ArticleFixture) TestParseContentOnlyFileToPage() {
 
 func (this *ArticleFixture) TestParseEmptyFrontMatterAndContentToPage() {
 	file := contracts.File("+++\n\n+++\nI have some content")
-	page := Parse(file)
+	page := parse(file)
 	this.So(page, should.Resemble, contracts.Article{
 		OriginalContent: "I have some content",
 		HTMLContent:     "<p>I have some content</p>\n",
@@ -53,7 +53,7 @@ draft = true
 
 The Content
 `)
-	page := Parse(file)
+	page := parse(file)
 	this.So(page, should.Resemble, contracts.Article{
 		FrontMatter: contracts.FrontMatter{
 			Title:       "The Title",
@@ -74,7 +74,7 @@ I am not front matter at all.
 
 The Content
 `)
-	page := Parse(file)
+	page := parse(file)
 	this.So(page.ParseError, should.NotBeNil)
 	this.Println(page.ParseError)
 }

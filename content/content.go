@@ -16,14 +16,14 @@ func ParseAll(files map[contracts.Path]contracts.File) contracts.ContentListing 
 
 func parseAll(files map[contracts.Path]contracts.File) (articles []contracts.Article) {
 	for path, file := range files {
-		article := Parse(file)
+		article := parse(file)
 		article.Path = path
 		articles = append(articles, article)
 	}
 	return articles
 }
 
-func Parse(file contracts.File) (article contracts.Article) {
+func parse(file contracts.File) (article contracts.Article) {
 	frontMatter, content := splitFrontMatterFromContent(string(file))
 	_, article.ParseError = toml.Decode(frontMatter, &article.FrontMatter)
 	if article.ParseError == nil {
