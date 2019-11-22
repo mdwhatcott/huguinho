@@ -10,7 +10,14 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-// TODO: translate map[fs.Path]fs.File to map[fs.Path]Page (parse front-matter, render md)
+func ParsePages(files map[contracts.Path]contracts.File) (pages []contracts.Page) {
+	for path, file := range files {
+		page := ParsePage(file)
+		page.Path = path
+		pages = append(pages, page)
+	}
+	return pages
+}
 
 func ParsePage(file contracts.File) contracts.Page {
 	frontMatter, content := splitFrontMatterFromContent(string(file))

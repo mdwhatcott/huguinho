@@ -1,6 +1,7 @@
 package site
 
 import (
+	"sort"
 	"testing"
 	"time"
 
@@ -76,4 +77,29 @@ The Content
 	page := ParsePage(file)
 	this.So(page.ParseError, should.NotBeNil)
 	this.Println(page.ParseError)
+}
+
+func (this *PageFixture) TestDeriveSlug() {
+	files := map[contracts.Path]contracts.File{
+		"/a/b/c": "Hello",
+		"/1/2/3": "World",
+	}
+
+	pages := ParsePages(files)
+	sort.Slice(pages, func(i, j int) bool {
+		return pages[i].OriginalContent < pages[j].OriginalContent
+	})
+
+	this.So(pages, should.Resemble, []contracts.Page{
+		{
+			Path:            "/a/b/c",
+			OriginalContent: "Hello",
+			HTMLContent:     "<p>Hello</p>\n",
+		},
+		{
+			Path:            "/1/2/3",
+			OriginalContent: "World",
+			HTMLContent:     "<p>World</p>\n",
+		},
+	})
 }
