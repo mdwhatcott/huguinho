@@ -26,8 +26,8 @@ func (this *PageFixture) TestConvertContentOnlyFileToPage() {
 	file := contracts.File("I have some content")
 	page := ConvertToPage(file)
 	this.So(page, should.Resemble, contracts.Page{
-		Content: "I have some content",
-		HTML:    "<p>I have some content</p>\n",
+		OriginalContent: "I have some content",
+		HTMLContent:     "<p>I have some content</p>\n",
 	})
 }
 
@@ -35,7 +35,7 @@ func (this *PageFixture) TestConvertEmptyFrontMatterAndContentToPage() {
 	file := contracts.File("+++\n\n+++\nI have some content")
 	page := ConvertToPage(file)
 	this.So(page, should.Resemble, contracts.Page{
-		Content: "I have some content",
-		HTML:    "<p>I have some content</p>\n",
+		OriginalContent: "I have some content",
+		HTMLContent:     "<p>I have some content</p>\n",
 	})
 }
