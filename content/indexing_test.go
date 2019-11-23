@@ -4,7 +4,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/mdwhatcott/static/contracts"
+	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 	"github.com/smartystreets/nu"

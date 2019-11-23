@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/mdwhatcott/static/content"
-	"github.com/mdwhatcott/static/contracts"
-	"github.com/mdwhatcott/static/fs"
-	"github.com/mdwhatcott/static/rendering"
+	"github.com/mdwhatcott/huguinho/content"
+	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/huguinho/fs"
+	"github.com/mdwhatcott/huguinho/rendering"
 )
 
 var (

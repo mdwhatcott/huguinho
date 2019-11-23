@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mdwhatcott/static/contracts"
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func LoadFiles(folder string) map[contracts.Path]contracts.File {

@@ -3,7 +3,7 @@ package content
 import (
 	"sort"
 
-	"github.com/mdwhatcott/static/contracts"
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func organizeContent(articles []contracts.Article) contracts.Site {

@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/mdwhatcott/static/contracts"
+	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/russross/blackfriday"
 )
 

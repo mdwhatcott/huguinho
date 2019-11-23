@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdwhatcott/static/contracts"
+	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 )
@@ -92,12 +92,12 @@ func (this *ArticleFixture) TestDerivePath() {
 
 	this.So(pages, should.Resemble, []contracts.Article{
 		{
-			Path:            "/a/b/c",
+			Path:            "/a/b/c/",
 			OriginalContent: "Hello",
 			Content:         "<p>Hello</p>\n",
 		},
 		{
-			Path:            "/1/2/3",
+			Path:            "/1/2/3/",
 			OriginalContent: "World",
 			Content:         "<p>World</p>\n",
 		},

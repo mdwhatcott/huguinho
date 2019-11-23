@@ -5,7 +5,7 @@ import (
 	"log"
 	"text/template"
 
-	"github.com/mdwhatcott/static/contracts"
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 type Renderer struct {

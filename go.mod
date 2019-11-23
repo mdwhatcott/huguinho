@@ -1,4 +1,4 @@
-module github.com/mdwhatcott/static
+module github.com/mdwhatcott/huguinho
 
 go 1.13
 
