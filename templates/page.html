@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        {{ template "header.html" . }}
+    </head>
+
+    <body>
+        <nav>
+            <ul>
+                <li>
+                    <a href="{{ .Site.BaseURL }}">Home</a>
+                </li>
+                {{ range .Params.tags }}
+                    <li>
+                        <a href="/tags/{{ . | urlize }}">{{ . }}</a>
+                    </li>
+                {{ end }}
+            </ul>
+            <div class="clear"></div>
+        </nav>
+
+        <hr>
+
+        <h1>{{ .Title }}</h1>
+        <h2 class="tldr">{{ .Description }}</h2>
+
+        <div>
+            {{ if ne (.Date.Format "2006-01-02") "2000-01-01" }}
+                <h4>{{ .Date.Format "January 2, 2006" }}</h4>
+            {{ end }}
+
+            <div>
+                {{ .Content }}
+            </div>
+        </div>
+
+        <br>
+        <br>
+
+        <footer>
+            <hr><p>&copy; Michael Whatcott 2012-<script>document.write(new Date().getFullYear())</script></p>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        {{ template "header.html" . }}
+    </head>
+
+    <body>
+
+        <nav>
+            <ul>
+                <li><a href="/about/">About Me</a></li>
+                <li><a href="/jesus-christ/reference">Jesus Christ</a></li>
+                <li><a href="/music/church/">Music</a></li>
+                <li><a href="/tags/software/">Software</a></li>
+                <li><a href="/tags/">All Topics</a></li>
+            </ul>
+        </nav>
+
+        <hr>
+
+        <h1>{{ .Site.Title }}</h1>
+
+        {{ if .Site.Params.headline }}
+            <blockquote>
+                <small>{{ .Site.Params.headline }}</small>
+                <a href="{{ .Site.Params.headline_link }}">{{ .Site.Params.headline_reference }}</a>
+            </blockquote>
+        {{ end }}
+
+        <br>
+
+        {{ range .Data.Pages }}
+            {{ if ne (.Date.Format "2006-01-02") "2000-01-01" }}
+                <h4>
+                    <a href="{{ .Permalink }}">{{ .Title }}</a>
+                    <small>{{ .Date.Format "2006-01-02" }}</small>
+                    <br>
+                    <small>{{ .Description }}</small>
+                </h4>
+                <br>
+            {{ end }}
+        {{ end }}
+
+        <br>
+        <br>
+
+        <footer>
+            <hr><p>&copy; Michael Whatcott 2012-<script>document.write(new Date().getFullYear())</script></p>
+        </footer>
+    </body>
+</html>

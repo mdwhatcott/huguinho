@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        {{ template "header.html" . }}
+    </head>
+
+    <body>
+        <nav>
+            <a href="{{ .Site.BaseURL }}">Home</a>
+        </nav>
+
+        <hr>
+
+        <main>
+            <article>
+                <header>
+                    <h1>{{.Title}}</h1>
+                </header>
+            </article>
+            <ul>
+                {{ range .Pages }}
+                    <li>
+                        <a href="{{.Permalink}}">{{.Title}}</a> {{.Date.Format "2006-01-02"}}
+                    </li>
+                {{ end }}
+            </ul>
+        </main>
+
+        <br>
+        <br>
+
+        <footer>
+            <hr><p>&copy; Michael Whatcott 2012-<script>document.write(new Date().getFullYear())</script></p>
+        </footer>
+    </body>
+</html>
