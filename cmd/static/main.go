@@ -10,8 +10,12 @@ import (
 	"github.com/mdwhatcott/static/fs"
 )
 
-const src = "/Users/mike/src/github.com/mdwhatcott/blog/content"
-const dest = "./rendered"
+const (
+	root      = "/Users/mike/src/github.com/mdwhatcott/blog"
+	templates = root + "/layouts"
+	src       = root + "/content"
+	dest      = "./rendered"
+)
 
 func main() {
 	_ = os.RemoveAll(dest)
