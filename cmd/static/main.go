@@ -12,8 +12,7 @@ import (
 )
 
 const (
-	root = "/Users/mike/src/github.com/mdwhatcott/blog"
-	src  = root + "/content"
+	src  = "/Users/mike/src/github.com/mdwhatcott/blog/content"
 	dest = "./rendered"
 )
 
