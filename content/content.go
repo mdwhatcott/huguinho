@@ -10,8 +10,10 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-func ParseAll(files map[contracts.Path]contracts.File) contracts.Site {
-	return organizeContent(parseAll(files))
+func ParseAll(files map[contracts.Path]contracts.File, drafts, future bool) contracts.Site {
+	articles := parseAll(files)
+	// TODO: filter drafts and future articles.
+	return organizeContent(articles)
 }
 
 func parseAll(files map[contracts.Path]contracts.File) (articles []contracts.Article) {

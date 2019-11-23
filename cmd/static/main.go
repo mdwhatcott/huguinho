@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -11,18 +12,33 @@ import (
 	"github.com/mdwhatcott/static/rendering"
 )
 
-const (
-	src  = "/Users/mike/src/github.com/mdwhatcott/blog/content"
-	dest = "./rendered"
+var (
+	src    string
+	dest   string
+	drafts bool
+	future bool
 )
 
 func main() {
+	parseCLI()
 	_ = os.RemoveAll(dest)
 	renderer := buildRenderer()
-	site := content.ParseAll(fs.LoadFiles(src))
-	renderArticles(site, renderer)
-	renderListings(site, renderer)
+	site := content.ParseAll(fs.LoadFiles(src), drafts, future)
+	renderArticles(renderer, site)
+	renderListings(renderer, site)
 	includeCSS()
+}
+
+func parseCLI() {
+	flag.StringVar(&src, "src", "", "The source directory (required)")
+	flag.StringVar(&dest, "dest", "", "The destination directory (required)")
+	flag.BoolVar(&drafts, "drafts", false, "When set, draft articles will be included in rendered output.")
+	flag.BoolVar(&future, "future", false, "When set, future articles will be included in rendered output.")
+	flag.Parse()
+	if src == "" || dest == "" {
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
 }
 
 func buildRenderer() *rendering.Renderer {
@@ -31,13 +47,13 @@ func buildRenderer() *rendering.Renderer {
 	return rendering.NewRenderer(templatesGlob)
 }
 
-func renderArticles(site contracts.Site, renderer *rendering.Renderer) {
+func renderArticles(renderer *rendering.Renderer, site contracts.Site) {
 	for _, article := range site[contracts.HomePageListingID] {
 		fs.WriteFile(article.TargetPath(dest), renderer.RenderPage(article))
 	}
 }
 
-func renderListings(site contracts.Site, renderer *rendering.Renderer) {
+func renderListings(renderer *rendering.Renderer, site contracts.Site) {
 	for tag, articles := range site {
 		if tag == contracts.HomePageListingID {
 			fs.WriteFile(filepath.Join(dest, "index.html"), renderer.RenderHomePage(articles))
