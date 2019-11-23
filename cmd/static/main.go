@@ -15,7 +15,6 @@ const (
 	root = "/Users/mike/src/github.com/mdwhatcott/blog"
 	src  = root + "/content"
 	dest = "./rendered"
-	base = "https://michaelwhatcott.com"
 )
 
 func main() {
@@ -29,7 +28,7 @@ func main() {
 func buildRenderer() *rendering.Renderer {
 	_, thisFile, _, _ := runtime.Caller(0)
 	templatesGlob := filepath.Join(filepath.Dir(thisFile), "..", "..", "templates") + "/*.html"
-	return rendering.NewRenderer(base, templatesGlob)
+	return rendering.NewRenderer(templatesGlob)
 }
 
 func renderArticles(site contracts.Site, renderer *rendering.Renderer) {

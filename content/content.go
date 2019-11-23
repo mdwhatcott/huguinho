@@ -17,7 +17,7 @@ func ParseAll(files map[contracts.Path]contracts.File) contracts.Site {
 func parseAll(files map[contracts.Path]contracts.File) (articles []contracts.Article) {
 	for path, file := range files {
 		article := parse(file)
-		article.Path = path
+		article.Path = contracts.Path(strings.TrimSuffix(string(path), ".md")) + "/"
 		articles = append(articles, article)
 	}
 	return articles
