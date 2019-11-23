@@ -28,7 +28,7 @@ func parse(file contracts.File) (article contracts.Article) {
 	_, article.ParseError = toml.Decode(frontMatter, &article.FrontMatter)
 	if article.ParseError == nil {
 		article.OriginalContent = content
-		article.HTMLContent = string(blackfriday.Run([]byte(content))) // TODO: footnotes option
+		article.Content = string(blackfriday.Run([]byte(content))) // TODO: footnotes option
 	}
 	return article
 }

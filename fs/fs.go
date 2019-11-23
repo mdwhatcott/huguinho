@@ -21,3 +21,8 @@ func LoadFiles(folder string) map[contracts.Path]contracts.File {
 	})
 	return content
 }
+
+func WriteFile(path string, data []byte) {
+	_ = os.MkdirAll(filepath.Dir(path), 0755)
+	_ = ioutil.WriteFile(path, data, 0644)
+}

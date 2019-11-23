@@ -10,7 +10,7 @@ type Article struct {
 	FrontMatter
 	Path            Path   `json:"Path"`
 	OriginalContent string `json:"-"`
-	HTMLContent     string `json:"Content"`
+	Content         string `json:"Content"`
 }
 
 func (this Article) TargetPath(root string) string {

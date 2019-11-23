@@ -29,7 +29,7 @@ func (this *ArticleFixture) TestParseContentOnlyFileToPage() {
 	page := parse(file)
 	this.So(page, should.Resemble, contracts.Article{
 		OriginalContent: "I have some content",
-		HTMLContent:     "<p>I have some content</p>\n",
+		Content:         "<p>I have some content</p>\n",
 	})
 }
 
@@ -38,7 +38,7 @@ func (this *ArticleFixture) TestParseEmptyFrontMatterAndContentToPage() {
 	page := parse(file)
 	this.So(page, should.Resemble, contracts.Article{
 		OriginalContent: "I have some content",
-		HTMLContent:     "<p>I have some content</p>\n",
+		Content:         "<p>I have some content</p>\n",
 	})
 }
 
@@ -63,7 +63,7 @@ The Content
 			IsDraft:     true,
 		},
 		OriginalContent: "The Content",
-		HTMLContent:     "<p>The Content</p>\n",
+		Content:         "<p>The Content</p>\n",
 	})
 }
 
@@ -94,12 +94,12 @@ func (this *ArticleFixture) TestDerivePath() {
 		{
 			Path:            "/a/b/c",
 			OriginalContent: "Hello",
-			HTMLContent:     "<p>Hello</p>\n",
+			Content:         "<p>Hello</p>\n",
 		},
 		{
 			Path:            "/1/2/3",
 			OriginalContent: "World",
-			HTMLContent:     "<p>World</p>\n",
+			Content:         "<p>World</p>\n",
 		},
 	})
 }

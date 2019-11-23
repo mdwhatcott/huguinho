@@ -1,11 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"html/template"
-	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -13,6 +8,7 @@ import (
 	"github.com/mdwhatcott/static/content"
 	"github.com/mdwhatcott/static/contracts"
 	"github.com/mdwhatcott/static/fs"
+	"github.com/mdwhatcott/static/rendering"
 )
 
 const (
@@ -23,53 +19,31 @@ const (
 )
 
 func main() {
+	_ = os.RemoveAll(dest)
+	renderer := buildRenderer()
+	site := content.ParseAll(fs.LoadFiles(src))
+	renderArticles(site, renderer)
+	renderListings(site, renderer)
+}
+
+func buildRenderer() *rendering.Renderer {
 	_, thisFile, _, _ := runtime.Caller(0)
 	templatesGlob := filepath.Join(filepath.Dir(thisFile), "..", "..", "templates") + "/*.html"
-	templates, err := template.ParseGlob(templatesGlob)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(templates.DefinedTemplates())
+	return rendering.NewRenderer(base, templatesGlob)
+}
 
-	_ = os.RemoveAll(dest)
-
-	site := content.ParseAll(fs.LoadFiles(src))
-
+func renderArticles(site contracts.Site, renderer *rendering.Renderer) {
 	for _, article := range site[contracts.HomePageListingID] {
-		writeFile(article.TargetPath(dest), Page{
-			BaseURL: base,
-			Article: article,
-		})
+		fs.WriteFile(article.TargetPath(dest), renderer.RenderPage(article))
 	}
+}
 
+func renderListings(site contracts.Site, renderer *rendering.Renderer) {
 	for tag, articles := range site {
 		if tag == contracts.HomePageListingID {
-			writeFile(filepath.Join(dest, "index.html"), Listing{
-				BaseURL: base,
-				Pages:   articles,
-			})
+			fs.WriteFile(filepath.Join(dest, "index.html"), renderer.RenderHomePage(articles))
 		} else {
-			writeFile(filepath.Join(dest, tag, "index.html"), Listing{
-				Name:    tag,
-				BaseURL: base,
-				Pages:   articles,
-			})
+			fs.WriteFile(filepath.Join(dest, "tags", tag, "index.html"), renderer.RenderListing(tag, articles))
 		}
 	}
-}
-
-func writeFile(path string, data interface{}) {
-	stuff, _ := json.MarshalIndent(data, "", "  ")
-	_ = os.MkdirAll(filepath.Dir(path), 0755)
-	_ = ioutil.WriteFile(path, stuff, 0644)
-}
-
-type Page struct {
-	BaseURL string
-	contracts.Article
-}
-type Listing struct {
-	Name    string
-	BaseURL string
-	Pages   []contracts.Article
 }
