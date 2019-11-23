@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/BurntSushi/toml"
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -12,8 +13,28 @@ import (
 
 func ParseAll(files map[contracts.Path]contracts.File, drafts, future bool) contracts.Site {
 	articles := parseAll(files)
-	// TODO: filter drafts and future articles.
+	articles = filterDrafts(articles, drafts)
+	articles = filterFutures(articles, future)
 	return organizeContent(articles)
+}
+
+func filterDrafts(articles []contracts.Article, drafts bool) (filtered []contracts.Article) {
+	for _, article := range articles {
+		if drafts || !article.IsDraft {
+			filtered = append(filtered, article)
+		}
+	}
+	return filtered
+}
+
+func filterFutures(articles []contracts.Article, future bool) (filtered []contracts.Article) {
+	now := time.Now()
+	for _, article := range articles {
+		if future || article.Date.Before(now) {
+			filtered = append(filtered, article)
+		}
+	}
+	return filtered
 }
 
 func parseAll(files map[contracts.Path]contracts.File) (articles []contracts.Article) {
