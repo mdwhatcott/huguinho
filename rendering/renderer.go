@@ -17,9 +17,7 @@ func NewRenderer(glob string) *Renderer {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return &Renderer{
-		templates: templates,
-	}
+	return &Renderer{templates: templates}
 }
 
 func (this *Renderer) RenderHomePage(articles []contracts.Article) []byte {
