@@ -17,8 +17,6 @@ func NewRenderer(glob string) *Renderer {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(templates.DefinedTemplates())
-
 	return &Renderer{
 		templates: templates,
 	}
