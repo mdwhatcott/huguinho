@@ -8,9 +8,9 @@ import (
 
 type Article struct {
 	FrontMatter
-	Path            Path   `json:"Path"`
-	OriginalContent string `json:"-"`
-	Content         string `json:"Content"`
+	Path            Path
+	OriginalContent string
+	Content         string
 }
 
 func (this Article) TargetPath(root string) string {
@@ -19,12 +19,12 @@ func (this Article) TargetPath(root string) string {
 }
 
 type FrontMatter struct {
-	ParseError  error     `json:"-"           toml:"-"`
-	Title       string    `json:"Title"       toml:"title"`
-	Description string    `json:"Description" toml:"description"`
-	Date        time.Time `json:"Date"        toml:"date"`
-	Tags        []string  `json:"Tags"        toml:"tags"`
-	IsDraft     bool      `json:"-"           toml:"draft"`
+	ParseError  error     `toml:"-"`
+	Title       string    `toml:"title"`
+	Description string    `toml:"description"`
+	Date        time.Time `toml:"date"`
+	Tags        []string  `toml:"tags"`
+	IsDraft     bool      `toml:"draft"`
 }
 
 type Site map[string][]Article
