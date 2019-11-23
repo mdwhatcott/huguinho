@@ -2,6 +2,7 @@ package fs
 
 import (
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -23,6 +24,26 @@ func LoadFiles(folder string) map[contracts.Path]contracts.File {
 }
 
 func WriteFile(path string, data []byte) {
-	_ = os.MkdirAll(filepath.Dir(path), 0755)
-	_ = ioutil.WriteFile(path, data, 0644)
+	mkdir(filepath.Dir(path))
+	writeFile(path, data)
+}
+func mkdir(dir string) {
+	err := os.MkdirAll(dir, 0755)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+func writeFile(path string, data []byte) {
+	err := ioutil.WriteFile(path, data, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func ReadFile(path string) []byte {
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return data
 }

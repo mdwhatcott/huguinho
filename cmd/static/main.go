@@ -23,6 +23,7 @@ func main() {
 	site := content.ParseAll(fs.LoadFiles(src))
 	renderArticles(site, renderer)
 	renderListings(site, renderer)
+	includeCSS()
 }
 
 func buildRenderer() *rendering.Renderer {
@@ -45,4 +46,11 @@ func renderListings(site contracts.Site, renderer *rendering.Renderer) {
 			fs.WriteFile(filepath.Join(dest, "tags", tag, "index.html"), renderer.RenderListing(tag, articles))
 		}
 	}
+}
+
+func includeCSS() {
+	_, thisFile, _, _ := runtime.Caller(0)
+	cssFile := filepath.Join(filepath.Dir(thisFile), "..", "..", "css", "custom.css")
+	data := fs.ReadFile(cssFile)
+	fs.WriteFile(filepath.Join(dest, "css", "custom.css"), data)
 }
