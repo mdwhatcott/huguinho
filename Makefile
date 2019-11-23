@@ -7,5 +7,5 @@ fmt:
 	go mod tidy
 	goimports -w `find . -type f -name '*.go'`
 
-install:
+install: test
 	go install github.com/mdwhatcott/static/cmd/...
