@@ -8,10 +8,9 @@ import (
 
 type Article struct {
 	FrontMatter
-	Path            Path
-	Permalink       string // TODO: populate
-	OriginalContent string
-	HTMLContent     string
+	Path            Path   `json:"Path"`
+	OriginalContent string `json:"-"`
+	HTMLContent     string `json:"Content"`
 }
 
 func (this Article) TargetPath(root string) string {
@@ -20,15 +19,19 @@ func (this Article) TargetPath(root string) string {
 }
 
 type FrontMatter struct {
-	ParseError  error     `toml:"-"`
-	Title       string    `toml:"title"`
-	Description string    `toml:"description"`
-	Date        time.Time `toml:"date"`
-	Tags        []string  `toml:"tags"`
-	IsDraft     bool      `toml:"draft"`
+	ParseError  error     `json:"-"           toml:"-"`
+	Title       string    `json:"Title"       toml:"title"`
+	Description string    `json:"Description" toml:"description"`
+	Date        time.Time `json:"Date"        toml:"date"`
+	Tags        []string  `json:"Tags"        toml:"tags"`
+	IsDraft     bool      `json:"-"           toml:"draft"`
 }
 
+type Site map[string][]Article
+
 type ContentListing struct {
-	All   []Article
+	Pages []Article
 	ByTag map[string][]Article
 }
+
+const HomePageListingID = "00000000-ba05-4d31-97b3-57d8d80b0dda"

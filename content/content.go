@@ -10,7 +10,7 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-func ParseAll(files map[contracts.Path]contracts.File) contracts.ContentListing {
+func ParseAll(files map[contracts.Path]contracts.File) contracts.Site {
 	return organizeContent(parseAll(files))
 }
 

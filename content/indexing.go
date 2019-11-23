@@ -6,15 +6,14 @@ import (
 	"github.com/mdwhatcott/static/contracts"
 )
 
-func organizeContent(articles []contracts.Article) contracts.ContentListing {
-	byTag := make(map[string][]contracts.Article)
+func organizeContent(articles []contracts.Article) contracts.Site {
+	site := make(contracts.Site)
+	site[contracts.HomePageListingID] = orderByMostRecentDate(articles)
+
 	for _, tag := range allTags(articles) {
-		byTag[tag] = filterByTag(articles, tag)
+		site[tag] = filterByTag(articles, tag)
 	}
-	return contracts.ContentListing{
-		All:   orderByMostRecentDate(articles),
-		ByTag: byTag,
-	}
+	return site
 }
 func orderByMostRecentDate(articles []contracts.Article) (ordered []contracts.Article) {
 	for _, article := range articles {

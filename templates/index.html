@@ -29,7 +29,7 @@
         {{ range .Pages }}
             {{ if ne (.Date.Format "2006-01-02") "2000-01-01" }}
                 <h4>
-                    <a href="{{ .Permalink }}">{{ .Title }}</a>
+                    <a href="{{ .Path }}">{{ .Title }}</a>
                     <small>{{ .Date.Format "2006-01-02" }}</small>
                     <br>
                     <small>{{ .Description }}</small>

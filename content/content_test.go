@@ -79,7 +79,7 @@ The Content
 	this.Println(page.ParseError)
 }
 
-func (this *ArticleFixture) TestDeriveSlug() {
+func (this *ArticleFixture) TestDerivePath() {
 	files := map[contracts.Path]contracts.File{
 		"/a/b/c": "Hello",
 		"/1/2/3": "World",

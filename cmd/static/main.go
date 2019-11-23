@@ -11,13 +11,15 @@ import (
 	"runtime"
 
 	"github.com/mdwhatcott/static/content"
+	"github.com/mdwhatcott/static/contracts"
 	"github.com/mdwhatcott/static/fs"
 )
 
 const (
-	root      = "/Users/mike/src/github.com/mdwhatcott/blog"
-	src       = root + "/content"
-	dest      = "./rendered"
+	root = "/Users/mike/src/github.com/mdwhatcott/blog"
+	src  = root + "/content"
+	dest = "./rendered"
+	base = "https://michaelwhatcott.com"
 )
 
 func main() {
@@ -31,16 +33,28 @@ func main() {
 
 	_ = os.RemoveAll(dest)
 
-	listing := content.ParseAll(fs.LoadFiles(src))
+	site := content.ParseAll(fs.LoadFiles(src))
 
-	writeFile(filepath.Join(dest, "index.html"), listing.All)
-
-	for _, article := range listing.All {
-		writeFile(article.TargetPath(dest), article)
+	for _, article := range site[contracts.HomePageListingID] {
+		writeFile(article.TargetPath(dest), Page{
+			BaseURL: base,
+			Article: article,
+		})
 	}
 
-	for tag, articles := range listing.ByTag {
-		writeFile(filepath.Join(dest, tag, "index.html"), articles)
+	for tag, articles := range site {
+		if tag == contracts.HomePageListingID {
+			writeFile(filepath.Join(dest, "index.html"), Listing{
+				BaseURL: base,
+				Pages:   articles,
+			})
+		} else {
+			writeFile(filepath.Join(dest, tag, "index.html"), Listing{
+				Name:    tag,
+				BaseURL: base,
+				Pages:   articles,
+			})
+		}
 	}
 }
 
@@ -48,4 +62,14 @@ func writeFile(path string, data interface{}) {
 	stuff, _ := json.MarshalIndent(data, "", "  ")
 	_ = os.MkdirAll(filepath.Dir(path), 0755)
 	_ = ioutil.WriteFile(path, stuff, 0644)
+}
+
+type Page struct {
+	BaseURL string
+	contracts.Article
+}
+type Listing struct {
+	Name    string
+	BaseURL string
+	Pages   []contracts.Article
 }
