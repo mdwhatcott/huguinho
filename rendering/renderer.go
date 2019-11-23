@@ -22,16 +22,16 @@ func NewRenderer(glob string) *Renderer {
 
 func (this *Renderer) RenderHomePage(articles []contracts.Article) []byte {
 	return this.execute("index.html", Listing{
-		Pages:   articles,
+		Pages: articles,
 	})
 }
 
 func (this *Renderer) RenderListing(name string, articles []contracts.Article) []byte {
 	return this.execute("tag.html", Listing{
-		Name:    name,
-		Title:   name,
-		Path:    "/" + name,
-		Pages:   articles,
+		Name:  name,
+		Title: name,
+		Path:  "/" + name,
+		Pages: articles,
 	})
 }
 
