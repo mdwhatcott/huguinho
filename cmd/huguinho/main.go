@@ -12,33 +12,34 @@ import (
 	"github.com/mdwhatcott/huguinho/rendering"
 )
 
-var (
+func main() {
+	config := parseCLI()
+	_ = os.RemoveAll(config.dest)
+	renderer := buildRenderer()
+	site := content.ParseAll(fs.LoadFiles(config.src), config.drafts, config.future)
+	renderArticles(config.dest, renderer, site)
+	renderListings(config.dest, renderer, site)
+	includeCSS(config.dest)
+}
+
+type Config struct {
 	src    string
 	dest   string
 	drafts bool
 	future bool
-)
-
-func main() {
-	parseCLI()
-	_ = os.RemoveAll(dest)
-	renderer := buildRenderer()
-	site := content.ParseAll(fs.LoadFiles(src), drafts, future)
-	renderArticles(renderer, site)
-	renderListings(renderer, site)
-	includeCSS()
 }
 
-func parseCLI() {
-	flag.StringVar(&src, "src", "", "The source directory (required)")
-	flag.StringVar(&dest, "dest", "", "The destination directory (required)")
-	flag.BoolVar(&drafts, "drafts", false, "When set, draft articles will be included in rendered output.")
-	flag.BoolVar(&future, "future", false, "When set, future articles will be included in rendered output.")
+func parseCLI() (config Config) {
+	flag.StringVar(&config.src, "src", "", "The source directory (required)")
+	flag.StringVar(&config.dest, "dest", "", "The destination directory (required)")
+	flag.BoolVar(&config.drafts, "drafts", false, "When set, draft articles will be included in rendered output.")
+	flag.BoolVar(&config.future, "future", false, "When set, future articles will be included in rendered output.")
 	flag.Parse()
-	if src == "" || dest == "" {
+	if config.src == "" || config.dest == "" {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
+	return config
 }
 
 func buildRenderer() *rendering.Renderer {
@@ -47,13 +48,13 @@ func buildRenderer() *rendering.Renderer {
 	return rendering.NewRenderer(templatesGlob)
 }
 
-func renderArticles(renderer *rendering.Renderer, site contracts.Site) {
+func renderArticles(dest string, renderer *rendering.Renderer, site contracts.Site) {
 	for _, article := range site[contracts.HomePageListingID] {
 		fs.WriteFile(article.TargetPath(dest), renderer.RenderPage(article))
 	}
 }
 
-func renderListings(renderer *rendering.Renderer, site contracts.Site) {
+func renderListings(dest string, renderer *rendering.Renderer, site contracts.Site) {
 	for tag, articles := range site {
 		if tag == contracts.HomePageListingID {
 			fs.WriteFile(filepath.Join(dest, "index.html"), renderer.RenderHomePage(articles))
@@ -63,7 +64,7 @@ func renderListings(renderer *rendering.Renderer, site contracts.Site) {
 	}
 }
 
-func includeCSS() {
+func includeCSS(dest string) {
 	_, thisFile, _, _ := runtime.Caller(0)
 	cssFile := filepath.Join(filepath.Dir(thisFile), "..", "..", "css", "custom.css")
 	data := fs.ReadFile(cssFile)
