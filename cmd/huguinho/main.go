@@ -14,28 +14,28 @@ import (
 
 func main() {
 	config := parseCLI()
-	_ = os.RemoveAll(config.dest)
+	_ = os.RemoveAll(config.outputRoot)
 	renderer := buildRenderer()
-	site := content.ParseAll(fs.LoadFiles(config.src), config.drafts, config.future)
-	renderArticles(config.dest, renderer, site)
-	renderListings(config.dest, renderer, site)
-	includeCSS(config.dest)
+	site := content.ParseAll(fs.LoadFiles(config.contentRoot), config.buildDrafts, config.buildFuture)
+	renderArticles(config.outputRoot, renderer, site)
+	renderListings(config.outputRoot, renderer, site)
+	includeCSS(config.outputRoot)
 }
 
 type Config struct {
-	src    string
-	dest   string
-	drafts bool
-	future bool
+	contentRoot string
+	outputRoot  string
+	buildDrafts bool
+	buildFuture bool
 }
 
 func parseCLI() (config Config) {
-	flag.StringVar(&config.src, "src", "", "The source directory (required)")
-	flag.StringVar(&config.dest, "dest", "", "The destination directory (required)")
-	flag.BoolVar(&config.drafts, "drafts", false, "When set, draft articles will be included in rendered output.")
-	flag.BoolVar(&config.future, "future", false, "When set, future articles will be included in rendered output.")
+	flag.StringVar(&config.contentRoot, "src", "", "The source directory (required)")
+	flag.StringVar(&config.outputRoot, "dest", "", "The destination directory (required)")
+	flag.BoolVar(&config.buildDrafts, "drafts", false, "When set, draft articles will be included in rendered output.")
+	flag.BoolVar(&config.buildFuture, "future", false, "When set, future articles will be included in rendered output.")
 	flag.Parse()
-	if config.src == "" || config.dest == "" {
+	if config.contentRoot == "" || config.outputRoot == "" {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -48,25 +48,25 @@ func buildRenderer() *rendering.Renderer {
 	return rendering.NewRenderer(templatesGlob)
 }
 
-func renderArticles(dest string, renderer *rendering.Renderer, site contracts.Site) {
+func renderArticles(root string, renderer *rendering.Renderer, site contracts.Site) {
 	for _, article := range site[contracts.HomePageListingID] {
-		fs.WriteFile(article.TargetPath(dest), renderer.RenderPage(article))
+		fs.WriteFile(article.TargetPath(root), renderer.RenderPage(article))
 	}
 }
 
-func renderListings(dest string, renderer *rendering.Renderer, site contracts.Site) {
+func renderListings(root string, renderer *rendering.Renderer, site contracts.Site) {
 	for tag, articles := range site {
 		if tag == contracts.HomePageListingID {
-			fs.WriteFile(filepath.Join(dest, "index.html"), renderer.RenderHomePage(articles))
+			fs.WriteFile(filepath.Join(root, "index.html"), renderer.RenderHomePage(articles))
 		} else {
-			fs.WriteFile(filepath.Join(dest, "tags", tag, "index.html"), renderer.RenderListing(tag, articles))
+			fs.WriteFile(filepath.Join(root, "tags", tag, "index.html"), renderer.RenderListing(tag, articles))
 		}
 	}
 }
 
-func includeCSS(dest string) {
+func includeCSS(root string) {
 	_, thisFile, _, _ := runtime.Caller(0)
 	cssFile := filepath.Join(filepath.Dir(thisFile), "..", "..", "css", "custom.css")
 	data := fs.ReadFile(cssFile)
-	fs.WriteFile(filepath.Join(dest, "css", "custom.css"), data)
+	fs.WriteFile(filepath.Join(root, "css", "custom.css"), data)
 }
