@@ -2,9 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"html/template"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/mdwhatcott/static/content"
 	"github.com/mdwhatcott/static/fs"
@@ -12,12 +16,19 @@ import (
 
 const (
 	root      = "/Users/mike/src/github.com/mdwhatcott/blog"
-	templates = root + "/layouts"
 	src       = root + "/content"
 	dest      = "./rendered"
 )
 
 func main() {
+	_, thisFile, _, _ := runtime.Caller(0)
+	templatesGlob := filepath.Join(filepath.Dir(thisFile), "..", "..", "templates") + "/*.html"
+	templates, err := template.ParseGlob(templatesGlob)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(templates.DefinedTemplates())
+
 	_ = os.RemoveAll(dest)
 
 	listing := content.ParseAll(fs.LoadFiles(src))

@@ -9,6 +9,7 @@ import (
 type Article struct {
 	FrontMatter
 	Path            Path
+	Permalink       string // TODO: populate
 	OriginalContent string
 	HTMLContent     string
 }

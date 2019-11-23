@@ -10,9 +10,9 @@
                 <li>
                     <a href="{{ .Site.BaseURL }}">Home</a>
                 </li>
-                {{ range .Params.tags }}
+                {{ range .Tags }}
                     <li>
-                        <a href="/tags/{{ . | urlize }}">{{ . }}</a>
+                        <a href="/tags/{{ . }}">{{ . }}</a>
                     </li>
                 {{ end }}
             </ul>
