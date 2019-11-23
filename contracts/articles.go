@@ -1,12 +1,21 @@
 package contracts
 
-import "time"
+import (
+	"path/filepath"
+	"strings"
+	"time"
+)
 
 type Article struct {
 	FrontMatter
 	Path            Path
 	OriginalContent string
 	HTMLContent     string
+}
+
+func (this Article) TargetPath(root string) string {
+	folder := strings.TrimSuffix(string(this.Path), ".md")
+	return filepath.Join(root, folder, "index.html")
 }
 
 type FrontMatter struct {

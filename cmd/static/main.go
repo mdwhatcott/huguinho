@@ -1,33 +1,36 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	"github.com/mdwhatcott/static/content"
 	"github.com/mdwhatcott/static/fs"
 )
 
-const contentRoot = "/Users/mike/src/github.com/mdwhatcott/blog/content"
+const src = "/Users/mike/src/github.com/mdwhatcott/blog/content"
+const dest = "./rendered"
 
 func main() {
-	outputRoot := "./rendered"
-	_ = os.Mkdir(outputRoot, 0755)
+	_ = os.RemoveAll(dest)
 
-	listing := content.ParseAll(fs.LoadFiles(contentRoot))
+	listing := content.ParseAll(fs.LoadFiles(src))
 
-	fmt.Println("--", "ALL", "--")
-	// populate index file
+	writeFile(filepath.Join(dest, "index.html"), listing.All)
+
 	for _, article := range listing.All {
-		// populate article file
-		fmt.Println(article.Date.Format("2006-01-02"), article.Path, article.Title, article.Description)
+		writeFile(article.TargetPath(dest), article)
 	}
 
 	for tag, articles := range listing.ByTag {
-		fmt.Println("--", tag, "--")
-		for _, article := range articles {
-			// populate tag listing file
-			fmt.Println(article.Date.Format("2006-01-02"), article.Path, article.Title, article.Description)
-		}
+		writeFile(filepath.Join(dest, tag, "index.html"), articles)
 	}
+}
+
+func writeFile(path string, data interface{}) {
+	stuff, _ := json.MarshalIndent(data, "", "  ")
+	_ = os.MkdirAll(filepath.Dir(path), 0755)
+	_ = ioutil.WriteFile(path, stuff, 0644)
 }
