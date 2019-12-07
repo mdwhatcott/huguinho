@@ -9,9 +9,10 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
-	"github.com/alecthomas/chroma/formatters/html"
+	chromaHTML "github.com/alecthomas/chroma/formatters/html"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting"
+	"github.com/yuin/goldmark/renderer/html"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 )
@@ -58,10 +59,11 @@ func parse(file contracts.File) (article contracts.Article) {
 		article.OriginalContent = content
 
 		markdown := goldmark.New(
+			goldmark.WithRendererOptions(html.WithUnsafe()),
 			goldmark.WithExtensions(
 				highlighting.NewHighlighting(
 					highlighting.WithStyle("lovelace"),
-					highlighting.WithFormatOptions(html.WithLineNumbers(true)),
+					highlighting.WithFormatOptions(chromaHTML.WithLineNumbers(true)),
 				),
 			),
 		)
