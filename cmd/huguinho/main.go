@@ -2,9 +2,12 @@ package main
 
 import (
 	"flag"
+	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/mdwhatcott/huguinho/content"
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -66,7 +69,17 @@ func renderListings(root string, renderer *rendering.Renderer, site contracts.Si
 
 func includeCSS(root string) {
 	_, thisFile, _, _ := runtime.Caller(0)
-	cssFile := filepath.Join(filepath.Dir(thisFile), "..", "..", "css", "custom.css")
-	data := fs.ReadFile(cssFile)
-	fs.WriteFile(filepath.Join(root, "css", "custom.css"), data)
+	cssFolder := filepath.Join(filepath.Dir(thisFile), "..", "..", "css")
+	listing, err := ioutil.ReadDir(cssFolder)
+	if err != nil {
+		log.Panicln(err)
+	}
+	for _, file := range listing {
+		name := file.Name()
+		if strings.HasSuffix(name, ".css") {
+			path := filepath.Join(cssFolder, name)
+			data := fs.ReadFile(path)
+			fs.WriteFile(filepath.Join(root, "css", name), data)
+		}
+	}
 }

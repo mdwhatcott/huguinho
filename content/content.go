@@ -2,13 +2,19 @@ package content
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
 	"github.com/BurntSushi/toml"
+	chromaHTML "github.com/alecthomas/chroma/formatters/html"
+	"github.com/yuin/goldmark"
+	highlighting "github.com/yuin/goldmark-highlighting"
+	"github.com/yuin/goldmark/renderer/html"
+
 	"github.com/mdwhatcott/huguinho/contracts"
-	"github.com/russross/blackfriday"
 )
 
 func ParseAll(files map[contracts.Path]contracts.File, drafts, future bool) contracts.Site {
@@ -51,7 +57,22 @@ func parse(file contracts.File) (article contracts.Article) {
 	_, article.ParseError = toml.Decode(frontMatter, &article.FrontMatter)
 	if article.ParseError == nil {
 		article.OriginalContent = content
-		article.Content = string(blackfriday.Run([]byte(content))) // TODO: footnotes option
+
+		markdown := goldmark.New(
+			goldmark.WithRendererOptions(html.WithUnsafe()),
+			goldmark.WithExtensions(
+				highlighting.NewHighlighting(
+					highlighting.WithStyle("lovelace"),
+					highlighting.WithFormatOptions(chromaHTML.WithLineNumbers(true)),
+				),
+			),
+		)
+		buffer := new(bytes.Buffer)
+		err := markdown.Convert([]byte(content), buffer)
+		if err != nil {
+			log.Println("[INFO] Failed to convert markdown:", err)
+		}
+		article.Content = buffer.String()
 	}
 	return article
 }
