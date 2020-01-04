@@ -63,7 +63,7 @@ func parse(file contracts.File) (article contracts.Article) {
 			goldmark.WithExtensions(
 				highlighting.NewHighlighting(
 					highlighting.WithStyle("lovelace"),
-					highlighting.WithFormatOptions(chromaHTML.WithLineNumbers(true)),
+					highlighting.WithFormatOptions(chromaHTML.WithLineNumbers(false)),
 				),
 			),
 		)
