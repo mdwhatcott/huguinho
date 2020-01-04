@@ -72,7 +72,10 @@ func includeCSS(root string) {
 	cssFolder := filepath.Join(filepath.Dir(thisFile), "..", "..", "css")
 	listing, err := ioutil.ReadDir(cssFolder)
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
+	}
+	if len(listing) == 0 {
+		return
 	}
 	for _, file := range listing {
 		name := file.Name()
