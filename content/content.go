@@ -62,7 +62,9 @@ func parse(file contracts.File) (article contracts.Article) {
 			goldmark.WithRendererOptions(html.WithUnsafe()),
 			goldmark.WithExtensions(
 				highlighting.NewHighlighting(
-					highlighting.WithStyle("lovelace"),
+					// All highlighting styles listed here: https://github.com/alecthomas/chroma/tree/master/styles
+					// Playground for previewing each style: https://swapoff.org/chroma/playground/
+					highlighting.WithStyle("friendly"),
 					highlighting.WithFormatOptions(chromaHTML.WithLineNumbers(false)),
 				),
 			),
