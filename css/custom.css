@@ -47,19 +47,20 @@ blockquote { border-left: 10px solid #ccc; }
 
 /**********************************************/
 
-code        { padding: 3px; }
-blockquote  { padding: 1px 1em; }
-pre         { padding: 1em; }
-td          { padding: 0 10px; }
-nav a       { padding: 5px; }
-nav ul      { padding-inline-start: 0; }
-
 body              { margin: 0 auto; }
 img.music         { margin: 40px auto; }
 audio             { margin: 0 auto; }
 blockquote        { margin: 0 auto; }
 blockquote:before { margin-right: 0.25em; }
 nav               { margin-bottom: 20px; }
+
+body        { padding: 1em; }
+code        { padding: 3px; }
+blockquote  { padding: 1px 1em; }
+pre         { padding: 1em; }
+td          { padding: 0 10px; }
+nav a       { padding: 5px; }
+nav ul      { padding-inline-start: 0; }
 
 /**********************************************/
 
