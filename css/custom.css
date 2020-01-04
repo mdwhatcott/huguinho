@@ -1,8 +1,40 @@
+/* Font Choices */
+h1, h2    { font-family: Times, serif }
+body      { font-family: Arial, sans-serif; }
+code, pre { font-family: Courier, monospace; }
+
+/* Font/line size, weight, and style */
+body {
+    line-height: 1.5;
+}
+code, pre {
+    font-size: small;
+}
+blockquote p {
+    font-style: italic;
+    line-height: 1.5;
+}
+strong {
+    font-weight: bold;
+}
+h1 {
+    text-align: center;
+}
+.tldr {
+    font-style: italic;
+    text-align: center;
+}
+h2.tldr {
+    font-size: small;
+}
+footer {
+    text-align: center;
+}
+
+/* All other styling */
 body {
     margin: 0 auto;
     max-width: 42em;
-    font-family: 'Nunito', sans-serif;
-    line-height: 1.5;
     padding: 4em 1em 0 1em;
     color: #566b78;
 }
@@ -19,48 +51,20 @@ audio {
     display: table;
 }
 
-footer {
-    text-align: center;
-}
-
-img.footer {
-    margin: 5px;
-    max-height: 35px;
-    opacity: 0.5;
-}
-
-h1 {
-    text-align: center;
-}
-
 h1, h2 {
     color: #333;
-    font-family: 'Ubuntu', sans-serif;
 }
 
 strong {
     color: #333;
-    font-weight: bold;
-}
-
-h2.tldr {
-    text-align: center;
-    font-size: small;
-    font-style: italic;
 }
 
 a {
     color: #566b78;
 }
 
-a:hover {
-    text-shadow: 0 0 .1px #333333;
-}
-
 code, pre {
-    font-family: 'Source Code Pro', monospace;
     background: #f9f9f9;
-    font-size: small;
 }
 
 code {
@@ -82,11 +86,6 @@ blockquote {
 blockquote:before {
     color: #ccc;
     margin-right: 0.25em;
-}
-
-blockquote p {
-    font-style: italic;
-    line-height: 1.5;
 }
 
 div.clear {

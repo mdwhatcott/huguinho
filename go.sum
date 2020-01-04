@@ -22,8 +22,6 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dlclark/regexp2 v1.1.6 h1:CqB4MjHw0MFCDj+PHHjiESmHX+N7t0tJzKvC6M97BRg=
 github.com/dlclark/regexp2 v1.1.6/go.mod h1:2pZnwuY/m+8K6iRw6wQdMtk+rH5tNGR1i55kozfMjCc=
-github.com/dlclark/regexp2 v1.2.0 h1:8sAhBGEM0dRWogWqWyQeIJnxjWO6oIjl8FKqREDsGfk=
-github.com/dlclark/regexp2 v1.2.0/go.mod h1:2pZnwuY/m+8K6iRw6wQdMtk+rH5tNGR1i55kozfMjCc=
 github.com/gorilla/csrf v1.6.0/go.mod h1:7tSf8kmjNYr7IWDCYhd3U8Ck34iQ/Yw5CJu7bAkHEGI=
 github.com/gorilla/handlers v1.4.1/go.mod h1:Qkdc/uu4tH4g6mTK6auzZ766c4CA0Ng8+o/OAirnOIQ=
 github.com/gorilla/mux v1.7.3/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
@@ -56,7 +54,7 @@ github.com/valyala/fasttemplate v1.0.1/go.mod h1:UQGH1tvbgY+Nz5t2n7tXsz52dQxojPU
 github.com/yuin/goldmark v1.1.7/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.9 h1:RbvK90nYhtCUumBOiAHM+Ya+Iu3/X9SyW0CSC9r+o+Y=
 github.com/yuin/goldmark v1.1.9/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
-github.com/yuin/goldmark-highlighting v0.0.0-20191126180129-d7a4bf4d7ea4 h1:vI4Jv29V1cMPqetuLPMW1CMB9xNgxsHVBo8Mid6bwH8=
-github.com/yuin/goldmark-highlighting v0.0.0-20191126180129-d7a4bf4d7ea4/go.mod h1:4QGn5rJFOASBa2uK4Q2h3BRTyJqRfsAucPFIipSTcaM=
+github.com/yuin/goldmark-highlighting v0.0.0-20191202084645-78f32c8dd6d5 h1:QbH7ca1qtgZHrzvcVAEoiJIwBqrXxMOfHYfwZIniIK0=
+github.com/yuin/goldmark-highlighting v0.0.0-20191202084645-78f32c8dd6d5/go.mod h1:4QGn5rJFOASBa2uK4Q2h3BRTyJqRfsAucPFIipSTcaM=
 golang.org/x/sys v0.0.0-20181128092732-4ed8d59d0b35 h1:YAFjXN64LMvktoUZH9zgY4lGc/msGN7HQfoSuKCgaDU=
 golang.org/x/sys v0.0.0-20181128092732-4ed8d59d0b35/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
