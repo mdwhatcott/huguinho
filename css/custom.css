@@ -1,7 +1,3 @@
-/**************/
-/* Fonts/Text */
-/**************/
-
 body  { font-family: serif; }
 code  { font-family: monospace; }
 pre   { font-family: monospace; }
@@ -23,9 +19,7 @@ nav a { text-decoration: none; }
 
 body { line-height: 1.5; }
 
-/****************/
-/* Color Scheme */
-/****************/
+/**********************************************/
 
 body              { color: #566b78; }
 a                 { color: #566b78; }
@@ -39,9 +33,7 @@ code       { background-color: #f9f9f9; }
 pre        { background-color: #f9f9f9; }
 nav a      { background-color: #c4d3f5; }
 
-/*************/
-/* Look/Feel */
-/*************/
+/**********************************************/
 
 nav ul { list-style: none; }
 
@@ -53,9 +45,7 @@ nav a     { border-radius: 5px; }
 
 blockquote { border-left: 10px solid #ccc; }
 
-/***********/
-/* Spacing */
-/***********/
+/**********************************************/
 
 code        { padding: 3px; }
 blockquote  { padding: 1px 1em; }
@@ -71,9 +61,7 @@ blockquote        { margin: 0 auto; }
 blockquote:before { margin-right: 0.25em; }
 nav               { margin-bottom: 20px; }
 
-/***************/
-/* Positioning */
-/***************/
+/**********************************************/
 
 body      { max-width: 42em; }
 img.music { max-width: 100%; }
