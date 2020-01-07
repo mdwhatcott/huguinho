@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
-	chromaHTML "github.com/alecthomas/chroma/formatters/html"
+	chroma "github.com/alecthomas/chroma/formatters/html"
 	"github.com/yuin/goldmark"
-	highlighting "github.com/yuin/goldmark-highlighting"
+	"github.com/yuin/goldmark-highlighting"
 	"github.com/yuin/goldmark/renderer/html"
 
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -65,7 +65,7 @@ func parse(file contracts.File) (article contracts.Article) {
 					// All highlighting styles listed here: https://github.com/alecthomas/chroma/tree/master/styles
 					// Playground for previewing each style: https://swapoff.org/chroma/playground/
 					highlighting.WithStyle("friendly"),
-					highlighting.WithFormatOptions(chromaHTML.WithLineNumbers(false)),
+					highlighting.WithFormatOptions(chroma.WithLineNumbers(false)),
 				),
 			),
 		)
