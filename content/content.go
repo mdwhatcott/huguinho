@@ -11,7 +11,7 @@ import (
 	"github.com/BurntSushi/toml"
 	chroma "github.com/alecthomas/chroma/formatters/html"
 	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark-highlighting"
+	highlighting "github.com/yuin/goldmark-highlighting"
 	"github.com/yuin/goldmark/renderer/html"
 
 	"github.com/mdwhatcott/huguinho/contracts"
