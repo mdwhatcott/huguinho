@@ -1,10 +1,11 @@
-body  { font-family: serif; }
-code  { font-family: monospace; }
-pre   { font-family: monospace; }
-h1    { font-family: sans-serif; }
-h2    { font-family: sans-serif; }
-nav a { font-family: sans-serif; }
+body  { font-family: 'Nunito', serif; }
+code  { font-family: 'Source Code Pro', monospace; }
+pre   { font-family: 'Source Code Pro', monospace; }
+h1    { font-family: 'Ubuntu', sans-serif; }
+h2    { font-family: 'Ubuntu', sans-serif; }
+nav a { font-family: 'Ubuntu', sans-serif; }
 
+body  { font-size: larger; }
 .tldr { font-size: smaller; }
 
 .tldr        { font-style: italic; }
@@ -21,17 +22,37 @@ body { line-height: 1.5; }
 
 /**********************************************/
 
-body              { color: #566b78; }
-a                 { color: #566b78; }
-h1                { color: #3c4e5a; }
-h2                { color: #3c4e5a; }
-strong            { color: #3c4e5a; }
-blockquote:before { color: #ccc; }
+@media (prefers-color-scheme: dark) {
+    a, a:visited      { color: #333; }
+    h1                { color: #444; }
+    h2                { color: #444; }
+    strong            { color: #444; }
+    body              { color: #666; }
+    nav a             { color: #666; }
+    blockquote:before { color: #777; }
 
-blockquote { background-color: #f9f9f9; }
-code       { background-color: #f9f9f9; }
-pre        { background-color: #f9f9f9; }
-nav a      { background-color: #c4d3f5; }
+    nav a      { background-color: #ccc; }
+    pre        { background-color: #ddd; }
+    code       { background-color: #ddd; }
+    blockquote { background-color: #ddd; }
+    body       { background-color: #fff; }
+}
+
+@media (prefers-color-scheme: light) {
+    a, a:visited      { color: #eee; }
+    h1                { color: #ddd; }
+    h2                { color: #ddd; }
+    strong            { color: #ddd; }
+    body              { color: #ccc; }
+    nav a             { color: #ccc; }
+    blockquote:before { color: #666; }
+
+    nav a      { background-color: #666; }
+    pre        { background-color: #444; }
+    code       { background-color: #444; }
+    blockquote { background-color: #444; }
+    body       { background-color: #333; }
+}
 
 /**********************************************/
 
@@ -39,11 +60,15 @@ nav ul { list-style: none; }
 
 img.music { box-shadow: 0 0 18px #ccc; }
 
-img.music { border-radius: 5px; }
-code      { border-radius: 5px; }
-nav a     { border-radius: 5px; }
+img.music  { border-radius: 5px; }
+pre        { border-radius: 5px; }
+code       { border-radius: 5px; }
+nav a      { border-radius: 5px; }
+blockquote { border-radius: 5px; }
 
 blockquote { border-left: 10px solid #ccc; }
+
+pre { overflow-x: auto }
 
 /**********************************************/
 

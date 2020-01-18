@@ -9,9 +9,8 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
-	chroma "github.com/alecthomas/chroma/formatters/html"
 	"github.com/yuin/goldmark"
-	highlighting "github.com/yuin/goldmark-highlighting"
+	_ "github.com/yuin/goldmark-highlighting"
 	"github.com/yuin/goldmark/renderer/html"
 
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -61,12 +60,12 @@ func parse(file contracts.File) (article contracts.Article) {
 		markdown := goldmark.New(
 			goldmark.WithRendererOptions(html.WithUnsafe()),
 			goldmark.WithExtensions(
-				highlighting.NewHighlighting(
-					// All highlighting styles listed here: https://github.com/alecthomas/chroma/tree/master/styles
-					// Playground for previewing each style: https://swapoff.org/chroma/playground/
-					highlighting.WithStyle("friendly"),
-					highlighting.WithFormatOptions(chroma.WithLineNumbers(false)),
-				),
+			//highlighting.NewHighlighting(
+			// All highlighting styles listed here: https://github.com/alecthomas/chroma/tree/master/styles
+			// Playground for previewing each style: https://swapoff.org/chroma/playground/
+			//highlighting.WithStyle("friendly"),
+			//highlighting.WithFormatOptions(chroma.WithLineNumbers(false)),
+			//),
 			),
 		)
 		buffer := new(bytes.Buffer)
