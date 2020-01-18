@@ -12,14 +12,20 @@ import (
 
 func LoadFiles(folder string) map[contracts.Path]contracts.File {
 	content := make(map[contracts.Path]contracts.File)
-	_ = filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
-		data, _ := ioutil.ReadFile(path)
+		data, err := ioutil.ReadFile(path)
+		if err != nil {
+			return err
+		}
 		content[contracts.Path(strings.TrimPrefix(path, folder))] = contracts.File(data)
 		return nil
 	})
+	if err != nil {
+		log.Println("Error walking filesystem:", err)
+	}
 	return content
 }
 

@@ -12,8 +12,8 @@ type Renderer struct {
 	templates *template.Template
 }
 
-func NewRenderer(glob string) *Renderer {
-	templates, err := template.ParseGlob(glob)
+func NewRenderer(dir string) *Renderer {
+	templates, err := template.ParseGlob(dir + "/*.html")
 	if err != nil {
 		log.Fatal(err)
 	}

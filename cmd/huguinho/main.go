@@ -1,12 +1,10 @@
 package main
 
 import (
-	"flag"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 
 	"github.com/mdwhatcott/huguinho/content"
@@ -16,39 +14,13 @@ import (
 )
 
 func main() {
-	config := parseCLI()
-	_ = os.RemoveAll(config.outputRoot)
-	renderer := buildRenderer()
+	config := ParseCLI()
+	_ = os.RemoveAll(config.targetRoot)
+	renderer := rendering.NewRenderer(config.templateDir)
 	site := content.ParseAll(fs.LoadFiles(config.contentRoot), config.buildDrafts, config.buildFuture)
-	renderArticles(config.outputRoot, renderer, site)
-	renderListings(config.outputRoot, renderer, site)
-	includeCSS(config.outputRoot)
-}
-
-type Config struct {
-	contentRoot string
-	outputRoot  string
-	buildDrafts bool
-	buildFuture bool
-}
-
-func parseCLI() (config Config) {
-	flag.StringVar(&config.contentRoot, "src", "", "The source directory (required)")
-	flag.StringVar(&config.outputRoot, "dest", "", "The destination directory (required)")
-	flag.BoolVar(&config.buildDrafts, "drafts", false, "When set, draft articles will be included in rendered output.")
-	flag.BoolVar(&config.buildFuture, "future", false, "When set, future articles will be included in rendered output.")
-	flag.Parse()
-	if config.contentRoot == "" || config.outputRoot == "" {
-		flag.PrintDefaults()
-		os.Exit(1)
-	}
-	return config
-}
-
-func buildRenderer() *rendering.Renderer {
-	_, thisFile, _, _ := runtime.Caller(0)
-	templatesGlob := filepath.Join(filepath.Dir(thisFile), "..", "..", "templates") + "/*.html"
-	return rendering.NewRenderer(templatesGlob)
+	renderArticles(config.targetRoot, renderer, site)
+	renderListings(config.targetRoot, renderer, site)
+	includeCSS(config.targetRoot, config.stylesDir)
 }
 
 func renderArticles(root string, renderer *rendering.Renderer, site contracts.Site) {
@@ -67,10 +39,8 @@ func renderListings(root string, renderer *rendering.Renderer, site contracts.Si
 	}
 }
 
-func includeCSS(root string) {
-	_, thisFile, _, _ := runtime.Caller(0)
-	cssFolder := filepath.Join(filepath.Dir(thisFile), "..", "..", "css")
-	listing, err := ioutil.ReadDir(cssFolder)
+func includeCSS(root, stylesDir string) {
+	listing, err := ioutil.ReadDir(stylesDir)
 	if err != nil {
 		log.Println(err)
 	}
@@ -80,7 +50,7 @@ func includeCSS(root string) {
 	for _, file := range listing {
 		name := file.Name()
 		if strings.HasSuffix(name, ".css") {
-			path := filepath.Join(cssFolder, name)
+			path := filepath.Join(stylesDir, name)
 			data := fs.ReadFile(path)
 			fs.WriteFile(filepath.Join(root, "css", name), data)
 		}
