@@ -10,7 +10,6 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/yuin/goldmark"
-	_ "github.com/yuin/goldmark-highlighting"
 	"github.com/yuin/goldmark/renderer/html"
 
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -56,26 +55,19 @@ func parse(file contracts.File) (article contracts.Article) {
 	_, article.ParseError = toml.Decode(frontMatter, &article.FrontMatter)
 	if article.ParseError == nil {
 		article.OriginalContent = content
-
-		markdown := goldmark.New(
-			goldmark.WithRendererOptions(html.WithUnsafe()),
-			goldmark.WithExtensions(
-			//highlighting.NewHighlighting(
-			// All highlighting styles listed here: https://github.com/alecthomas/chroma/tree/master/styles
-			// Playground for previewing each style: https://swapoff.org/chroma/playground/
-			//highlighting.WithStyle("friendly"),
-			//highlighting.WithFormatOptions(chroma.WithLineNumbers(false)),
-			//),
-			),
-		)
-		buffer := new(bytes.Buffer)
-		err := markdown.Convert([]byte(content), buffer)
-		if err != nil {
-			log.Println("[INFO] Failed to convert markdown:", err)
-		}
-		article.Content = buffer.String()
+		article.Content = markdown(content)
 	}
 	return article
+}
+
+func markdown(content string) string {
+	markdown := goldmark.New(goldmark.WithRendererOptions(html.WithUnsafe()))
+	buffer := new(bytes.Buffer)
+	err := markdown.Convert([]byte(content), buffer)
+	if err != nil {
+		log.Println("[INFO] Failed to convert markdown:", err)
+	}
+	return buffer.String()
 }
 
 func splitFrontMatterFromContent(file string) (string, string) {
