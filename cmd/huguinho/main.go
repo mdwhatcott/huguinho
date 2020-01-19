@@ -15,7 +15,13 @@ import (
 
 func main() {
 	config := ParseCLI()
-	_ = os.RemoveAll(config.targetRoot)
+	listing, err := ioutil.ReadDir(config.targetRoot)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, item := range listing {
+		_ = os.RemoveAll(filepath.Join(config.targetRoot, item.Name()))
+	}
 	renderer := rendering.NewRenderer(config.templateDir)
 	site := content.ParseAll(fs.LoadFiles(config.contentRoot), config.buildDrafts, config.buildFuture)
 	renderArticles(config.targetRoot, renderer, site)
