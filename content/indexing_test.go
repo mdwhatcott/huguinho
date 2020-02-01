@@ -4,10 +4,11 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 	"github.com/smartystreets/nu"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestIndexingFixture(t *testing.T) {

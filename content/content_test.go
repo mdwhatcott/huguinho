@@ -5,9 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestArticleFixture(t *testing.T) {
