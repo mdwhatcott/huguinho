@@ -80,7 +80,7 @@ func splitFrontMatterFromContent(file string) (string, string) {
 func scanContent(scanner *bufio.Scanner) string {
 	content := new(strings.Builder)
 	for scanner.Scan() {
-		fmt.Fprintln(content, scanner.Text())
+		_, _ = fmt.Fprintln(content, scanner.Text())
 	}
 	return strings.TrimSpace(content.String())
 }
@@ -104,7 +104,7 @@ func scanFrontMatterBody(scanner *bufio.Scanner) string {
 		if line == tomlSeparator {
 			break
 		}
-		fmt.Fprintln(front, line)
+		_, _ = fmt.Fprintln(front, line)
 	}
 	return strings.TrimSpace(front.String())
 }
