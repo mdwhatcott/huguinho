@@ -2,6 +2,7 @@ package core
 
 import (
 	"encoding/json"
+	"errors"
 	"testing"
 	"time"
 
@@ -27,18 +28,18 @@ func date(y, m, d int) time.Time {
 	return time.Date(y, time.Month(m), d, 0, 0, 0, 0, time.UTC)
 }
 
-func (this *PageParserFixture) prepareValidPage() string {
+func (this *PageParserFixture) prepareValidPage() ContentFile {
 	front, err := json.Marshal(this.sample.Metadata)
 	this.So(err, should.BeNil)
-	return string(front) + "\n\n+++\n\n" + this.sample.Content.Original
+	return ContentFile{Content: string(front) + "\n\n+++\n\n" + this.sample.Content.Original}
 }
-func (this *PageParserFixture) preparePage_MissingDivider() string {
+func (this *PageParserFixture) preparePage_MissingDivider() ContentFile {
 	front, err := json.Marshal(this.sample.Metadata)
 	this.So(err, should.BeNil)
-	return string(front) + "\n\n" + /* missing divider */ "\n\n" + this.sample.Content.Original
+	return ContentFile{Content: string(front) + "\n\n" + /* missing divider */ "\n\n" + this.sample.Content.Original}
 }
-func (this *PageParserFixture) preparePage_MalformedFrontMatter() string {
-	return "malformed front matter" + "\n\n+++\n\n" + this.sample.Content.Original
+func (this *PageParserFixture) preparePage_MalformedFrontMatter() ContentFile {
+	return ContentFile{Content: "malformed front matter" + "\n\n+++\n\n" + this.sample.Content.Original}
 }
 
 func (this *PageParserFixture) assertMetadataDecoded(page contracts.Page) bool {
@@ -82,7 +83,7 @@ func (this *PageParserFixture) TestMissingFrontMatterDivider() {
 
 	page, err := this.parser.ParsePage(rawPage)
 
-	this.So(err, should.NotBeNil)
+	this.So(errors.Is(err, errMissingFrontMatter), should.BeTrue)
 	this.So(page, should.BeZeroValue)
 	this.So(this.converter.original, should.BeZeroValue)
 }

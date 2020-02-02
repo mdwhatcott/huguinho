@@ -34,9 +34,15 @@ func (this *ContentLoaderFixture) TestLoadContent() {
 	content, err := this.loader.LoadContent()
 
 	this.So(err, should.BeNil)
-	this.So(content, should.Resemble, []string{
-		"article1",
-		"article3",
+	this.So(content, should.Resemble, []ContentFile{
+		{
+			Path:    "/content/article1.md",
+			Content: "article1",
+		},
+		{
+			Path:    "/content/folder/article3.md",
+			Content: "article3",
+		},
 	})
 }
 
@@ -48,5 +54,10 @@ func (this *ContentLoaderFixture) TestLoadContent_Err() {
 	content, err := this.loader.LoadContent()
 
 	this.So(err, should.NotBeNil)
-	this.So(content, should.Resemble, []string{"article1"})
+	this.So(content, should.Resemble, []ContentFile{
+		{
+			Path:    "/content/article1.md",
+			Content: "article1",
+		},
+	})
 }
