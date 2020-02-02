@@ -5,7 +5,7 @@ test: fmt
 
 fmt:
 	go mod tidy
-	goimports -w `find . -type f -name '*.go'`
+	/Users/mike/bin/goimports -w `find . -type f -name '*.go'`
 
 install: test
 	go install github.com/mdwhatcott/huguinho/cmd/...
