@@ -10,14 +10,14 @@ import (
 type PathLoader struct {
 	files  contracts.Walk
 	root   string
-	output chan contracts.Page
+	output chan contracts.Article
 	err    error
 }
 
 func NewPathLoader(
 	files contracts.Walk,
 	root string,
-	output chan contracts.Page,
+	output chan contracts.Article,
 ) *PathLoader {
 
 	return &PathLoader{
@@ -28,13 +28,13 @@ func NewPathLoader(
 }
 
 func (this *PathLoader) Listen() {
+	defer close(this.output)
 	this.err = this.files.Walk(this.root, this.walk)
-	close(this.output)
 }
 
 func (this *PathLoader) walk(path string, info os.FileInfo, err error) error {
 	if err != nil {
-		return err
+		return NewStackTraceError(err)
 	}
 	if info.IsDir() {
 		return nil
@@ -42,7 +42,9 @@ func (this *PathLoader) walk(path string, info os.FileInfo, err error) error {
 	if !strings.HasSuffix(path, ".md") {
 		return nil
 	}
-	this.output <- contracts.Page{SourcePath: path}
+	this.output <- contracts.Article{
+		Source: contracts.ArticleSource{Path: path},
+	}
 	return nil
 }
 

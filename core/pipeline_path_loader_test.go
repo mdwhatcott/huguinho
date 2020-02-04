@@ -18,12 +18,12 @@ type PathLoaderFixture struct {
 	*gunit.Fixture
 	loader *PathLoader
 	files  *InMemoryFileSystem
-	output chan contracts.Page
+	output chan contracts.Article
 }
 
 func (this *PathLoaderFixture) Setup() {
 	this.files = NewInMemoryFileSystem()
-	this.output = make(chan contracts.Page, 10)
+	this.output = make(chan contracts.Article, 10)
 	this.loader = NewPathLoader(this.files, "/content", this.output)
 
 	_ = this.files.WriteFile("/article1.md", []byte("outside of content root"), 0644)
@@ -38,27 +38,22 @@ func (this *PathLoaderFixture) Test() {
 	err := this.loader.Finalize()
 
 	this.So(err, should.BeNil)
-	this.So(this.gather(), should.Resemble, []contracts.Page{
-		{SourcePath: "/content/article1.md"},
-		{SourcePath: "/content/folder/article3.md"},
+	this.So(gather(this.output), should.Resemble, []contracts.Article{
+		{Source: contracts.ArticleSource{Path: "/content/article1.md"}},
+		{Source: contracts.ArticleSource{Path: "/content/folder/article3.md"}},
 	})
 }
 
 func (this *PathLoaderFixture) TestErrWalkFunc() {
-	this.files.ErrWalkFunc["/content/folder/article3.md"] = errors.New("hi")
+	this.files.ErrWalkFunc["/content/folder/article3.md"] = walkFuncErr
 
 	this.loader.Listen()
 	err := this.loader.Finalize()
 
-	this.So(err, should.Resemble, errors.New("hi"))
-	this.So(this.gather(), should.Resemble, []contracts.Page{
-		{SourcePath: "/content/article1.md"},
+	this.So(errors.Is(err, walkFuncErr), should.BeTrue)
+	this.So(gather(this.output), should.Resemble, []contracts.Article{
+		{Source: contracts.ArticleSource{Path: "/content/article1.md"}},
 	})
 }
 
-func (this *PathLoaderFixture) gather() (pages []contracts.Page) {
-	for page := range this.output {
-		pages = append(pages, page)
-	}
-	return pages
-}
+var walkFuncErr = errors.New("walk func error")

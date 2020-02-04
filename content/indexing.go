@@ -6,16 +6,16 @@ import (
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
-func organizeContent(articles []contracts.Article) contracts.Site {
-	site := make(contracts.Site)
-	site[contracts.HomePageListingID] = orderByMostRecentDate(articles)
+func organizeContent(articles []contracts.Article__DEPRECATED) contracts.Site__DEPRECATED {
+	site := make(contracts.Site__DEPRECATED)
+	site[contracts.HomePageListingID__DEPRECATED] = orderByMostRecentDate(articles)
 
 	for _, tag := range allTags(articles) {
 		site[tag] = filterByTag(articles, tag)
 	}
 	return site
 }
-func orderByMostRecentDate(articles []contracts.Article) (ordered []contracts.Article) {
+func orderByMostRecentDate(articles []contracts.Article__DEPRECATED) (ordered []contracts.Article__DEPRECATED) {
 	for _, article := range articles {
 		ordered = append(ordered, article)
 	}
@@ -24,7 +24,7 @@ func orderByMostRecentDate(articles []contracts.Article) (ordered []contracts.Ar
 	})
 	return ordered
 }
-func allTags(articles []contracts.Article) (tags []string) {
+func allTags(articles []contracts.Article__DEPRECATED) (tags []string) {
 	all := make(map[string]struct{})
 	for _, article := range articles {
 		for _, tag := range article.Tags {
@@ -37,7 +37,7 @@ func allTags(articles []contracts.Article) (tags []string) {
 	sort.Strings(tags)
 	return tags
 }
-func filterByTag(articles []contracts.Article, tag string) (filtered []contracts.Article) {
+func filterByTag(articles []contracts.Article__DEPRECATED, tag string) (filtered []contracts.Article__DEPRECATED) {
 	for _, article := range articles {
 		if contains(article.Tags, tag) {
 			filtered = append(filtered, article)

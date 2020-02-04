@@ -21,7 +21,7 @@ type PageParserFixture struct {
 
 	parser    *PageParser
 	converter *FakeContentConverter
-	sample    contracts.Page
+	sample    contracts.Article
 }
 
 func date(y, m, d int) time.Time {
@@ -42,10 +42,10 @@ func (this *PageParserFixture) preparePage_MalformedFrontMatter() ContentFile {
 	return ContentFile{Content: "malformed front matter" + "\n\n+++\n\n" + this.sample.Content.Original}
 }
 
-func (this *PageParserFixture) assertMetadataDecoded(page contracts.Page) bool {
+func (this *PageParserFixture) assertMetadataDecoded(page contracts.Article) bool {
 	return this.So(page.Metadata, should.Resemble, this.sample.Metadata)
 }
-func (this *PageParserFixture) assertContentConverted(page contracts.Page) {
+func (this *PageParserFixture) assertContentConverted(page contracts.Article) {
 	this.So(this.converter.original, should.Equal, this.sample.Content.Original)
 	this.So(page.Content.Original, should.Equal, this.sample.Content.Original)
 	this.So(page.Content.Converted, should.Equal, CONVERTED_CONTENT)
@@ -54,16 +54,16 @@ func (this *PageParserFixture) assertContentConverted(page contracts.Page) {
 func (this *PageParserFixture) Setup() {
 	this.converter = NewFakeContentConverter()
 	this.parser = NewPageParser(this.converter)
-	this.sample = contracts.Page{
-		Metadata: contracts.JSONFrontMatter{
-			Slug:        "/slug",
-			Title:       "title",
-			Description: "description",
-			Date:        date(2020, 2, 1),
-			Tags:        []string{"a", "b"},
-			IsDraft:     true,
+	this.sample = contracts.Article{
+		Metadata: contracts.ArticleMetadata{
+			Slug:  "/slug",
+			Title: "title",
+			Intro: "description",
+			Date:  date(2020, 2, 1),
+			Tags:  []string{"a", "b"},
+			Draft: true,
 		},
-		Content: contracts.Content{
+		Content: contracts.ArticleContent{
 			Original: "# H1",
 		},
 	}

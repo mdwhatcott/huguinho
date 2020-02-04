@@ -20,11 +20,11 @@ func NewRenderer(dir string) *Renderer {
 	return &Renderer{templates: templates}
 }
 
-func (this *Renderer) RenderHomePage(articles []contracts.Article) []byte {
+func (this *Renderer) RenderHomePage(articles []contracts.Article__DEPRECATED) []byte {
 	return this.render("index.html", Listing{Pages: articles})
 }
 
-func (this *Renderer) RenderListing(name string, articles []contracts.Article) []byte {
+func (this *Renderer) RenderListing(name string, articles []contracts.Article__DEPRECATED) []byte {
 	return this.render("tag.html", Listing{
 		Name:  name,
 		Title: name,
@@ -33,7 +33,7 @@ func (this *Renderer) RenderListing(name string, articles []contracts.Article) [
 	})
 }
 
-func (this *Renderer) RenderPage(article contracts.Article) []byte {
+func (this *Renderer) RenderPage(article contracts.Article__DEPRECATED) []byte {
 	return this.render("page.html", article)
 }
 
@@ -52,5 +52,5 @@ type Listing struct {
 	Name        string
 	Title       string
 	Description string
-	Pages       []contracts.Article
+	Pages       []contracts.Article__DEPRECATED
 }

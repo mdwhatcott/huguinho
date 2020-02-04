@@ -6,19 +6,19 @@ import (
 	"time"
 )
 
-type Article struct {
-	FrontMatter
+type Article__DEPRECATED struct {
+	FrontMatter__DEPRECATED
 	Path            Path
 	OriginalContent string
 	Content         string
 }
 
-func (this Article) TargetPath(root string) string {
+func (this Article__DEPRECATED) TargetPath(root string) string {
 	folder := strings.TrimSuffix(string(this.Path), ".md")
 	return filepath.Join(root, folder, "index.html")
 }
 
-type FrontMatter struct {
+type FrontMatter__DEPRECATED struct {
 	ParseError  error     `toml:"-"`
 	Title       string    `toml:"title"`
 	Description string    `toml:"description"`
@@ -27,11 +27,11 @@ type FrontMatter struct {
 	IsDraft     bool      `toml:"draft"`
 }
 
-type Site map[string][]Article
+type Site__DEPRECATED map[string][]Article__DEPRECATED
 
-type ContentListing struct {
-	Pages []Article
-	ByTag map[string][]Article
+type ContentListing__DEPRECATED struct {
+	Pages []Article__DEPRECATED
+	ByTag map[string][]Article__DEPRECATED
 }
 
-const HomePageListingID = "00000000-ba05-4d31-97b3-57d8d80b0dda"
+const HomePageListingID__DEPRECATED = "00000000-ba05-4d31-97b3-57d8d80b0dda"

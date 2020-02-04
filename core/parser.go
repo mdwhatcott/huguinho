@@ -17,8 +17,8 @@ func NewPageParser(converter contracts.ContentConverter) *PageParser {
 	return &PageParser{converter: converter}
 }
 
-func (this *PageParser) ParsePage(file ContentFile) (page contracts.Page, err error) {
-	divider := contracts.FRONT_MATTER_DIVIDER
+func (this *PageParser) ParsePage(file ContentFile) (page contracts.Article, err error) {
+	divider := contracts.METADATA_CONTENT_DIVIDER
 	frontMatterEnd := strings.Index(file.Content, divider)
 	contentStart := frontMatterEnd + len(divider)
 

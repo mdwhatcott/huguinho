@@ -2,24 +2,29 @@ package contracts
 
 import "time"
 
-type Page struct {
-	SourcePath string
-	Metadata   JSONFrontMatter
-	Content    Content
+type Article struct {
+	Source   ArticleSource
+	Metadata ArticleMetadata
+	Content  ArticleContent
 }
 
-type JSONFrontMatter struct {
-	Slug        string    `json:"slug"`
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	Date        time.Time `json:"date"`
-	Tags        []string  `json:"tags"`
-	IsDraft     bool      `json:"draft"`
+type ArticleSource struct {
+	Path string
+	Data string
 }
 
-type Content struct {
+type ArticleMetadata struct {
+	Draft bool
+	Slug  string
+	Title string
+	Intro string
+	Tags  []string
+	Date  time.Time
+}
+
+const METADATA_CONTENT_DIVIDER = "+++"
+
+type ArticleContent struct {
 	Original  string
 	Converted string
 }
-
-const FRONT_MATTER_DIVIDER = "+++"

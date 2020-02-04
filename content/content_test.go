@@ -22,13 +22,13 @@ type ArticleFixture struct {
 func (this *ArticleFixture) TestParseEmptyFileToPage() {
 	file := contracts.File("")
 	page := parse(file)
-	this.So(page, should.Resemble, contracts.Article{})
+	this.So(page, should.Resemble, contracts.Article__DEPRECATED{})
 }
 
 func (this *ArticleFixture) TestParseContentOnlyFileToPage() {
 	file := contracts.File("I have some content")
 	page := parse(file)
-	this.So(page, should.Resemble, contracts.Article{
+	this.So(page, should.Resemble, contracts.Article__DEPRECATED{
 		OriginalContent: "I have some content",
 		Content:         "<p>I have some content</p>\n",
 	})
@@ -37,7 +37,7 @@ func (this *ArticleFixture) TestParseContentOnlyFileToPage() {
 func (this *ArticleFixture) TestParseEmptyFrontMatterAndContentToPage() {
 	file := contracts.File("+++\n\n+++\nI have some content")
 	page := parse(file)
-	this.So(page, should.Resemble, contracts.Article{
+	this.So(page, should.Resemble, contracts.Article__DEPRECATED{
 		OriginalContent: "I have some content",
 		Content:         "<p>I have some content</p>\n",
 	})
@@ -46,7 +46,7 @@ func (this *ArticleFixture) TestParseEmptyFrontMatterAndContentToPage() {
 func (this *ArticleFixture) TestParseFrontMatterAndContentToPage() {
 	file := contracts.File(`+++
 title = "The Title"
-description = "The Description"
+description = "The Intro"
 date = 2019-11-21
 tags = ["a", "b", "c"]
 draft = true
@@ -55,10 +55,10 @@ draft = true
 The Content
 `)
 	page := parse(file)
-	this.So(page, should.Resemble, contracts.Article{
-		FrontMatter: contracts.FrontMatter{
+	this.So(page, should.Resemble, contracts.Article__DEPRECATED{
+		FrontMatter__DEPRECATED: contracts.FrontMatter__DEPRECATED{
 			Title:       "The Title",
-			Description: "The Description",
+			Description: "The Intro",
 			Date:        time.Date(2019, 11, 21, 0, 0, 0, 0, time.Local),
 			Tags:        []string{"a", "b", "c"},
 			IsDraft:     true,
@@ -91,7 +91,7 @@ func (this *ArticleFixture) TestDerivePath() {
 		return pages[i].OriginalContent < pages[j].OriginalContent
 	})
 
-	this.So(pages, should.Resemble, []contracts.Article{
+	this.So(pages, should.Resemble, []contracts.Article__DEPRECATED{
 		{
 			Path:            "/a/b/c/",
 			OriginalContent: "Hello",

@@ -29,15 +29,15 @@ func main() {
 	includeCSS(config.targetRoot, config.stylesDir)
 }
 
-func renderArticles(root string, renderer *rendering.Renderer, site contracts.Site) {
-	for _, article := range site[contracts.HomePageListingID] {
+func renderArticles(root string, renderer *rendering.Renderer, site contracts.Site__DEPRECATED) {
+	for _, article := range site[contracts.HomePageListingID__DEPRECATED] {
 		fs.WriteFile(article.TargetPath(root), renderer.RenderPage(article))
 	}
 }
 
-func renderListings(root string, renderer *rendering.Renderer, site contracts.Site) {
+func renderListings(root string, renderer *rendering.Renderer, site contracts.Site__DEPRECATED) {
 	for tag, articles := range site {
-		if tag == contracts.HomePageListingID {
+		if tag == contracts.HomePageListingID__DEPRECATED {
 			fs.WriteFile(filepath.Join(root, "index.html"), renderer.RenderHomePage(articles))
 		} else {
 			fs.WriteFile(filepath.Join(root, "tags", tag, "index.html"), renderer.RenderListing(tag, articles))

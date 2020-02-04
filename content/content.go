@@ -15,14 +15,14 @@ import (
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
-func ParseAll(files map[contracts.Path]contracts.File, drafts, future bool) contracts.Site {
+func ParseAll(files map[contracts.Path]contracts.File, drafts, future bool) contracts.Site__DEPRECATED {
 	articles := parseAll(files)
 	articles = filterDrafts(articles, drafts)
 	articles = filterFutures(articles, future)
 	return organizeContent(articles)
 }
 
-func filterDrafts(articles []contracts.Article, drafts bool) (filtered []contracts.Article) {
+func filterDrafts(articles []contracts.Article__DEPRECATED, drafts bool) (filtered []contracts.Article__DEPRECATED) {
 	for _, article := range articles {
 		if drafts || !article.IsDraft {
 			filtered = append(filtered, article)
@@ -31,7 +31,7 @@ func filterDrafts(articles []contracts.Article, drafts bool) (filtered []contrac
 	return filtered
 }
 
-func filterFutures(articles []contracts.Article, future bool) (filtered []contracts.Article) {
+func filterFutures(articles []contracts.Article__DEPRECATED, future bool) (filtered []contracts.Article__DEPRECATED) {
 	now := time.Now()
 	for _, article := range articles {
 		if future || article.Date.Before(now) {
@@ -41,7 +41,7 @@ func filterFutures(articles []contracts.Article, future bool) (filtered []contra
 	return filtered
 }
 
-func parseAll(files map[contracts.Path]contracts.File) (articles []contracts.Article) {
+func parseAll(files map[contracts.Path]contracts.File) (articles []contracts.Article__DEPRECATED) {
 	for path, file := range files {
 		article := parse(file)
 		article.Path = contracts.Path(strings.TrimSuffix(string(path), ".md")) + "/"
@@ -50,9 +50,9 @@ func parseAll(files map[contracts.Path]contracts.File) (articles []contracts.Art
 	return articles
 }
 
-func parse(file contracts.File) (article contracts.Article) {
+func parse(file contracts.File) (article contracts.Article__DEPRECATED) {
 	frontMatter, content := splitFrontMatterFromContent(string(file))
-	_, article.ParseError = toml.Decode(frontMatter, &article.FrontMatter)
+	_, article.ParseError = toml.Decode(frontMatter, &article.FrontMatter__DEPRECATED)
 	if article.ParseError == nil {
 		article.OriginalContent = content
 		article.Content = markdown(content)
