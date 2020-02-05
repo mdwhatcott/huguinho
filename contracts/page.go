@@ -22,7 +22,7 @@ type ArticleMetadata struct {
 	Date  time.Time
 }
 
-const METADATA_CONTENT_DIVIDER = "+++"
+const METADATA_CONTENT_DIVIDER = "\n+++\n"
 
 type ArticleContent struct {
 	Original  string

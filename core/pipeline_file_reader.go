@@ -3,44 +3,18 @@ package core
 import "github.com/mdwhatcott/huguinho/contracts"
 
 type FileReader struct {
-	disk   contracts.ReadFile
-	input  chan contracts.Article
-	output chan contracts.Article
-	err    error
+	disk contracts.ReadFile
 }
 
-func NewFileReader(
-	disk contracts.ReadFile,
-	input chan contracts.Article,
-	output chan contracts.Article,
-) *FileReader {
-	return &FileReader{
-		disk:   disk,
-		input:  input,
-		output: output,
+func NewFileReader(disk contracts.ReadFile) *FileReader {
+	return &FileReader{disk: disk}
+}
+
+func (this *FileReader) Handle(article *contracts.Article) error {
+	raw, err := this.disk.ReadFile(article.Source.Path)
+	if err != nil {
+		return NewStackTraceError(err)
 	}
-}
-
-func (this *FileReader) Listen() {
-	defer close(this.output)
-	defer this.drain()
-
-	for article := range this.input {
-		raw, err := this.disk.ReadFile(article.Source.Path)
-		if err != nil {
-			this.err = NewStackTraceError(err)
-			return
-		}
-		article.Source.Data = string(raw)
-		this.output <- article
-	}
-}
-
-func (this *FileReader) drain() {
-	for range this.input {
-	}
-}
-
-func (this *FileReader) Finalize() error {
-	return this.err
+	article.Source.Data = string(raw)
+	return nil
 }

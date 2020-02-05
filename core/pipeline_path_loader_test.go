@@ -34,8 +34,7 @@ func (this *PathLoaderFixture) Setup() {
 }
 
 func (this *PathLoaderFixture) Test() {
-	this.loader.Listen()
-	err := this.loader.Finalize()
+	err := this.loader.Listen()
 
 	this.So(err, should.BeNil)
 	this.So(gather(this.output), should.Resemble, []contracts.Article{
@@ -47,8 +46,7 @@ func (this *PathLoaderFixture) Test() {
 func (this *PathLoaderFixture) TestErrWalkFunc() {
 	this.files.ErrWalkFunc["/content/folder/article3.md"] = walkFuncErr
 
-	this.loader.Listen()
-	err := this.loader.Finalize()
+	err := this.loader.Listen()
 
 	this.So(errors.Is(err, walkFuncErr), should.BeTrue)
 	this.So(gather(this.output), should.Resemble, []contracts.Article{

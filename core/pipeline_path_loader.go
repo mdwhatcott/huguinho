@@ -11,7 +11,6 @@ type PathLoader struct {
 	files  contracts.Walk
 	root   string
 	output chan contracts.Article
-	err    error
 }
 
 func NewPathLoader(
@@ -27,9 +26,9 @@ func NewPathLoader(
 	}
 }
 
-func (this *PathLoader) Listen() {
+func (this *PathLoader) Listen() error {
 	defer close(this.output)
-	this.err = this.files.Walk(this.root, this.walk)
+	return this.files.Walk(this.root, this.walk)
 }
 
 func (this *PathLoader) walk(path string, info os.FileInfo, err error) error {
@@ -46,8 +45,4 @@ func (this *PathLoader) walk(path string, info os.FileInfo, err error) error {
 		Source: contracts.ArticleSource{Path: path},
 	}
 	return nil
-}
-
-func (this *PathLoader) Finalize() error {
-	return this.err
 }

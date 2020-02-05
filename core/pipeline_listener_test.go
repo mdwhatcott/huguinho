@@ -1,0 +1,82 @@
+package core
+
+import (
+	"errors"
+	"fmt"
+	"testing"
+
+	"github.com/smartystreets/assertions/should"
+	"github.com/smartystreets/gunit"
+
+	"github.com/mdwhatcott/huguinho/contracts"
+)
+
+func TestListenerFixture(t *testing.T) {
+	gunit.Run(new(ListenerFixture), t)
+}
+
+type ListenerFixture struct {
+	*gunit.Fixture
+	input    chan contracts.Article
+	output   chan contracts.Article
+	handler  *FakeHandler
+	listener *Listener
+}
+
+func (this *ListenerFixture) Setup() {
+	this.input = make(chan contracts.Article, 10)
+	this.output = make(chan contracts.Article, 10)
+	this.handler = NewFakeHandler()
+	this.listener = NewListener(this.input, this.output, this.handler)
+}
+
+func (this *ListenerFixture) TestEachArticleHandledAndPassedOn() {
+	this.input <- contracts.Article{Content: contracts.ArticleContent{Original: "A"}}
+	this.input <- contracts.Article{Content: contracts.ArticleContent{Original: "B"}}
+	this.input <- contracts.Article{Content: contracts.ArticleContent{Original: "C"}}
+	close(this.input)
+
+	err := this.listener.Listen()
+
+	this.So(err, should.BeNil)
+	this.So(gather(this.output), should.Resemble, []contracts.Article{
+		{Content: contracts.ArticleContent{Original: "A", Converted: "A1"}},
+		{Content: contracts.ArticleContent{Original: "B", Converted: "B2"}},
+		{Content: contracts.ArticleContent{Original: "C", Converted: "C3"}},
+	})
+}
+
+func (this *ListenerFixture) TestFirstHandlerToErrEndsHandling() {
+	this.input <- contracts.Article{Content: contracts.ArticleContent{Original: "A"}}
+	this.input <- contracts.Article{Content: contracts.ArticleContent{Original: "B"}}
+	this.input <- contracts.Article{Content: contracts.ArticleContent{Original: "C"}}
+	close(this.input)
+
+	handlerError := errors.New("handler error")
+	this.handler.errs[2] = handlerError
+
+	err := this.listener.Listen()
+
+	this.So(errors.Is(err, handlerError), should.BeTrue)
+	this.So(gather(this.output), should.Resemble, []contracts.Article{
+		{Content: contracts.ArticleContent{Original: "A", Converted: "A1"}},
+	})
+}
+
+///////////////////////////////////////////////////////////////
+
+type FakeHandler struct {
+	articles []contracts.Article
+	calls    int
+	errs     map[int]error
+}
+
+func NewFakeHandler() *FakeHandler {
+	return &FakeHandler{errs: make(map[int]error)}
+}
+
+func (this *FakeHandler) Handle(article *contracts.Article) error {
+	this.calls++
+	article.Content.Converted = article.Content.Original + fmt.Sprint(this.calls)
+	return this.errs[this.calls]
+}

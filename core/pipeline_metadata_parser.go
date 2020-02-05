@@ -1,6 +1,12 @@
 package core
 
-import "time"
+import (
+	"encoding/json"
+	"strings"
+	"time"
+
+	"github.com/mdwhatcott/huguinho/contracts"
+)
 
 type JSONMetadata struct {
 	Draft bool      `json:"draft"`
@@ -11,5 +17,26 @@ type JSONMetadata struct {
 	Date  time.Time `json:"date"`
 }
 
-type JSONMetadataParser struct {
+type JSONMetadataParser struct{}
+
+func NewJSONMetadataParser() *JSONMetadataParser {
+	return &JSONMetadataParser{}
+}
+
+func (this *JSONMetadataParser) Handle(article *contracts.Article) error {
+	division := strings.Index(article.Source.Data, contracts.METADATA_CONTENT_DIVIDER)
+	// TODO: no division err
+	raw := []byte(article.Source.Data[:division])
+	var metadata JSONMetadata
+	_ = json.Unmarshal(raw, &metadata) // TODO: err
+	article.Metadata = contracts.ArticleMetadata{
+		Draft: metadata.Draft,
+		Slug:  metadata.Slug,
+		Title: metadata.Title,
+		Intro: metadata.Intro,
+		Tags:  metadata.Tags,
+		Date:  metadata.Date,
+	}
+	// TODO: validation? (or separate handler?
+	return nil
 }

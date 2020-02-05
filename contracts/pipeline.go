@@ -1,6 +1,9 @@
 package contracts
 
+type Listener interface {
+	Listen() error
+}
+
 type Handler interface {
-	Listen()
-	Finalize()
+	Handle(*Article) error
 }
