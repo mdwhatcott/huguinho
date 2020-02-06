@@ -7,7 +7,10 @@ import (
 )
 
 type (
+	// Deprecated
 	Path string
+
+	// Deprecated
 	File string
 )
 

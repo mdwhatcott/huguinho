@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// Deprecated
 type Article__DEPRECATED struct {
 	FrontMatter__DEPRECATED
 	Path            Path
@@ -18,6 +19,7 @@ func (this Article__DEPRECATED) TargetPath(root string) string {
 	return filepath.Join(root, folder, "index.html")
 }
 
+// Deprecated
 type FrontMatter__DEPRECATED struct {
 	ParseError  error     `toml:"-"`
 	Title       string    `toml:"title"`
@@ -27,11 +29,14 @@ type FrontMatter__DEPRECATED struct {
 	IsDraft     bool      `toml:"draft"`
 }
 
+// Deprecated
 type Site__DEPRECATED map[string][]Article__DEPRECATED
 
+// Deprecated
 type ContentListing__DEPRECATED struct {
 	Pages []Article__DEPRECATED
 	ByTag map[string][]Article__DEPRECATED
 }
 
+// Deprecated
 const HomePageListingID__DEPRECATED = "00000000-ba05-4d31-97b3-57d8d80b0dda"

@@ -13,7 +13,11 @@ type GoldmarkMarkdownConverter struct {
 
 func NewGoldmarkMarkdownConverter() *GoldmarkMarkdownConverter {
 	return &GoldmarkMarkdownConverter{
-		converter: goldmark.New(goldmark.WithRendererOptions(html.WithUnsafe())),
+		converter: goldmark.New(
+			goldmark.WithRendererOptions(
+				html.WithUnsafe(),
+			),
+		),
 	}
 }
 

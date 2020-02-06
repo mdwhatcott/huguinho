@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 )
 
@@ -16,5 +17,7 @@ type TraceErrorFixture struct {
 }
 
 func (this *TraceErrorFixture) Test() {
-	this.Println(NewStackTraceError(errors.New("gophers")))
+	gopherErr := errors.New("gophers")
+	err := NewStackTraceError(gopherErr)
+	this.So(errors.Is(err, gopherErr), should.BeTrue)
 }

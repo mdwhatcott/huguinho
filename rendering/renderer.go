@@ -8,6 +8,7 @@ import (
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
+// Deprecated
 type Renderer struct {
 	templates *template.Template
 }
