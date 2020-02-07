@@ -1,0 +1,7 @@
+Title:       {{ .Title }}
+Description: {{ .Description }}
+Date:        {{ .Date.Format "2006-01-02" }}
+Tags:        [{{ range .Tags }}"{{.}}",{{ end }}]
+Content:
+
+{{ .Content }}

@@ -1,0 +1,9 @@
+Site Title:      {{ .Title }}
+
+{{ range .Pages }}
+    Path:        {{ .Path }}
+    Title:       {{ .Title }}
+    Date:        {{ .Date.Format "2006-01-02" }}
+    Description: {{ .Description }}
+    ------------------------------------------------------------------
+{{ end }}
