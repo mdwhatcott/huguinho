@@ -11,6 +11,9 @@ type StackTraceError struct {
 }
 
 func NewStackTraceError(inner error) *StackTraceError {
+	if inner == nil {
+		return nil
+	}
 	return &StackTraceError{
 		inner: inner,
 		stack: debug.Stack(),

@@ -21,3 +21,9 @@ func (this *TraceErrorFixture) Test() {
 	err := NewStackTraceError(gopherErr)
 	this.So(errors.Is(err, gopherErr), should.BeTrue)
 }
+
+func (this *TraceErrorFixture) TestNil() {
+	var err error
+	err = NewStackTraceError(err)
+	this.So(err, should.BeNil)
+}

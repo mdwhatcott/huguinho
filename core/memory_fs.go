@@ -103,7 +103,7 @@ func (this *InMemoryFileSystem) MkdirAll(path string, perm os.FileMode) error {
 		return err
 	}
 	components := strings.Split(path, string(os.PathSeparator))
-	for x := 1; x < len(components); x++ {
+	for x := 1; x < len(components)+1; x++ {
 		p := strings.Join(components[:x], string(os.PathSeparator))
 		this.Files[p] = &MemoryFile{
 			name:    filepath.Base(p),

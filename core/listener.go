@@ -1,6 +1,10 @@
 package core
 
-import "github.com/mdwhatcott/huguinho/contracts"
+import (
+	"errors"
+
+	"github.com/mdwhatcott/huguinho/contracts"
+)
 
 type Listener struct {
 	input   chan contracts.Article
@@ -22,10 +26,18 @@ func (this *Listener) Listen() error {
 
 	for article := range this.input {
 		err := this.handler.Handle(&article)
+		if err == ErrDropArticle {
+			continue
+		}
 		if err != nil {
 			return err
 		}
 		this.output <- article
+	}
+
+	finalizer, ok := this.handler.(contracts.Finalizer)
+	if ok {
+		return finalizer.Finalize()
 	}
 
 	return nil
@@ -35,3 +47,5 @@ func (this *Listener) drain() {
 	for range this.input {
 	}
 }
+
+var ErrDropArticle = errors.New("do not continue dispatching to handlers")
