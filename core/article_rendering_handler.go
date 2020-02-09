@@ -30,7 +30,15 @@ func NewArticleRenderingHandler(
 }
 
 func (this *ArticleRenderingHandler) Handle(article *contracts.Article) (err error) {
-	rendered, err := this.renderer.Render(article)
+	data := contracts.RenderedArticle{
+		Title:       article.Metadata.Title,
+		Description: article.Metadata.Intro,
+		Date:        article.Metadata.Date,
+		Tags:        article.Metadata.Tags,
+		Content:     article.Content.Converted,
+	}
+
+	rendered, err := this.renderer.Render(data)
 	if err != nil {
 		return NewStackTraceError(err)
 	}

@@ -37,6 +37,6 @@ func (this *JSONMetadataParser) Handle(article *contracts.Article) error {
 		Tags:  metadata.Tags,
 		Date:  metadata.Date,
 	}
-	// TODO: validation? (or separate handler?
+	// TODO: validation? (or separate handler?)
 	return nil
 }

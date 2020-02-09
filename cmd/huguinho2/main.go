@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/huguinho/core"
@@ -12,8 +13,10 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	config := ParseCLI()
-	renderer := rendering.NewRenderer2(parseTemplates(config.templateDir + "*"))
+	renderer := rendering.NewRenderer2(parseTemplates(filepath.Join(config.templateDir, "*.tmpl")))
 	pipeline := NewPipeline(config, shell.NewDisk(), renderer)
 	os.Exit(pipeline.Run())
 }
