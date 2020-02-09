@@ -23,6 +23,7 @@ func main() {
 	os.Exit(pipeline.Run())
 }
 func parseTemplates(glob string) *template.Template {
+	// TODO: this could all be put under unit test via the "in memory file system".
 	templates, err := template.ParseGlob(glob)
 	if err != nil {
 		log.Fatalln("Could not parse templates:", err)
