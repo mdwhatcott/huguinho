@@ -17,7 +17,6 @@ func main() {
 	pipeline := NewPipeline(config, shell.NewDisk(), renderer)
 	os.Exit(pipeline.Run())
 }
-
 func parseTemplates(glob string) *template.Template {
 	templates, err := template.ParseGlob(glob)
 	if err != nil {
@@ -41,14 +40,12 @@ func NewPipeline(config *Config, disk contracts.FileSystem, renderer contracts.R
 		errs:     make(chan error),
 	}
 }
-
 func (this *Pipeline) Run() int {
 	// TODO: Move CSS into place
 	out := this.startAll()
 	go this.terminate(out)
 	return this.errCount()
 }
-
 func (this *Pipeline) startAll() (out chan contracts.Article) {
 	out = this.goLoad()
 	out = this.goListen(out, core.NewFileReader(this.disk))
@@ -62,7 +59,24 @@ func (this *Pipeline) startAll() (out chan contracts.Article) {
 	// out = this.goListen(out, core.NewAllTagsRenderer(...)) // TODO
 	return out
 }
-
+func (this *Pipeline) goLoad() (out chan contracts.Article) {
+	out = make(chan contracts.Article)
+	loader := core.NewPathLoader(this.disk, this.config.contentRoot, out)
+	go func() { this.errs <- loader.Start() }()
+	return out
+}
+func (this *Pipeline) goListen(in chan contracts.Article, handler contracts.Handler) (out chan contracts.Article) {
+	out = make(chan contracts.Article)
+	listener := core.NewListener(in, out, handler)
+	go func() { this.errs <- listener.Listen() }()
+	return out
+}
+func (this *Pipeline) terminate(out chan contracts.Article) {
+	for item := range out {
+		log.Println("Published article:", item.Metadata.Slug)
+	}
+	close(this.errs)
+}
 func (this *Pipeline) errCount() (errCount int) {
 	for err := range this.errs {
 		if err != nil {
@@ -71,27 +85,4 @@ func (this *Pipeline) errCount() (errCount int) {
 		}
 	}
 	return errCount
-}
-
-func (this *Pipeline) goLoad() (out chan contracts.Article) {
-	out = make(chan contracts.Article)
-	loader := core.NewPathLoader(this.disk, this.config.contentRoot, out)
-	go func() { this.errs <- loader.Start() }()
-	return out
-}
-
-func (this *Pipeline) goListen(
-	in chan contracts.Article, handler contracts.Handler) (out chan contracts.Article,
-) {
-	out = make(chan contracts.Article)
-	listener := core.NewListener(in, out, handler)
-	go func() { this.errs <- listener.Listen() }()
-	return out
-}
-
-func (this *Pipeline) terminate(out chan contracts.Article) {
-	for item := range out {
-		log.Println("Published article:", item.Metadata.Slug)
-	}
-	close(this.errs)
 }
