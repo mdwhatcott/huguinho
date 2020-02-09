@@ -34,7 +34,7 @@ type RenderedArticle struct {
 
 //////////////////////////////////////////////
 
-type RenderedTag struct {
+type RenderedTagListing struct {
 	Title string
 	Name  string
 	Pages []RenderedTagEntry

@@ -22,7 +22,7 @@ func NewGoldmarkMarkdownConverter() *GoldmarkMarkdownConverter {
 }
 
 func (this *GoldmarkMarkdownConverter) Convert(content string) (string, error) {
-	buffer := bytes.NewBufferString("")
-	err := this.converter.Convert([]byte(content), buffer)
+	var buffer bytes.Buffer
+	err := this.converter.Convert([]byte(content), &buffer)
 	return buffer.String(), err
 }

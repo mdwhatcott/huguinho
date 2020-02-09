@@ -14,6 +14,19 @@ type (
 	File string
 )
 
+type FileSystem interface {
+	Stat
+	Open
+	Create
+	ReadFile
+	WriteFile
+	Mkdir
+	MkdirAll
+	Remove
+	RemoveAll
+	Walk
+}
+
 type (
 	Stat interface {
 		Stat(path string) (os.FileInfo, error)

@@ -18,7 +18,6 @@ func NewPathLoader(
 	root string,
 	output chan contracts.Article,
 ) *PathLoader {
-
 	return &PathLoader{
 		files:  files,
 		root:   root,
@@ -26,7 +25,7 @@ func NewPathLoader(
 	}
 }
 
-func (this *PathLoader) Listen() error {
+func (this *PathLoader) Start() error {
 	defer close(this.output)
 	return this.files.Walk(this.root, this.walk)
 }

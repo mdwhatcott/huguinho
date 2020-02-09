@@ -2,15 +2,53 @@ package rendering
 
 import (
 	"bytes"
+	"fmt"
+	"html/template"
 	"log"
-	"text/template"
+	"reflect"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
-// Deprecated
 type Renderer struct {
 	templates *template.Template
+}
+
+func (this *Renderer) Render(v interface{}) (string, error) {
+	switch v.(type) {
+
+	case contracts.RenderedArticle:
+		return this.render2("article", v)
+
+	case contracts.RenderedAllTagsListing:
+		return this.render2("all-tags", v)
+
+	case contracts.RenderedTagListing:
+		return this.render2("tag", v)
+
+	case contracts.RenderedHomePage:
+		return this.render2("home", v)
+
+	default:
+		return "", fmt.Errorf(
+			"unknown value for rendering of type [%v]: %v",
+			reflect.TypeOf(v).Name(), v,
+		)
+	}
+}
+
+func (this *Renderer) render2(name string, data interface{}) (string, error) {
+	buffer := new(bytes.Buffer)
+	err := this.templates.ExecuteTemplate(buffer, name, data)
+	if err != nil {
+		log.Printf("Failed to render template [%s] (err: %v) with data: %+v", name, err, data)
+		return "", fmt.Errorf("failed to render template [%s] (err: %w) with data: %+v", name, err, data)
+	}
+	return buffer.String(), nil
+}
+
+func NewRenderer2(templates *template.Template) *Renderer {
+	return &Renderer{templates: templates}
 }
 
 func NewRenderer(dir string) *Renderer {
