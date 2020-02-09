@@ -8,6 +8,13 @@ type Renderer interface {
 	Render(interface{}) (string, error)
 }
 
+const (
+	HomePageTemplateName = "home.tmpl"
+	ArticleTemplateName  = "article.tmpl"
+	AllTagsTemplateName  = "all-tags.tmpl"
+	TagTemplateName      = "tag.tmpl"
+)
+
 //////////////////////////////////////////////
 
 type RenderedHomePage struct {
