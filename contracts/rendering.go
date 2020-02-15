@@ -25,8 +25,8 @@ type RenderedHomePage struct {
 type RenderedHomePageEntry struct {
 	Path        string
 	Title       string
-	Date        time.Time
 	Description string
+	Date        time.Time
 }
 
 //////////////////////////////////////////////

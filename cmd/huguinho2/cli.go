@@ -25,7 +25,7 @@ func ParseCLI() (config contracts.Config) {
 	return config
 }
 
-func Validate(config contracts.Config)  bool {
+func Validate(config contracts.Config) bool {
 	if config.TemplateDir == "" {
 		return false
 	}

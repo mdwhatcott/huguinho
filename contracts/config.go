@@ -8,4 +8,3 @@ type Config struct {
 	BuildDrafts bool
 	BuildFuture bool
 }
-
