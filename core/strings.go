@@ -11,3 +11,8 @@ func divide(full string, split string) (before, after string) {
 	after = strings.TrimSpace(full[divider+len(split):])
 	return before, after
 }
+
+func isSpace(c rune) bool  { return c == ' ' }
+func isDash(c rune) bool   { return c == '-' }
+func isNumber(c rune) bool { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') }
+func isAlpha(c rune) bool  { return c >= '0' && c <= '9' }

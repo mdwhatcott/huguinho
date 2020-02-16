@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 )
@@ -43,6 +44,8 @@ type MetadataParser struct {
 	parsedIntro bool
 	parsedSlug  bool
 	parsedDraft bool
+	parsedDate  bool
+	parsedTags  bool
 }
 
 func NewMetadataParser(lines []string) *MetadataParser {
@@ -71,6 +74,16 @@ func (this *MetadataParser) Parse() error {
 			}
 		case "draft":
 			err := this.parseDraft(value)
+			if err != nil {
+				return err
+			}
+		case "date":
+			err := this.parseDate(value)
+			if err != nil {
+				return err
+			}
+		case "tags":
+			err := this.parseTags(value)
 			if err != nil {
 				return err
 			}
@@ -137,6 +150,49 @@ func (this *MetadataParser) parseDraft(value string) error {
 	return nil
 }
 
+func (this *MetadataParser) parseDate(value string) error {
+	if this.parsedDate {
+		return NewStackTraceError(errDuplicateMetadataDate)
+	}
+	if value == "" {
+		return NewStackTraceError(errBlankMetadataDate)
+	}
+	parsed, err := time.Parse("2006-01-02", value)
+	if err != nil {
+		return NewStackTraceError(fmt.Errorf("%w with value: [%s] err: %v", errInvalidMetadataDate, value, err))
+	}
+	this.parsed.Date = parsed
+	this.parsedDate = true
+	return nil
+}
+
+func (this *MetadataParser) parseTags(value string) error {
+	if this.parsedTags {
+		return NewStackTraceError(errDuplicateMetadataTags)
+	}
+	if value == "" {
+		return NewStackTraceError(errBlankMetadataTags)
+	}
+	tags := strings.Fields(value)
+	for _, tag := range tags {
+		if !isValidTag(tag) {
+			return NewStackTraceError(fmt.Errorf("%w: [%s]", errInvalidMetadataTags, value))
+		}
+	}
+	this.parsed.Tags = tags
+	this.parsedTags = true
+	return nil
+}
+
+func isValidTag(tag string) bool {
+	for _, c := range tag {
+		if !(isSpace(c) || isDash(c) || isAlpha(c) || isNumber(c)) {
+			return false
+		}
+	}
+	return true
+}
+
 func (this *MetadataParser) Parsed() contracts.ArticleMetadata {
 	return this.parsed
 }
@@ -149,12 +205,18 @@ var (
 	errDuplicateMetadataIntro = errors.New("duplicate metadata intro")
 	errDuplicateMetadataSlug  = errors.New("duplicate metadata slug")
 	errDuplicateMetadataDraft = errors.New("duplicate metadata draft")
+	errDuplicateMetadataDate  = errors.New("duplicate metadata date")
+	errDuplicateMetadataTags  = errors.New("duplicate metadata tags")
 
 	errInvalidMetadataSlug  = errors.New("invalid metadata slug")
 	errInvalidMetadataDraft = errors.New("invalid metadata draft")
+	errInvalidMetadataDate  = errors.New("invalid metadata date")
+	errInvalidMetadataTags  = errors.New("invalid metadata tags")
 
 	errBlankMetadataSlug  = errors.New("blank metadata slug")
 	errBlankMetadataDraft = errors.New("blank metadata draft")
 	errBlankMetadataTitle = errors.New("blank metadata title")
 	errBlankMetadataIntro = errors.New("blank metadata intro")
+	errBlankMetadataDate  = errors.New("blank metadata date")
+	errBlankMetadataTags  = errors.New("blank metadata tags")
 )

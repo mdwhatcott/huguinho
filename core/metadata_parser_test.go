@@ -143,15 +143,64 @@ func (this *MetadataParserFixture) TestDuplicateMetadataDraft_Err() {
 
 	this.So(errors.Is(err, errDuplicateMetadataDraft), should.BeTrue)
 }
+func (this *MetadataParserFixture) TestBlankMetadataDate_Err() {
+	this.appendMetadataWithContent("date: ")
+
+	err := this.parser.Handle(this.article)
+
+	this.So(errors.Is(err, errBlankMetadataDate), should.BeTrue)
+}
+func (this *MetadataParserFixture) TestInvalidMetadataDate_Err() {
+	this.appendMetadataWithContent("date: not-a-date")
+
+	err := this.parser.Handle(this.article)
+
+	this.So(errors.Is(err, errInvalidMetadataDate), should.BeTrue)
+}
+func (this *MetadataParserFixture) TestDuplicateMetadataDate_Err() {
+	this.appendMetadataWithContent(
+		"date: 2020-02-01",
+		"date: 2020-02-02",
+	)
+
+	err := this.parser.Handle(this.article)
+
+	this.So(errors.Is(err, errDuplicateMetadataDate), should.BeTrue)
+}
+
+func (this *MetadataParserFixture) TestBlankMetadataTags_Err() {
+	this.appendMetadataWithContent("tags: ")
+
+	err := this.parser.Handle(this.article)
+
+	this.So(errors.Is(err, errBlankMetadataTags), should.BeTrue)
+}
+func (this *MetadataParserFixture) TestInvalidMetadataTags_Err() {
+	this.appendMetadataWithContent("tags: invalid?!")
+
+	err := this.parser.Handle(this.article)
+
+	this.So(errors.Is(err, errInvalidMetadataTags), should.BeTrue)
+}
+func (this *MetadataParserFixture) TestDuplicateMetadataTags_Err() {
+	this.appendMetadataWithContent(
+		"tags: a b c",
+		"tags: x y z",
+	)
+
+	err := this.parser.Handle(this.article)
+
+	this.So(errors.Is(err, errDuplicateMetadataTags), should.BeTrue)
+}
 
 func (this *MetadataParserFixture) TestValidMetadata() {
-	this.appendMetadataWithContent( // TODO: test showing that trailing/leading whitespace is trimmed
-		"title: This is the title",
-		"intro: This is the intro",
-		"slug:  /this/is/the/slug",
-		"draft: true",
-		// TODO: date
-		// TODO: tags
+	this.appendMetadataWithContent(
+		"title: This is the title ",
+		"intro: This is the intro ",
+		"slug:  /this/is/the/slug ",
+		"draft: true              ",
+		"date:  2020-02-16        ",
+		"tags:  a-a b c           ",
 	)
 
 	err := this.parser.Handle(this.article)
@@ -161,4 +210,6 @@ func (this *MetadataParserFixture) TestValidMetadata() {
 	this.So(this.article.Metadata.Intro, should.Equal, "This is the intro")
 	this.So(this.article.Metadata.Slug, should.Equal, "/this/is/the/slug")
 	this.So(this.article.Metadata.Draft, should.BeTrue)
+	this.So(this.article.Metadata.Date, should.Resemble, Date(2020, 2, 16))
+	this.So(this.article.Metadata.Tags, should.Resemble, []string{"a-a", "b", "c"})
 }
