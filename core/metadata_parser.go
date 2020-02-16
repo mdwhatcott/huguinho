@@ -2,6 +2,7 @@ package core
 
 import (
 	"errors"
+	"fmt"
 	"net/url"
 	"strings"
 
@@ -41,6 +42,7 @@ type MetadataParser struct {
 	parsedTitle bool
 	parsedIntro bool
 	parsedSlug  bool
+	parsedDraft bool
 }
 
 func NewMetadataParser(lines []string) *MetadataParser {
@@ -67,6 +69,11 @@ func (this *MetadataParser) Parse() error {
 			if err != nil {
 				return err
 			}
+		case "draft":
+			err := this.parseDraft(value)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -77,6 +84,9 @@ func (this *MetadataParser) parseTitle(value string) error {
 	if this.parsedTitle {
 		return NewStackTraceError(errDuplicateMetadataTitle)
 	}
+	if value == "" {
+		return errBlankMetadataTitle
+	}
 	this.parsed.Title = value
 	this.parsedTitle = true
 	return nil
@@ -84,6 +94,9 @@ func (this *MetadataParser) parseTitle(value string) error {
 func (this *MetadataParser) parseIntro(value string) error {
 	if this.parsedIntro {
 		return NewStackTraceError(errDuplicateMetadataIntro)
+	}
+	if value == "" {
+		return NewStackTraceError(errBlankMetadataIntro)
 	}
 	this.parsed.Intro = value
 	this.parsedIntro = true
@@ -98,10 +111,29 @@ func (this *MetadataParser) parseSlug(value string) error {
 	}
 	parsed, _ := url.Parse(value)
 	if parsed.Path != parsed.EscapedPath() {
-		return NewStackTraceError(errInvalidMetadataSlug)
+		return NewStackTraceError(fmt.Errorf("%w: [%s]", errInvalidMetadataSlug, value))
 	}
 	this.parsed.Slug = value
 	this.parsedSlug = true
+	return nil
+}
+func (this *MetadataParser) parseDraft(value string) error {
+	if this.parsedDraft {
+		return NewStackTraceError(errDuplicateMetadataDraft)
+	}
+
+	switch value {
+	case "true":
+		this.parsed.Draft = true
+		this.parsedDraft = true
+	case "false":
+		this.parsed.Draft = false
+		this.parsedDraft = true
+	case "":
+		return NewStackTraceError(errBlankMetadataDraft)
+	default:
+		return NewStackTraceError(fmt.Errorf("%w: [%s]", errInvalidMetadataDraft, value))
+	}
 	return nil
 }
 
@@ -112,9 +144,17 @@ func (this *MetadataParser) Parsed() contracts.ArticleMetadata {
 var (
 	errMissingMetadata        = errors.New("article lacks metadata")
 	errMissingMetadataDivider = errors.New("article lacks metadata divider")
+
 	errDuplicateMetadataTitle = errors.New("duplicate metadata title")
 	errDuplicateMetadataIntro = errors.New("duplicate metadata intro")
 	errDuplicateMetadataSlug  = errors.New("duplicate metadata slug")
-	errInvalidMetadataSlug    = errors.New("invalid metadata slug")
-	errBlankMetadataSlug      = errors.New("blank metadata slug")
+	errDuplicateMetadataDraft = errors.New("duplicate metadata draft")
+
+	errInvalidMetadataSlug  = errors.New("invalid metadata slug")
+	errInvalidMetadataDraft = errors.New("invalid metadata draft")
+
+	errBlankMetadataSlug  = errors.New("blank metadata slug")
+	errBlankMetadataDraft = errors.New("blank metadata draft")
+	errBlankMetadataTitle = errors.New("blank metadata title")
+	errBlankMetadataIntro = errors.New("blank metadata intro")
 )
