@@ -77,7 +77,6 @@ The Content
 `)
 	page := parse(file)
 	this.So(page.ParseError, should.NotBeNil)
-	this.Println(page.ParseError)
 }
 
 func (this *ArticleFixture) TestDerivePath() {
