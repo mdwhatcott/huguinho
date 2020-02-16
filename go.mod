@@ -9,3 +9,5 @@ require (
 	github.com/smartystreets/nu v1.0.1
 	github.com/yuin/goldmark v1.1.9
 )
+
+replace github.com/smartystreets/gunit => /Users/mike/src/github.com/smartystreets/gunit

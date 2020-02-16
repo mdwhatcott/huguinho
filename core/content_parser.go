@@ -1,8 +1,6 @@
 package core
 
 import (
-	"strings"
-
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
@@ -15,9 +13,7 @@ func NewContentParser(inner contracts.ContentConverter) *ContentParser {
 }
 
 func (this *ContentParser) Handle(article *contracts.Article) (err error) {
-	marker := contracts.METADATA_CONTENT_DIVIDER
-	divider := strings.Index(article.Source.Data, marker)
-	original := strings.TrimSpace(article.Source.Data[divider+len(marker):])
+	_, original := divide(article.Source.Data, contracts.METADATA_CONTENT_DIVIDER)
 	converted, err := this.inner.Convert(original)
 	if err != nil {
 		return NewStackTraceError(err)
