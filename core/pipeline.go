@@ -34,11 +34,11 @@ func (this *Pipeline) Run() int {
 }
 func (this *Pipeline) startAll() (out chan contracts.Article) {
 	out = this.goLoad()
-	out = this.goListen(out, NewFileReader(this.disk))
-	out = this.goListen(out, NewJSONMetadataParser())
+	out = this.goListen(out, NewFileReadingHandler(this.disk))
+	out = this.goListen(out, NewMetadataParsingHandler())
 	// out = this.goListen(out, core.NewDraftFiltering(...)) // TODO
 	// out = this.goListen(out, core.NewFutureFiltering(...)) // TODO
-	out = this.goListen(out, NewContentParser(shell.NewGoldmarkMarkdownConverter()))
+	out = this.goListen(out, NewContentParsingHandler(shell.NewGoldmarkMarkdownConverter()))
 	// out = this.goListen(out, core.NewHomePageRenderer(...)) // TODO
 	out = this.goListen(out, NewArticleRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	// out = this.goListen(out, core.NewTagsRenderer(...)) // TODO

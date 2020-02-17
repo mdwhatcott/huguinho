@@ -16,13 +16,13 @@ func TestFileReaderFixture(t *testing.T) {
 
 type FileReaderFixture struct {
 	*gunit.Fixture
-	reader *FileReader
+	reader *FileReadingHandler
 	files  *InMemoryFileSystem
 }
 
 func (this *FileReaderFixture) Setup() {
 	this.files = NewInMemoryFileSystem()
-	this.reader = NewFileReader(this.files)
+	this.reader = NewFileReadingHandler(this.files)
 
 	_ = this.files.WriteFile("/file1", []byte("FILE1"), 0644)
 }

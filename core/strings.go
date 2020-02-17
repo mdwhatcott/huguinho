@@ -12,7 +12,7 @@ func divide(full string, split string) (before, after string) {
 	return before, after
 }
 
-func isSpace(c rune) bool  { return c == ' ' }
-func isDash(c rune) bool   { return c == '-' }
-func isNumber(c rune) bool { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') }
-func isAlpha(c rune) bool  { return c >= '0' && c <= '9' }
+func isSpace(c rune) bool      { return c == ' ' }
+func isDash(c rune) bool       { return c == '-' }
+func isLowerAlpha(c rune) bool { return c >= 'a' && c <= 'z' }
+func isNumber(c rune) bool     { return c >= '0' && c <= '9' }

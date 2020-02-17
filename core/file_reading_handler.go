@@ -2,15 +2,15 @@ package core
 
 import "github.com/mdwhatcott/huguinho/contracts"
 
-type FileReader struct {
+type FileReadingHandler struct {
 	disk contracts.ReadFile
 }
 
-func NewFileReader(disk contracts.ReadFile) *FileReader {
-	return &FileReader{disk: disk}
+func NewFileReadingHandler(disk contracts.ReadFile) *FileReadingHandler {
+	return &FileReadingHandler{disk: disk}
 }
 
-func (this *FileReader) Handle(article *contracts.Article) error {
+func (this *FileReadingHandler) Handle(article *contracts.Article) error {
 	raw, err := this.disk.ReadFile(article.Source.Path)
 	if err != nil {
 		return NewStackTraceError(err)

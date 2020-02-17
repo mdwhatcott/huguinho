@@ -1,7 +1,7 @@
-Title:       {{ .Title }}
-Description: {{ .Description }}
-Date:        {{ .Date.Format "2006-01-02" }}
-Tags:        [{{ range .Tags }}"{{.}}",{{ end }}]
-Content:
+meta-title: {{ .Title }}
+meta-intro: {{ .Description }}
+meta-date:  {{ .Date.Format "2006-01-02" }}
+meta-tags:  {{ range .Tags }}{{.}} {{ end }}
+content:
 
 {{ .Content }}

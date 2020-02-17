@@ -17,7 +17,7 @@ func TestContentParserFixture(t *testing.T) {
 type ContentParserFixture struct {
 	*gunit.Fixture
 
-	converter *ContentParser
+	converter *ContentParsingHandler
 	inner     *FakeConverter
 	input     chan contracts.Article
 	output    chan contracts.Article
@@ -25,7 +25,7 @@ type ContentParserFixture struct {
 
 func (this *ContentParserFixture) Setup() {
 	this.inner = NewFakeConverter()
-	this.converter = NewContentParser(this.inner)
+	this.converter = NewContentParsingHandler(this.inner)
 }
 
 func (this *ContentParserFixture) formatSourceData(original string) string {

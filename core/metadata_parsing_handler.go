@@ -122,6 +122,9 @@ func (this *MetadataParser) parseSlug(value string) error {
 	if value == "" {
 		return NewStackTraceError(errBlankMetadataSlug)
 	}
+	if strings.ToLower(value) != value {
+		return NewStackTraceError(errInvalidMetadataSlug)
+	}
 	parsed, _ := url.Parse(value)
 	if parsed.Path != parsed.EscapedPath() {
 		return NewStackTraceError(fmt.Errorf("%w: [%s]", errInvalidMetadataSlug, value))
@@ -186,7 +189,7 @@ func (this *MetadataParser) parseTags(value string) error {
 
 func isValidTag(tag string) bool {
 	for _, c := range tag {
-		if !(isSpace(c) || isDash(c) || isAlpha(c) || isNumber(c)) {
+		if !(isSpace(c) || isDash(c) || isNumber(c) || isLowerAlpha(c)) {
 			return false
 		}
 	}

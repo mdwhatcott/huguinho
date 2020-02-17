@@ -39,7 +39,7 @@ func (this *MetadataParserFixture) appendMetadataWithContent(lines ...string) {
 	this.appendDividerAndContent()
 }
 
-func (this *MetadataParserFixture) TestBlank_Err() {
+func (this *MetadataParserFixture) TestBlankFile_Err() {
 	this.appendSourceLine(" \t \n  ")
 	err := this.parser.Handle(this.article)
 	this.So(errors.Is(err, errMissingMetadata), should.BeTrue)
@@ -53,7 +53,7 @@ func (this *MetadataParserFixture) TestMissingMetadataDivider_Err() {
 
 	this.So(errors.Is(err, errMissingMetadataDivider), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestRepeatedMetadataTitle_Err() {
+func (this *MetadataParserFixture) TestDuplicateTitle_Err() {
 	this.appendMetadataWithContent(
 		"title: This is the title",
 		"title: This is another title",
@@ -63,14 +63,14 @@ func (this *MetadataParserFixture) TestRepeatedMetadataTitle_Err() {
 
 	this.So(errors.Is(err, errDuplicateMetadataTitle), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestBlankMetadataTitle_Err() {
+func (this *MetadataParserFixture) TestBlankTitle_Err() {
 	this.appendMetadataWithContent("title: ")
 
 	err := this.parser.Handle(this.article)
 
 	this.So(errors.Is(err, errBlankMetadataTitle), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestRepeatedMetadataIntro_Err() {
+func (this *MetadataParserFixture) TestDuplicateIntro_Err() {
 	this.appendMetadataWithContent(
 		"intro: This is the intro",
 		"intro: This is another intro",
@@ -80,14 +80,14 @@ func (this *MetadataParserFixture) TestRepeatedMetadataIntro_Err() {
 
 	this.So(errors.Is(err, errDuplicateMetadataIntro), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestBlankMetadataIntro_Err() {
+func (this *MetadataParserFixture) TestBlankIntro_Err() {
 	this.appendMetadataWithContent("intro: ")
 
 	err := this.parser.Handle(this.article)
 
 	this.So(errors.Is(err, errBlankMetadataIntro), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestRepeatedMetadataSlug_Err() {
+func (this *MetadataParserFixture) TestDuplicateSlug_Err() {
 	this.appendMetadataWithContent(
 		"slug: /this/is/the/slug",
 		"slug: /this/is/another/slug",
@@ -97,28 +97,35 @@ func (this *MetadataParserFixture) TestRepeatedMetadataSlug_Err() {
 
 	this.So(errors.Is(err, errDuplicateMetadataSlug), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestInvalidMetadataSlug_Err() {
+func (this *MetadataParserFixture) TestInvalidSlug_Err() {
 	this.appendMetadataWithContent("slug: /this/slug/is invalid")
 
 	err := this.parser.Handle(this.article)
 
 	this.So(errors.Is(err, errInvalidMetadataSlug), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestBlankMetadataSlug_Err() {
+func (this *MetadataParserFixture) TestInvalidCasingSlug_Err() {
+	this.appendMetadataWithContent("slug: /THIS/SLUG/IS/INVALID")
+
+	err := this.parser.Handle(this.article)
+
+	this.So(errors.Is(err, errInvalidMetadataSlug), should.BeTrue)
+}
+func (this *MetadataParserFixture) TestBlankSlug_Err() {
 	this.appendMetadataWithContent("slug: ")
 
 	err := this.parser.Handle(this.article)
 
 	this.So(errors.Is(err, errBlankMetadataSlug), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestBlankMetadataDraft_Err() {
+func (this *MetadataParserFixture) TestBlankDraft_Err() {
 	this.appendMetadataWithContent("draft: ")
 
 	err := this.parser.Handle(this.article)
 
 	this.So(errors.Is(err, errBlankMetadataDraft), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestInvalidMetadataDraft_Err() {
+func (this *MetadataParserFixture) TestInvalidDraft_Err() {
 	this.appendMetadataWithContent("draft: not-true-or-false")
 
 	err := this.parser.Handle(this.article)
@@ -133,7 +140,7 @@ func (this *MetadataParserFixture) TestMetadataDraftFalse_Valid() {
 	this.So(errors.Is(err, errBlankMetadataDraft), should.BeFalse)
 	this.So(errors.Is(err, errInvalidMetadataDraft), should.BeFalse)
 }
-func (this *MetadataParserFixture) TestDuplicateMetadataDraft_Err() {
+func (this *MetadataParserFixture) TestDuplicateDraft_Err() {
 	this.appendMetadataWithContent(
 		"draft: false",
 		"draft: true",
@@ -143,21 +150,21 @@ func (this *MetadataParserFixture) TestDuplicateMetadataDraft_Err() {
 
 	this.So(errors.Is(err, errDuplicateMetadataDraft), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestBlankMetadataDate_Err() {
+func (this *MetadataParserFixture) TestBlankDate_Err() {
 	this.appendMetadataWithContent("date: ")
 
 	err := this.parser.Handle(this.article)
 
 	this.So(errors.Is(err, errBlankMetadataDate), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestInvalidMetadataDate_Err() {
+func (this *MetadataParserFixture) TestInvalidDate_Err() {
 	this.appendMetadataWithContent("date: not-a-date")
 
 	err := this.parser.Handle(this.article)
 
 	this.So(errors.Is(err, errInvalidMetadataDate), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestDuplicateMetadataDate_Err() {
+func (this *MetadataParserFixture) TestDuplicateDate_Err() {
 	this.appendMetadataWithContent(
 		"date: 2020-02-01",
 		"date: 2020-02-02",
@@ -167,22 +174,28 @@ func (this *MetadataParserFixture) TestDuplicateMetadataDate_Err() {
 
 	this.So(errors.Is(err, errDuplicateMetadataDate), should.BeTrue)
 }
-
-func (this *MetadataParserFixture) TestBlankMetadataTags_Err() {
+func (this *MetadataParserFixture) TestBlankTags_Err() {
 	this.appendMetadataWithContent("tags: ")
 
 	err := this.parser.Handle(this.article)
 
 	this.So(errors.Is(err, errBlankMetadataTags), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestInvalidMetadataTags_Err() {
+func (this *MetadataParserFixture) TestInvalidTags_Err() {
 	this.appendMetadataWithContent("tags: invalid?!")
 
 	err := this.parser.Handle(this.article)
 
 	this.So(errors.Is(err, errInvalidMetadataTags), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestDuplicateMetadataTags_Err() {
+func (this *MetadataParserFixture) TestInvalidCasingTags_Err() {
+	this.appendMetadataWithContent("tags: INVALID")
+
+	err := this.parser.Handle(this.article)
+
+	this.So(errors.Is(err, errInvalidMetadataTags), should.BeTrue)
+}
+func (this *MetadataParserFixture) TestDuplicateTags_Err() {
 	this.appendMetadataWithContent(
 		"tags: a b c",
 		"tags: x y z",
@@ -193,7 +206,7 @@ func (this *MetadataParserFixture) TestDuplicateMetadataTags_Err() {
 	this.So(errors.Is(err, errDuplicateMetadataTags), should.BeTrue)
 }
 
-func (this *MetadataParserFixture) TestValidMetadata() {
+func (this *MetadataParserFixture) TestAllValidAttributes() {
 	this.appendMetadataWithContent(
 		"title: This is the title ",
 		"intro: This is the intro ",
