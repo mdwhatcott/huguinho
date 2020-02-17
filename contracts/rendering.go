@@ -18,7 +18,6 @@ const (
 //////////////////////////////////////////////
 
 type RenderedHomePage struct {
-	Title string
 	Pages []RenderedHomePageEntry
 }
 
