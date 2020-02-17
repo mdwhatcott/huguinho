@@ -195,6 +195,8 @@ func (this *MetadataParserFixture) TestInvalidCasingTags_Err() {
 
 	this.So(errors.Is(err, errInvalidMetadataTags), should.BeTrue)
 }
+
+// TODO: TestInvalidTagsRepeated_Err()
 func (this *MetadataParserFixture) TestDuplicateTags_Err() {
 	this.appendMetadataWithContent(
 		"tags: a b c",

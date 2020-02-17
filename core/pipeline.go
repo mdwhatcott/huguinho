@@ -41,7 +41,7 @@ func (this *Pipeline) startAll() (out chan contracts.Article) {
 	out = this.goListen(out, NewContentParsingHandler(shell.NewGoldmarkMarkdownConverter()))
 	out = this.goListen(out, NewHomePageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	out = this.goListen(out, NewArticleRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
-	// out = this.goListen(out, core.NewTagsRenderer(...)) // TODO
+	out = this.goListen(out, NewTagPageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	// out = this.goListen(out, core.NewAllTagsRenderer(...)) // TODO
 	return out
 }

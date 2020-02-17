@@ -49,7 +49,7 @@ type RenderedTagListing struct {
 type RenderedTagEntry struct {
 	Path  string
 	Title string
-	Date  string
+	Date  time.Time
 }
 
 //////////////////////////////////////////////

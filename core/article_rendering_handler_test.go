@@ -104,6 +104,7 @@ func (this *ArticleRenderingHandlerFixture) TestWriteFileErrorReturned() {
 ///////////////////////////////////////////////////////////////////
 
 type FakeRenderer struct {
+	all      []interface{}
 	rendered interface{}
 	result   string
 	err      error
@@ -114,6 +115,7 @@ func NewFakeRenderer() *FakeRenderer {
 }
 
 func (this *FakeRenderer) Render(rendered interface{}) (string, error) {
+	this.all = append(this.all, rendered)
 	this.rendered = rendered
 	return this.result, this.err
 }
