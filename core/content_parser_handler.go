@@ -16,7 +16,7 @@ func (this *ContentParsingHandler) Handle(article *contracts.Article) (err error
 	_, original := divide(article.Source.Data, contracts.METADATA_CONTENT_DIVIDER)
 	converted, err := this.inner.Convert(original)
 	if err != nil {
-		return NewStackTraceError(err)
+		return contracts.NewStackTraceError(err)
 	}
 
 	article.Content.Original = original

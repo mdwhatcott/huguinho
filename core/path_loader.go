@@ -32,7 +32,7 @@ func (this *PathLoader) Start() error {
 
 func (this *PathLoader) walk(path string, info os.FileInfo, err error) error {
 	if err != nil {
-		return NewStackTraceError(err)
+		return contracts.NewStackTraceError(err)
 	}
 	if info.IsDir() {
 		return nil

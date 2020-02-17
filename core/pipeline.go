@@ -2,6 +2,7 @@ package core
 
 import (
 	"log"
+	"time"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/huguinho/shell"
@@ -27,7 +28,6 @@ func NewPipeline(
 	}
 }
 func (this *Pipeline) Run() int {
-	// TODO: Move CSS into place
 	out := this.startAll()
 	go this.terminate(out)
 	return this.errCount()
@@ -36,8 +36,9 @@ func (this *Pipeline) startAll() (out chan contracts.Article) {
 	out = this.goLoad()
 	out = this.goListen(out, NewFileReadingHandler(this.disk))
 	out = this.goListen(out, NewMetadataParsingHandler())
-	// out = this.goListen(out, core.NewDraftFiltering(...)) // TODO
-	// out = this.goListen(out, core.NewFutureFiltering(...)) // TODO
+	// TODO: verify that all articles have unique slugs
+	out = this.goListen(out, NewDraftFilteringHandler(!this.config.BuildDrafts))
+	out = this.goListen(out, NewFutureFilteringHandler(time.Now(), !this.config.BuildFuture))
 	out = this.goListen(out, NewContentParsingHandler(shell.NewGoldmarkMarkdownConverter()))
 	out = this.goListen(out, NewHomePageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	out = this.goListen(out, NewArticleRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
@@ -59,7 +60,7 @@ func (this *Pipeline) goListen(in chan contracts.Article, handler contracts.Hand
 }
 func (this *Pipeline) terminate(out chan contracts.Article) {
 	for item := range out {
-		log.Println("Published article:", item.Metadata.Slug)
+		log.Println("[INFO] published article:", item.Metadata.Slug)
 	}
 	close(this.errs)
 }

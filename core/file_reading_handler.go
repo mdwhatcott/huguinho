@@ -13,7 +13,7 @@ func NewFileReadingHandler(disk contracts.ReadFile) *FileReadingHandler {
 func (this *FileReadingHandler) Handle(article *contracts.Article) error {
 	raw, err := this.disk.ReadFile(article.Source.Path)
 	if err != nil {
-		return NewStackTraceError(err)
+		return contracts.NewStackTraceError(err)
 	}
 	article.Source.Data = string(raw)
 	return nil

@@ -2,7 +2,7 @@ slug:  /article-b/
 title: Article B
 intro: The introduction for Article B.
 tags:  important
-date:  2020-02-09
+date:  2021-02-09
 
 +++
 
