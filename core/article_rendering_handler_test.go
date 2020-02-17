@@ -33,7 +33,7 @@ func (this *ArticleRenderingHandlerFixture) Setup() {
 			Slug:  "/slug",
 			Title: "Title",
 			Intro: "Intro",
-			Tags:  []string{"A", "B"},
+			Tags:  []string{"a", "b"},
 			Date:  Date(2020, 2, 8),
 		},
 		Content: contracts.ArticleContent{
@@ -42,13 +42,13 @@ func (this *ArticleRenderingHandlerFixture) Setup() {
 	}
 }
 
-func (this *ArticleRenderingHandlerFixture) SkipTestFileTemplateRenderedAndWrittenToDisk() { // TODO: fix
+func (this *ArticleRenderingHandlerFixture) TestFileTemplateRenderedAndWrittenToDisk() {
 	this.renderer.result = "RENDERED"
 
 	err := this.handler.Handle(this.article)
 
 	this.So(err, should.BeNil)
-	this.So(this.renderer.rendered, should.Resemble, this.article)
+	this.assertArticleDataRendered()
 	this.So(this.disk.Files, should.ContainKey, "output/folder/slug")
 	if this.So(this.disk.Files, should.ContainKey, "output/folder/slug/index.html") {
 		file := this.disk.Files["output/folder/slug/index.html"]
@@ -56,18 +56,28 @@ func (this *ArticleRenderingHandlerFixture) SkipTestFileTemplateRenderedAndWritt
 	}
 }
 
-func (this *ArticleRenderingHandlerFixture) SkipTestRenderErrorReturned() { // TODO: fix
+func (this *ArticleRenderingHandlerFixture) assertArticleDataRendered() bool {
+	return this.So(this.renderer.rendered, should.Resemble, contracts.RenderedArticle{
+		Title:       this.article.Metadata.Title,
+		Description: this.article.Metadata.Intro,
+		Date:        this.article.Metadata.Date,
+		Tags:        this.article.Metadata.Tags,
+		Content:     this.article.Content.Converted,
+	})
+}
+
+func (this *ArticleRenderingHandlerFixture) TestRenderErrorReturned() {
 	renderErr := errors.New("boink")
 	this.renderer.err = renderErr
 
 	err := this.handler.Handle(this.article)
 
 	this.So(errors.Is(err, renderErr), should.BeTrue)
-	this.So(this.renderer.rendered, should.Resemble, this.article)
+	this.assertArticleDataRendered()
 	this.So(this.disk.Files, should.BeEmpty)
 }
 
-func (this *ArticleRenderingHandlerFixture) SkipTestMkdirAllErrorReturned() { // TODO: fix
+func (this *ArticleRenderingHandlerFixture) TestMkdirAllErrorReturned() {
 	this.renderer.result = "RENDERED"
 	mkdirErr := errors.New("boink")
 	this.disk.ErrMkdirAll["output/folder/slug"] = mkdirErr
@@ -75,11 +85,11 @@ func (this *ArticleRenderingHandlerFixture) SkipTestMkdirAllErrorReturned() { //
 	err := this.handler.Handle(this.article)
 
 	this.So(errors.Is(err, mkdirErr), should.BeTrue)
-	this.So(this.renderer.rendered, should.Resemble, this.article)
+	this.assertArticleDataRendered()
 	this.So(this.disk.Files, should.BeEmpty)
 }
 
-func (this *ArticleRenderingHandlerFixture) SkipTestWriteFileErrorReturned() { // TODO: fix
+func (this *ArticleRenderingHandlerFixture) TestWriteFileErrorReturned() {
 	this.renderer.result = "RENDERED"
 	writeFileErr := errors.New("boink")
 	this.disk.ErrWriteFile["output/folder/slug/index.html"] = writeFileErr
@@ -87,7 +97,7 @@ func (this *ArticleRenderingHandlerFixture) SkipTestWriteFileErrorReturned() { /
 	err := this.handler.Handle(this.article)
 
 	this.So(errors.Is(err, writeFileErr), should.BeTrue)
-	this.So(this.renderer.rendered, should.Resemble, this.article)
+	this.assertArticleDataRendered()
 	this.So(this.disk.Files, should.NotContainKey, "output/folder/slug/index.html")
 }
 
