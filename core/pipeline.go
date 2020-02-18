@@ -36,7 +36,7 @@ func (this *Pipeline) startAll() (out chan contracts.Article) {
 	out = this.goLoad()
 	out = this.goListen(out, NewFileReadingHandler(this.disk))
 	out = this.goListen(out, NewMetadataParsingHandler())
-	// TODO: verify that all articles have unique slugs
+	out = this.goListen(out, NewMetadataValidationHandler())
 	out = this.goListen(out, NewDraftFilteringHandler(!this.config.BuildDrafts))
 	out = this.goListen(out, NewFutureFilteringHandler(time.Now(), !this.config.BuildFuture))
 	out = this.goListen(out, NewContentParsingHandler(shell.NewGoldmarkMarkdownConverter()))
