@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -25,7 +26,7 @@ func (this *MetadataParsingHandler) Handle(article *contracts.Article) error {
 	parser := NewMetadataParser(strings.Split(metadata, "\n"))
 	err := parser.Parse()
 	if err != nil {
-		return err
+		return fmt.Errorf("[%s] %w", article.Source.Path, err)
 	}
 
 	article.Metadata = parser.Parsed()

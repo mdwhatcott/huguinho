@@ -80,13 +80,6 @@ func (this *MetadataParserFixture) TestDuplicateIntro_Err() {
 
 	this.So(errors.Is(err, errDuplicateMetadataIntro), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestBlankIntro_Err() {
-	this.appendMetadataWithContent("intro: ")
-
-	err := this.parser.Handle(this.article)
-
-	this.So(errors.Is(err, errBlankMetadataIntro), should.BeTrue)
-}
 func (this *MetadataParserFixture) TestDuplicateSlug_Err() {
 	this.appendMetadataWithContent(
 		"slug: /this/is/the/slug",
@@ -173,13 +166,6 @@ func (this *MetadataParserFixture) TestDuplicateDate_Err() {
 	err := this.parser.Handle(this.article)
 
 	this.So(errors.Is(err, errDuplicateMetadataDate), should.BeTrue)
-}
-func (this *MetadataParserFixture) TestBlankTags_Err() {
-	this.appendMetadataWithContent("tags: ")
-
-	err := this.parser.Handle(this.article)
-
-	this.So(errors.Is(err, errBlankMetadataTags), should.BeTrue)
 }
 func (this *MetadataParserFixture) TestInvalidTags_Err() {
 	this.appendMetadataWithContent("tags: invalid?!")

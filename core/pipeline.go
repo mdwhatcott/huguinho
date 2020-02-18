@@ -9,10 +9,11 @@ import (
 )
 
 type Pipeline struct {
-	config   contracts.Config
-	disk     contracts.FileSystem
-	renderer contracts.Renderer
-	errs     chan error
+	config    contracts.Config
+	disk      contracts.FileSystem
+	renderer  contracts.Renderer
+	errs      chan error
+	published int
 }
 
 func NewPipeline(
@@ -27,10 +28,11 @@ func NewPipeline(
 		errs:     make(chan error),
 	}
 }
-func (this *Pipeline) Run() int {
+func (this *Pipeline) Run() (published, errs int) {
 	out := this.startAll()
 	go this.terminate(out)
-	return this.errCount()
+	errs = this.errCount()
+	return this.published, errs
 }
 func (this *Pipeline) startAll() (out chan contracts.Article) {
 	out = this.goLoad()
@@ -59,9 +61,10 @@ func (this *Pipeline) goListen(in chan contracts.Article, handler contracts.Hand
 	return out
 }
 func (this *Pipeline) terminate(out chan contracts.Article) {
-	for item := range out {
-		log.Println("[INFO] published article:", item.Metadata.Slug)
+	for range out {
+		this.published++
 	}
+	time.Sleep(time.Millisecond) // HACK!
 	close(this.errs)
 }
 func (this *Pipeline) errCount() (errCount int) {

@@ -17,7 +17,7 @@ import (
 
 func main() {
 	start := time.Now()
-	log.SetFlags(0)
+	log.SetFlags(log.Lshortfile)
 	log.SetPrefix("(stderr) ")
 
 	disk := shell.NewDisk()
@@ -26,8 +26,11 @@ func main() {
 	templates := parseTemplates(filepath.Join(config.TemplateDir, "*.tmpl"))
 	renderer := core.NewTemplateRenderer(templates)
 	pipeline := core.NewPipeline(config, disk, renderer)
-	errs := pipeline.Run()
-	log.Println("[INFO] duration:", time.Since(start))
+	articles, errs := pipeline.Run()
+	log.Printf(
+		"[INFO] published %d articles with %d errors in %v.",
+		articles, errs, time.Since(start).Round(time.Millisecond),
+	)
 	os.Exit(errs)
 }
 
@@ -88,14 +91,18 @@ func parseTemplates(glob string) *template.Template {
 	return templates
 }
 
-func exportCSS(disk contracts.FileSystem, config contracts.Config) error {
+func exportCSS(disk contracts.FileSystem, config contracts.Config) {
 	_, err := disk.Stat(config.StylesDir)
 	if os.IsNotExist(err) {
-		return nil
+		return
 	}
-	return disk.Walk(config.StylesDir, func(path string, info os.FileInfo, err error) error {
+	err = disk.Walk(config.StylesDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return contracts.NewStackTraceError(err)
+		}
+
+		if info.IsDir() {
+			return nil
 		}
 
 		src, err := disk.Open(path)
@@ -115,4 +122,7 @@ func exportCSS(disk contracts.FileSystem, config contracts.Config) error {
 		_, err = io.Copy(dst, src)
 		return err
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
 }

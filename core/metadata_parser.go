@@ -82,9 +82,6 @@ func (this *MetadataParser) parseIntro(value string) error {
 	if this.parsedIntro {
 		return contracts.NewStackTraceError(errDuplicateMetadataIntro)
 	}
-	if value == "" {
-		return contracts.NewStackTraceError(errBlankMetadataIntro)
-	}
 	this.parsed.Intro = value
 	this.parsedIntro = true
 	return nil
@@ -144,9 +141,6 @@ func (this *MetadataParser) parseDate(value string) error {
 func (this *MetadataParser) parseTags(value string) error {
 	if this.parsedTags {
 		return contracts.NewStackTraceError(errDuplicateMetadataTags)
-	}
-	if value == "" {
-		return contracts.NewStackTraceError(errBlankMetadataTags)
 	}
 	unique := make(map[string]struct{})
 	tags := strings.Fields(value)
