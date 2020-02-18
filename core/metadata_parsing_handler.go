@@ -176,11 +176,16 @@ func (this *MetadataParser) parseTags(value string) error {
 	if value == "" {
 		return contracts.NewStackTraceError(errBlankMetadataTags)
 	}
+	unique := make(map[string]struct{})
 	tags := strings.Fields(value)
 	for _, tag := range tags {
 		if !isValidTag(tag) {
 			return contracts.NewStackTraceError(fmt.Errorf("%w: [%s]", errInvalidMetadataTags, value))
 		}
+		unique[tag] = struct{}{}
+	}
+	if len(unique) != len(tags) {
+		return contracts.NewStackTraceError(fmt.Errorf("%w: [%s] (repeated values)", errInvalidMetadataTags, value))
 	}
 	this.parsed.Tags = tags
 	this.parsedTags = true
