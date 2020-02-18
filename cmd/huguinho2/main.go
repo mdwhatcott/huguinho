@@ -96,6 +96,12 @@ func exportCSS(disk contracts.FileSystem, config contracts.Config) {
 	if os.IsNotExist(err) {
 		return
 	}
+	target := filepath.Join(config.TargetRoot, "css")
+	err = disk.MkdirAll(target, 0755)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	err = disk.Walk(config.StylesDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return contracts.NewStackTraceError(err)
@@ -112,7 +118,7 @@ func exportCSS(disk contracts.FileSystem, config contracts.Config) {
 
 		defer func() { _ = src.Close() }()
 
-		dst, err := disk.Create(filepath.Join(config.TargetRoot, "css", info.Name()))
+		dst, err := disk.Create(filepath.Join(target, info.Name()))
 		if err != nil {
 			return contracts.NewStackTraceError(err)
 		}
