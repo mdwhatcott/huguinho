@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/mdwhatcott/huguinho/content"
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -14,6 +15,7 @@ import (
 )
 
 func main() {
+	start := time.Now()
 	config := ParseCLI()
 	listing, err := ioutil.ReadDir(config.targetRoot)
 	if err != nil {
@@ -27,6 +29,7 @@ func main() {
 	renderArticles(config.targetRoot, renderer, site)
 	renderListings(config.targetRoot, renderer, site)
 	includeCSS(config.targetRoot, config.stylesDir)
+	log.Println("Duration:", time.Since(start))
 }
 
 func renderArticles(root string, renderer *rendering.Renderer, site contracts.Site__DEPRECATED) {

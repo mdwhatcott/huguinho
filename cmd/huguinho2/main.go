@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/huguinho/core"
@@ -15,7 +16,9 @@ import (
 )
 
 func main() {
+	start := time.Now()
 	log.SetFlags(0)
+	log.SetPrefix("(stderr) ")
 
 	disk := shell.NewDisk()
 	config := parseConfig()
@@ -23,7 +26,9 @@ func main() {
 	templates := parseTemplates(filepath.Join(config.TemplateDir, "*.tmpl"))
 	renderer := core.NewTemplateRenderer(templates)
 	pipeline := core.NewPipeline(config, disk, renderer)
-	os.Exit(pipeline.Run())
+	errs := pipeline.Run()
+	log.Println("[INFO] duration:", time.Since(start))
+	os.Exit(errs)
 }
 
 func parseConfig() (config contracts.Config) {
