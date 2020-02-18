@@ -3,8 +3,8 @@ package core
 import (
 	"bytes"
 	"fmt"
-	"html/template"
 	"reflect"
+	"text/template"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 )

@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
-	"html/template"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/mdwhatcott/huguinho/contracts"
