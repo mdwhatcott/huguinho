@@ -58,14 +58,14 @@ func (this *Disk) CopyFile(source, destination string) error {
 
 	src, err := this.Open(source)
 	if err != nil {
-		return contracts.NewStackTraceError(err)
+		return contracts.StackTraceError(err)
 	}
 
 	defer func() { _ = src.Close() }()
 
 	dst, err := this.Create(destination)
 	if err != nil {
-		return contracts.NewStackTraceError(err)
+		return contracts.StackTraceError(err)
 	}
 
 	defer func() { _ = dst.Close() }()

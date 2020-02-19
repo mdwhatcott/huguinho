@@ -49,19 +49,19 @@ func (this *TagPageRenderingHandler) Finalize() error {
 
 		rendered, err := this.renderer.Render(listing)
 		if err != nil {
-			return contracts.NewStackTraceError(err)
+			return contracts.StackTraceError(err)
 		}
 
 		folder := filepath.Join(this.output, "tags", listing.Name)
 
 		err = this.disk.MkdirAll(folder, 0755)
 		if err != nil {
-			return contracts.NewStackTraceError(err)
+			return contracts.StackTraceError(err)
 		}
 
 		err = this.disk.WriteFile(filepath.Join(folder, "index.html"), []byte(rendered), 0644)
 		if err != nil {
-			return contracts.NewStackTraceError(err)
+			return contracts.StackTraceError(err)
 		}
 	}
 	return nil

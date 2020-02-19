@@ -9,21 +9,23 @@ import (
 )
 
 func TestTraceErrorFixture(t *testing.T) {
-	gunit.Run(new(TraceErrorFixture), t)
+	gunit.Run(new(StackTraceErrorFixture), t)
 }
 
-type TraceErrorFixture struct {
+type StackTraceErrorFixture struct {
 	*gunit.Fixture
 }
 
-func (this *TraceErrorFixture) Test() {
+func (this *StackTraceErrorFixture) Test() {
 	gopherErr := errors.New("gophers")
-	err := NewStackTraceError(gopherErr)
+	err := StackTraceError(gopherErr)
 	this.So(errors.Is(err, gopherErr), should.BeTrue)
+	this.So(err.Error(), should.ContainSubstring, "gophers")
+	this.So(err.Error(), should.ContainSubstring, "stack:")
 }
 
-func (this *TraceErrorFixture) TestNil() {
+func (this *StackTraceErrorFixture) TestNil() {
 	var err error
-	err = NewStackTraceError(err)
+	err = StackTraceError(err)
 	this.So(err, should.BeNil)
 }
