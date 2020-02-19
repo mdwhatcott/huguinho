@@ -6,5 +6,5 @@ require (
 	github.com/smartystreets/assertions v1.0.1
 	github.com/smartystreets/gunit v1.1.3
 	github.com/smartystreets/logging v1.0.2
-	github.com/yuin/goldmark v1.1.9
+	github.com/yuin/goldmark v1.1.23
 )
