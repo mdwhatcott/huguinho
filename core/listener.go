@@ -6,6 +6,7 @@ import (
 
 func Listen(in, out chan contracts.Article, handler contracts.Handler) {
 	defer close(out)
+	defer finalize(handler, out)
 
 	for article := range in {
 		if article.Error == nil {
@@ -13,4 +14,18 @@ func Listen(in, out chan contracts.Article, handler contracts.Handler) {
 		}
 		out <- article
 	}
+}
+
+func finalize(handler contracts.Handler, out chan contracts.Article) {
+	finalizer, ok := handler.(contracts.Finalizer)
+	if !ok {
+		return
+	}
+
+	err := finalizer.Finalize()
+	if err == nil {
+		return
+	}
+
+	out <- contracts.Article{Error: err}
 }

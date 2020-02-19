@@ -9,12 +9,12 @@ import (
 )
 
 type Pipeline struct {
-	config     contracts.Config
-	disk       contracts.FileSystem
-	renderer   contracts.Renderer
-	finalizers []contracts.Finalizer
-	published  int
-	errors     int
+	config   contracts.Config
+	disk     contracts.FileSystem
+	renderer contracts.Renderer
+
+	published int
+	errors    int
 }
 
 func NewPipeline(
@@ -30,7 +30,6 @@ func NewPipeline(
 }
 func (this *Pipeline) Run() (published, errors int) {
 	this.drain(this.startAll())
-	this.runFinalizer()
 	return this.published, this.errors
 }
 func (this *Pipeline) startAll() (out chan contracts.Article) {
@@ -49,39 +48,25 @@ func (this *Pipeline) startAll() (out chan contracts.Article) {
 }
 func (this *Pipeline) goLoad() (out chan contracts.Article) {
 	out = make(chan contracts.Article)
-	loader := NewPathLoader(this.disk, this.config.ContentRoot, out)
-	this.finalizers = append(this.finalizers, loader)
-	go loader.Start()
+	go NewPathLoader(this.disk, this.config.ContentRoot, out).Start()
 	return out
 }
 func (this *Pipeline) goListen(in chan contracts.Article, handler contracts.Handler) (out chan contracts.Article) {
-	finalizer, ok := handler.(contracts.Finalizer)
-	if ok {
-		this.finalizers = append(this.finalizers, finalizer)
-	}
 	out = make(chan contracts.Article)
 	go Listen(in, out, handler)
 	return out
 }
 
-func (this *Pipeline) runFinalizer() {
-	for _, finalizer := range this.finalizers {
-		err := finalizer.Finalize()
-		if err != nil {
-			log.Println("[WARN] handler finalization error:", err)
-			this.errors++
-		}
-	}
-}
-
 func (this *Pipeline) drain(out chan contracts.Article) {
 	for article := range out {
 		if article.Error != nil {
-			log.Println("[WARN] article handling error:", article.Error)
+			log.Println("[WARN] error:", article.Error)
 			this.errors++
-		} else {
+		} else if article.Source.Path != "" {
 			log.Println("[INFO] published article:", article.Metadata.Slug)
 			this.published++
+		} else {
+			log.Printf("[INFO] not sure what this article struct represents: %#v", article)
 		}
 	}
 }

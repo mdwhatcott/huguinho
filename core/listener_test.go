@@ -42,6 +42,29 @@ func (this *ListenerFixture) TestEachArticleHandledIfNotErrantAndPassedOn() {
 	})
 }
 
+func (this *ListenerFixture) TestFinalizeCalledIfDefinedOnHandler() {
+	close(this.input)
+
+	handler := NewFakeFinalizingHandler()
+
+	Listen(this.input, this.output, handler)
+
+	this.So(handler.called, should.Equal, 1)
+}
+
+func (this *ListenerFixture) TestFinalizeErrPassedOnIfNonNil() {
+	close(this.input)
+
+	handler := NewFakeFinalizingHandler()
+	handler.err = contracts.ErrDropArticle
+
+	Listen(this.input, this.output, handler)
+
+	this.So(handler.called, should.Equal, 1)
+	this.So(len(this.output), should.Equal, 1)
+	this.So(<-this.output, should.Resemble, contracts.Article{Error: contracts.ErrDropArticle})
+}
+
 ///////////////////////////////////////////////////////////////
 
 type FakeHandler struct {
@@ -55,4 +78,24 @@ func NewFakeHandler() *FakeHandler {
 func (this *FakeHandler) Handle(article *contracts.Article) {
 	this.calls++
 	article.Content.Converted = article.Content.Original + fmt.Sprint(this.calls)
+}
+
+//////////////////////////////////////////////////////////////
+
+type FakeFinalizingHandler struct {
+	called int
+	err    error
+}
+
+func (this *FakeFinalizingHandler) Handle(*contracts.Article) {
+	panic("NOT NEEDED")
+}
+
+func NewFakeFinalizingHandler() *FakeFinalizingHandler {
+	return &FakeFinalizingHandler{}
+}
+
+func (this *FakeFinalizingHandler) Finalize() error {
+	this.called++
+	return this.err
 }
