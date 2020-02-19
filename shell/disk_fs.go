@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 type Disk struct{}
@@ -41,4 +43,33 @@ func (this *Disk) RemoveAll(path string) error {
 }
 func (this *Disk) Walk(root string, walk filepath.WalkFunc) error {
 	return filepath.Walk(root, walk)
+}
+
+func (this *Disk) CopyFile(source, destination string) error {
+	_, err := this.Stat(source)
+	if os.IsNotExist(err) {
+		return err
+	}
+
+	err = this.MkdirAll(filepath.Dir(destination), 0755)
+	if err != nil {
+		return err
+	}
+
+	src, err := this.Open(source)
+	if err != nil {
+		return contracts.NewStackTraceError(err)
+	}
+
+	defer func() { _ = src.Close() }()
+
+	dst, err := this.Create(destination)
+	if err != nil {
+		return contracts.NewStackTraceError(err)
+	}
+
+	defer func() { _ = dst.Close() }()
+
+	_, err = io.Copy(dst, src)
+	return err
 }

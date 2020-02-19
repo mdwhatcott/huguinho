@@ -1,13 +1,22 @@
-package core
+package shell
 
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"reflect"
 	"text/template"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 )
+
+func ParseTemplates(glob string) *TemplateRenderer {
+	templates, err := template.ParseGlob(glob)
+	if err != nil {
+		log.Fatalln("Could not parse templates:", err)
+	}
+	return NewTemplateRenderer(templates)
+}
 
 type TemplateRenderer struct {
 	templates *template.Template

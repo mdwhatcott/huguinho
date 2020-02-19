@@ -99,3 +99,12 @@ func (this *FakeFinalizingHandler) Finalize() error {
 	this.called++
 	return this.err
 }
+
+//////////////////////////////////////////////////////////////
+
+func gather(output chan contracts.Article) (pages []contracts.Article) {
+	for page := range output {
+		pages = append(pages, page)
+	}
+	return pages
+}
