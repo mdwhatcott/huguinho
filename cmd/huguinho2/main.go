@@ -17,8 +17,7 @@ import (
 
 func main() {
 	start := time.Now()
-	log.SetFlags(log.Lshortfile)
-	log.SetPrefix("(stderr) ")
+	log.SetFlags(0)
 
 	disk := shell.NewDisk()
 	config := parseConfig()
@@ -28,7 +27,7 @@ func main() {
 	pipeline := core.NewPipeline(config, disk, renderer)
 	articles, errs := pipeline.Run()
 	log.Printf(
-		"[INFO] published %d articles with %d errors in %v.",
+		"[INFO] published %d articles, encountered %d errors, all in %v.",
 		articles, errs, time.Since(start).Round(time.Millisecond),
 	)
 	os.Exit(errs)

@@ -29,7 +29,7 @@ func NewArticleRenderingHandler(
 	}
 }
 
-func (this *ArticleRenderingHandler) Handle(article *contracts.Article) (err error) {
+func (this *ArticleRenderingHandler) Handle(article *contracts.Article) {
 	data := contracts.RenderedArticle{
 		Slug:    article.Metadata.Slug,
 		Title:   article.Metadata.Title,
@@ -41,19 +41,20 @@ func (this *ArticleRenderingHandler) Handle(article *contracts.Article) (err err
 
 	rendered, err := this.renderer.Render(data)
 	if err != nil {
-		return contracts.NewStackTraceError(err)
+		article.Error = contracts.NewStackTraceError(err)
+		return
 	}
 
 	folder := filepath.Join(this.output, article.Metadata.Slug)
 	err = this.disk.MkdirAll(folder, 0755)
 	if err != nil {
-		return contracts.NewStackTraceError(err)
+		article.Error = contracts.NewStackTraceError(err)
+		return
 	}
 
 	err = this.disk.WriteFile(filepath.Join(folder, "index.html"), []byte(rendered), 0644)
 	if err != nil {
-		return contracts.NewStackTraceError(err)
+		article.Error = contracts.NewStackTraceError(err)
+		return
 	}
-
-	return nil
 }

@@ -13,22 +13,24 @@ func NewMetadataParsingHandler() *MetadataParsingHandler {
 	return &MetadataParsingHandler{}
 }
 
-func (this *MetadataParsingHandler) Handle(article *contracts.Article) error {
+func (this *MetadataParsingHandler) Handle(article *contracts.Article) {
 	if strings.TrimSpace(article.Source.Data) == "" {
-		return contracts.NewStackTraceError(errMissingMetadata)
+		article.Error = contracts.NewStackTraceError(errMissingMetadata)
+		return
 	}
 
 	metadata, _ := divide(article.Source.Data, contracts.METADATA_CONTENT_DIVIDER)
 	if len(metadata) == 0 {
-		return contracts.NewStackTraceError(errMissingMetadataDivider)
+		article.Error = contracts.NewStackTraceError(errMissingMetadataDivider)
+		return
 	}
 
 	parser := NewMetadataParser(strings.Split(metadata, "\n"))
 	err := parser.Parse()
 	if err != nil {
-		return fmt.Errorf("[%s] %w", article.Source.Path, err)
+		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, err)
+		return
 	}
 
 	article.Metadata = parser.Parsed()
-	return nil
 }

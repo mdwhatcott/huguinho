@@ -12,14 +12,14 @@ func NewContentParsingHandler(inner contracts.ContentConverter) *ContentParsingH
 	return &ContentParsingHandler{inner: inner}
 }
 
-func (this *ContentParsingHandler) Handle(article *contracts.Article) (err error) {
+func (this *ContentParsingHandler) Handle(article *contracts.Article) {
 	_, original := divide(article.Source.Data, contracts.METADATA_CONTENT_DIVIDER)
 	converted, err := this.inner.Convert(original)
 	if err != nil {
-		return contracts.NewStackTraceError(err)
+		article.Error = contracts.NewStackTraceError(err)
+		return
 	}
 
 	article.Content.Original = original
 	article.Content.Converted = converted
-	return nil
 }

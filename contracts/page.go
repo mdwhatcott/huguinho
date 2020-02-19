@@ -3,6 +3,7 @@ package contracts
 import "time"
 
 type Article struct {
+	Error    error
 	Source   ArticleSource
 	Metadata ArticleMetadata
 	Content  ArticleContent

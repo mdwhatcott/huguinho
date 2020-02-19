@@ -10,11 +10,11 @@ func NewFileReadingHandler(disk contracts.ReadFile) *FileReadingHandler {
 	return &FileReadingHandler{disk: disk}
 }
 
-func (this *FileReadingHandler) Handle(article *contracts.Article) error {
+func (this *FileReadingHandler) Handle(article *contracts.Article) {
 	raw, err := this.disk.ReadFile(article.Source.Path)
 	if err != nil {
-		return contracts.NewStackTraceError(err)
+		article.Error = contracts.NewStackTraceError(err)
+	} else {
+		article.Source.Data = string(raw)
 	}
-	article.Source.Data = string(raw)
-	return nil
 }

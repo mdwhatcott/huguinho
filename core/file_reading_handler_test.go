@@ -29,8 +29,7 @@ func (this *FileReaderFixture) Setup() {
 
 func (this *FileReaderFixture) TestRead() {
 	article := &contracts.Article{Source: contracts.ArticleSource{Path: "/file1"}}
-	err := this.reader.Handle(article)
-	this.So(err, should.BeNil)
+	this.reader.Handle(article)
 	this.So(article, should.Resemble, &contracts.Article{
 		Source: contracts.ArticleSource{Path: "/file1", Data: "FILE1"},
 	})
@@ -40,10 +39,11 @@ func (this *FileReaderFixture) TestReadError() {
 	article := &contracts.Article{Source: contracts.ArticleSource{Path: "/file1"}}
 	this.files.ErrReadFile["/file1"] = readError
 
-	err := this.reader.Handle(article)
+	this.reader.Handle(article)
 
-	this.So(errors.Is(err, readError), should.BeTrue)
+	this.So(errors.Is(article.Error, readError), should.BeTrue)
 	this.So(article, should.Resemble, &contracts.Article{
+		Error:  article.Error,
 		Source: contracts.ArticleSource{Path: "/file1"},
 	})
 }

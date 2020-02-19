@@ -45,9 +45,9 @@ func (this *ArticleRenderingHandlerFixture) Setup() {
 func (this *ArticleRenderingHandlerFixture) TestFileTemplateRenderedAndWrittenToDisk() {
 	this.renderer.result = "RENDERED"
 
-	err := this.handler.Handle(this.article)
+	this.handler.Handle(this.article)
 
-	this.So(err, should.BeNil)
+	this.So(this.article.Error, should.BeNil)
 	this.assertArticleDataRendered()
 	this.So(this.disk.Files, should.ContainKey, "output/folder/slug")
 	if this.So(this.disk.Files, should.ContainKey, "output/folder/slug/index.html") {
@@ -71,9 +71,9 @@ func (this *ArticleRenderingHandlerFixture) TestRenderErrorReturned() {
 	renderErr := errors.New("boink")
 	this.renderer.err = renderErr
 
-	err := this.handler.Handle(this.article)
+	this.handler.Handle(this.article)
 
-	this.So(errors.Is(err, renderErr), should.BeTrue)
+	this.So(errors.Is(this.article.Error, renderErr), should.BeTrue)
 	this.assertArticleDataRendered()
 	this.So(this.disk.Files, should.BeEmpty)
 }
@@ -83,9 +83,9 @@ func (this *ArticleRenderingHandlerFixture) TestMkdirAllErrorReturned() {
 	mkdirErr := errors.New("boink")
 	this.disk.ErrMkdirAll["output/folder/slug"] = mkdirErr
 
-	err := this.handler.Handle(this.article)
+	this.handler.Handle(this.article)
 
-	this.So(errors.Is(err, mkdirErr), should.BeTrue)
+	this.So(errors.Is(this.article.Error, mkdirErr), should.BeTrue)
 	this.assertArticleDataRendered()
 	this.So(this.disk.Files, should.BeEmpty)
 }
@@ -95,9 +95,9 @@ func (this *ArticleRenderingHandlerFixture) TestWriteFileErrorReturned() {
 	writeFileErr := errors.New("boink")
 	this.disk.ErrWriteFile["output/folder/slug/index.html"] = writeFileErr
 
-	err := this.handler.Handle(this.article)
+	this.handler.Handle(this.article)
 
-	this.So(errors.Is(err, writeFileErr), should.BeTrue)
+	this.So(errors.Is(this.article.Error, writeFileErr), should.BeTrue)
 	this.assertArticleDataRendered()
 	this.So(this.disk.Files, should.NotContainKey, "output/folder/slug/index.html")
 }

@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -18,15 +19,15 @@ func TestFutureFilteringHandlerFixture(t *testing.T) {
 type FutureFilteringHandlerFixture struct {
 	*gunit.Fixture
 
-	now    time.Time
-	before time.Time
-	after  time.Time
+	present time.Time
+	past    time.Time
+	future  time.Time
 }
 
 func (this *FutureFilteringHandlerFixture) Setup() {
-	this.now = time.Now()
-	this.before = this.now.Add(-time.Second)
-	this.after = this.now.Add(time.Second)
+	this.present = time.Now()
+	this.past = this.present.Add(-time.Second)
+	this.future = this.present.Add(time.Second)
 }
 
 func (this *FutureFilteringHandlerFixture) article(date time.Time) *contracts.Article {
@@ -34,23 +35,39 @@ func (this *FutureFilteringHandlerFixture) article(date time.Time) *contracts.Ar
 }
 
 func (this *FutureFilteringHandlerFixture) buildHandler(enabled bool) *FutureFilteringHandler {
-	handler := NewFutureFilteringHandler(this.now, enabled)
+	handler := NewFutureFilteringHandler(this.present, enabled)
 	handler.log = logging.Capture()
 	return handler
 }
 
 func (this *FutureFilteringHandlerFixture) TestDisabled_LetEverythingThrough() {
-	handler := this.buildHandler(false)
+	disabled := this.buildHandler(false)
 
-	this.So(handler.Handle(this.article(this.before)), should.BeNil)
-	this.So(handler.Handle(this.article(this.now)), should.BeNil)
-	this.So(handler.Handle(this.article(this.after)), should.BeNil)
+	past := this.article(this.past)
+	disabled.Handle(past)
+	this.So(past.Error, should.BeNil)
+
+	present := this.article(this.present)
+	disabled.Handle(present)
+	this.So(present.Error, should.BeNil)
+
+	future := this.article(this.future)
+	disabled.Handle(future)
+	this.So(future.Error, should.BeNil)
 }
 
 func (this *FutureFilteringHandlerFixture) TestEnabled_AnythingAfterNowDropped() {
-	handler := this.buildHandler(true)
+	enabled := this.buildHandler(true)
 
-	this.So(handler.Handle(this.article(this.before)), should.BeNil)
-	this.So(handler.Handle(this.article(this.now)), should.BeNil)
-	this.So(handler.Handle(this.article(this.after)), should.Resemble, ErrDropArticle)
+	past := this.article(this.past)
+	enabled.Handle(past)
+	this.So(past.Error, should.BeNil)
+
+	present := this.article(this.present)
+	enabled.Handle(present)
+	this.So(present.Error, should.BeNil)
+
+	future := this.article(this.future)
+	enabled.Handle(future)
+	this.So(errors.Is(future.Error, contracts.ErrDropArticle), should.BeTrue)
 }

@@ -9,11 +9,12 @@ import (
 )
 
 type Pipeline struct {
-	config    contracts.Config
-	disk      contracts.FileSystem
-	renderer  contracts.Renderer
-	errs      chan error
-	published int
+	config     contracts.Config
+	disk       contracts.FileSystem
+	renderer   contracts.Renderer
+	finalizers []contracts.Finalizer
+	published  int
+	errors     int
 }
 
 func NewPipeline(
@@ -25,14 +26,12 @@ func NewPipeline(
 		config:   config,
 		disk:     disk,
 		renderer: renderer,
-		errs:     make(chan error),
 	}
 }
-func (this *Pipeline) Run() (published, errs int) {
-	out := this.startAll()
-	go this.terminate(out)
-	errs = this.errCount()
-	return this.published, errs
+func (this *Pipeline) Run() (published, errors int) {
+	this.drain(this.startAll())
+	this.runFinalizer()
+	return this.published, this.errors
 }
 func (this *Pipeline) startAll() (out chan contracts.Article) {
 	out = this.goLoad()
@@ -51,28 +50,38 @@ func (this *Pipeline) startAll() (out chan contracts.Article) {
 func (this *Pipeline) goLoad() (out chan contracts.Article) {
 	out = make(chan contracts.Article)
 	loader := NewPathLoader(this.disk, this.config.ContentRoot, out)
-	go func() { this.errs <- loader.Start() }()
+	this.finalizers = append(this.finalizers, loader)
+	go loader.Start()
 	return out
 }
 func (this *Pipeline) goListen(in chan contracts.Article, handler contracts.Handler) (out chan contracts.Article) {
+	finalizer, ok := handler.(contracts.Finalizer)
+	if ok {
+		this.finalizers = append(this.finalizers, finalizer)
+	}
 	out = make(chan contracts.Article)
-	listener := NewListener(in, out, handler)
-	go func() { this.errs <- listener.Listen() }()
+	go Listen(in, out, handler)
 	return out
 }
-func (this *Pipeline) terminate(out chan contracts.Article) {
-	for range out {
-		this.published++
-	}
-	time.Sleep(time.Millisecond) // HACK!
-	close(this.errs)
-}
-func (this *Pipeline) errCount() (errCount int) {
-	for err := range this.errs {
+
+func (this *Pipeline) runFinalizer() {
+	for _, finalizer := range this.finalizers {
+		err := finalizer.Finalize()
 		if err != nil {
-			errCount++
-			log.Println("[WARN]", err)
+			log.Println("[WARN] handler finalization error:", err)
+			this.errors++
 		}
 	}
-	return errCount
+}
+
+func (this *Pipeline) drain(out chan contracts.Article) {
+	for article := range out {
+		if article.Error != nil {
+			log.Println("[WARN] article handling error:", article.Error)
+			this.errors++
+		} else {
+			log.Println("[INFO] published article:", article.Metadata.Slug)
+			this.published++
+		}
+	}
 }

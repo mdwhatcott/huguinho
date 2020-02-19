@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/smartystreets/assertions/should"
@@ -31,13 +32,23 @@ func (this *DraftFilteringHandlerFixture) buildHandler(enabled bool) *DraftFilte
 func (this *DraftFilteringHandlerFixture) TestDisabled_LetEverythingThrough() {
 	handler := this.buildHandler(false)
 
-	this.So(handler.Handle(this.article(true)), should.BeNil)
-	this.So(handler.Handle(this.article(false)), should.BeNil)
+	draft := this.article(true)
+	handler.Handle(draft)
+	this.So(draft.Error, should.BeNil)
+
+	nonDraft := this.article(false)
+	handler.Handle(nonDraft)
+	this.So(nonDraft.Error, should.BeNil)
 }
 
 func (this *DraftFilteringHandlerFixture) TestEnabled_AnyDraftsDropped() {
 	handler := this.buildHandler(true)
 
-	this.So(handler.Handle(this.article(false)), should.BeNil)
-	this.So(handler.Handle(this.article(true)), should.Resemble, ErrDropArticle)
+	nonDraft := this.article(false)
+	handler.Handle(nonDraft)
+	this.So(nonDraft.Error, should.BeNil)
+
+	draft := this.article(true)
+	handler.Handle(draft)
+	this.So(errors.Is(draft.Error, contracts.ErrDropArticle), should.BeTrue)
 }

@@ -30,30 +30,30 @@ func (this *HomePageRenderingHandlerFixture) Setup() {
 }
 
 func (this *HomePageRenderingHandlerFixture) handleArticles() {
-	this.So(this.handler.Handle(&contracts.Article{
+	this.handler.Handle(&contracts.Article{
 		Metadata: contracts.ArticleMetadata{
 			Slug:  "/slug1",
 			Title: "title1",
 			Intro: "intro1",
 			Date:  Date(2020, 1, 1),
 		},
-	}), should.BeNil)
-	this.So(this.handler.Handle(&contracts.Article{
+	})
+	this.handler.Handle(&contracts.Article{
 		Metadata: contracts.ArticleMetadata{
 			Slug:  "/slug2",
 			Title: "title2",
 			Intro: "intro2",
 			Date:  Date(2020, 2, 2),
 		},
-	}), should.BeNil)
-	this.So(this.handler.Handle(&contracts.Article{
+	})
+	this.handler.Handle(&contracts.Article{
 		Metadata: contracts.ArticleMetadata{
 			Slug:  "/slug3",
 			Title: "title3",
 			Intro: "intro3",
 			Date:  Date(2020, 3, 3),
 		},
-	}), should.BeNil)
+	})
 }
 
 func (this *HomePageRenderingHandlerFixture) assertHandledArticlesRendered() bool {

@@ -30,7 +30,7 @@ func (this *TagPageRenderingHandlerFixture) Setup() {
 }
 
 func (this *TagPageRenderingHandlerFixture) handleArticles() {
-	this.So(this.handler.Handle(&contracts.Article{
+	this.handler.Handle(&contracts.Article{
 		Metadata: contracts.ArticleMetadata{
 			Slug:  "/slug1",
 			Title: "title1",
@@ -38,8 +38,8 @@ func (this *TagPageRenderingHandlerFixture) handleArticles() {
 			Date:  Date(2020, 1, 1),
 			Tags:  []string{"a", "b"},
 		},
-	}), should.BeNil)
-	this.So(this.handler.Handle(&contracts.Article{
+	})
+	this.handler.Handle(&contracts.Article{
 		Metadata: contracts.ArticleMetadata{
 			Slug:  "/slug2",
 			Title: "title2",
@@ -47,8 +47,8 @@ func (this *TagPageRenderingHandlerFixture) handleArticles() {
 			Date:  Date(2020, 2, 2),
 			Tags:  []string{"b", "c"},
 		},
-	}), should.BeNil)
-	this.So(this.handler.Handle(&contracts.Article{
+	})
+	this.handler.Handle(&contracts.Article{
 		Metadata: contracts.ArticleMetadata{
 			Slug:  "/slug3",
 			Title: "title3",
@@ -56,7 +56,7 @@ func (this *TagPageRenderingHandlerFixture) handleArticles() {
 			Date:  Date(2020, 3, 3),
 			Tags:  []string{"c"},
 		},
-	}), should.BeNil)
+	})
 }
 
 func (this *TagPageRenderingHandlerFixture) assertHandledArticlesRenderedInTagListings() {

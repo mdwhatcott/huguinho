@@ -15,10 +15,9 @@ func NewDraftFilteringHandler(enabled bool) *DraftFilteringHandler {
 	return &DraftFilteringHandler{enabled: enabled}
 }
 
-func (this *DraftFilteringHandler) Handle(article *contracts.Article) error {
+func (this *DraftFilteringHandler) Handle(article *contracts.Article) {
 	if this.enabled && article.Metadata.Draft {
 		this.log.Println("[INFO] dropping draft article:", article.Metadata.Slug)
-		return ErrDropArticle
+		article.Error = contracts.ErrDropArticle
 	}
-	return nil
 }

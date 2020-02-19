@@ -12,20 +12,27 @@ func NewMetadataValidationHandler() *MetadataValidationHandler {
 	return &MetadataValidationHandler{slugs: make(map[string]struct{})}
 }
 
-func (this *MetadataValidationHandler) Handle(article *contracts.Article) error {
+func (this *MetadataValidationHandler) Handle(article *contracts.Article) {
 	if article.Metadata.Title == "" {
-		return contracts.NewStackTraceError(errBlankMetadataTitle)
+		article.Error = contracts.NewStackTraceError(errBlankMetadataTitle)
+		return
 	}
+
 	if article.Metadata.Slug == "" {
-		return contracts.NewStackTraceError(errBlankMetadataSlug)
+		article.Error = contracts.NewStackTraceError(errBlankMetadataSlug)
+		return
 	}
+
 	if article.Metadata.Date.IsZero() {
-		return contracts.NewStackTraceError(errBlankMetadataDate)
+		article.Error = contracts.NewStackTraceError(errBlankMetadataDate)
+		return
 	}
+
 	_, found := this.slugs[article.Metadata.Slug]
 	if found {
-		return contracts.NewStackTraceError(errRepeatedMetadataSlug)
+		article.Error = contracts.NewStackTraceError(errRepeatedMetadataSlug)
+		return
 	}
+
 	this.slugs[article.Metadata.Slug] = struct{}{}
-	return nil
 }

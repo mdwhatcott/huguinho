@@ -27,7 +27,7 @@ func NewTagPageRenderingHandler(
 	}
 }
 
-func (this *TagPageRenderingHandler) Handle(article *contracts.Article) error {
+func (this *TagPageRenderingHandler) Handle(article *contracts.Article) {
 	for _, tag := range article.Metadata.Tags {
 		listing := this.tags[tag]
 		listing.Title = tag
@@ -39,7 +39,6 @@ func (this *TagPageRenderingHandler) Handle(article *contracts.Article) error {
 		})
 		this.tags[tag] = listing
 	}
-	return nil
 }
 
 func (this *TagPageRenderingHandler) Finalize() error {

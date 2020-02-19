@@ -37,23 +37,23 @@ func (this *MetadataValidationHandlerFixture) Setup() {
 }
 
 func (this *MetadataValidationHandlerFixture) TestAllPresentAndAccountedFor() {
-	err := this.handler.Handle(this.article)
-	this.So(err, should.BeNil)
+	this.handler.Handle(this.article)
+	this.So(this.article.Error, should.BeNil)
 }
 func (this *MetadataValidationHandlerFixture) TestMissingTitle_Err() {
 	this.article.Metadata.Title = ""
-	err := this.handler.Handle(this.article)
-	this.So(errors.Is(err, errBlankMetadataTitle), should.BeTrue)
+	this.handler.Handle(this.article)
+	this.So(errors.Is(this.article.Error, errBlankMetadataTitle), should.BeTrue)
 }
 func (this *MetadataValidationHandlerFixture) TestMissingSlug_Err() {
 	this.article.Metadata.Slug = ""
-	err := this.handler.Handle(this.article)
-	this.So(errors.Is(err, errBlankMetadataSlug), should.BeTrue)
+	this.handler.Handle(this.article)
+	this.So(errors.Is(this.article.Error, errBlankMetadataSlug), should.BeTrue)
 }
 func (this *MetadataValidationHandlerFixture) TestMissingDate_Err() {
 	this.article.Metadata.Date = time.Time{}
-	err := this.handler.Handle(this.article)
-	this.So(errors.Is(err, errBlankMetadataDate), should.BeTrue)
+	this.handler.Handle(this.article)
+	this.So(errors.Is(this.article.Error, errBlankMetadataDate), should.BeTrue)
 }
 func (this *MetadataValidationHandlerFixture) TestUniqueSlugs_OK() {
 	this.assertHandleWithSlugOK("a")
@@ -68,11 +68,11 @@ func (this *MetadataValidationHandlerFixture) TestRepeatedSlugs_Err() {
 }
 func (this *MetadataValidationHandlerFixture) assertHandleWithSlugOK(slug string) {
 	this.article.Metadata.Slug = slug
-	err := this.handler.Handle(this.article)
-	this.So(err, should.BeNil)
+	this.handler.Handle(this.article)
+	this.So(this.article.Error, should.BeNil)
 }
 func (this *MetadataValidationHandlerFixture) assertHandleWithSlugFAIL(slug string) {
 	this.article.Metadata.Slug = slug
-	err := this.handler.Handle(this.article)
-	this.So(errors.Is(err, errRepeatedMetadataSlug), should.BeTrue)
+	this.handler.Handle(this.article)
+	this.So(errors.Is(this.article.Error, errRepeatedMetadataSlug), should.BeTrue)
 }

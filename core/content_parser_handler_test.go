@@ -35,10 +35,10 @@ func (this *ContentParserFixture) formatSourceData(original string) string {
 func (this *ContentParserFixture) TestValidContentParsedAndConverted() {
 	article := &contracts.Article{Source: contracts.ArticleSource{Data: this.formatSourceData("content1")}}
 
-	err := this.converter.Handle(article)
+	this.converter.Handle(article)
 
-	this.So(err, should.BeNil)
 	this.So(article, should.Resemble, &contracts.Article{
+		Error:   nil,
 		Source:  contracts.ArticleSource{Data: this.formatSourceData("content1")},
 		Content: contracts.ArticleContent{Original: "content1", Converted: "content1 (CONVERTED)"},
 	})
@@ -49,9 +49,9 @@ func (this *ContentParserFixture) TestInvalidContentElicitsError() {
 	conversionError := errors.New("conversion error")
 	this.inner.err = conversionError
 
-	err := this.converter.Handle(article)
+	this.converter.Handle(article)
 
-	this.So(errors.Is(err, conversionError), should.BeTrue)
+	this.So(errors.Is(article.Error, conversionError), should.BeTrue)
 	this.So(article.Content, should.BeZeroValue)
 }
 
