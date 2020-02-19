@@ -28,10 +28,10 @@ func NewHomePageRenderingHandler(
 
 func (this *HomePageRenderingHandler) Handle(article *contracts.Article) error {
 	this.listing = append(this.listing, contracts.RenderedHomePageEntry{
-		Path:        article.Metadata.Slug,
-		Title:       article.Metadata.Title,
-		Description: article.Metadata.Intro,
-		Date:        article.Metadata.Date,
+		Slug:  article.Metadata.Slug,
+		Title: article.Metadata.Title,
+		Intro: article.Metadata.Intro,
+		Date:  article.Metadata.Date,
 	})
 	return nil
 }

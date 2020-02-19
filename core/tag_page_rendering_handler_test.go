@@ -68,7 +68,7 @@ func (this *TagPageRenderingHandlerFixture) assertHandledArticlesRenderedInTagLi
 		Name:  "a",
 		Pages: []contracts.RenderedTagEntry{
 			{
-				Path:  "/slug1",
+				Slug:  "/slug1",
 				Title: "title1",
 				Date:  Date(2020, 1, 1),
 			},
@@ -79,12 +79,12 @@ func (this *TagPageRenderingHandlerFixture) assertHandledArticlesRenderedInTagLi
 		Name:  "b",
 		Pages: []contracts.RenderedTagEntry{
 			{
-				Path:  "/slug2",
+				Slug:  "/slug2",
 				Title: "title2",
 				Date:  Date(2020, 2, 2),
 			},
 			{
-				Path:  "/slug1",
+				Slug:  "/slug1",
 				Title: "title1",
 				Date:  Date(2020, 1, 1),
 			},
@@ -95,12 +95,12 @@ func (this *TagPageRenderingHandlerFixture) assertHandledArticlesRenderedInTagLi
 		Name:  "c",
 		Pages: []contracts.RenderedTagEntry{
 			{
-				Path:  "/slug3",
+				Slug:  "/slug3",
 				Title: "title3",
 				Date:  Date(2020, 3, 3),
 			},
 			{
-				Path:  "/slug2",
+				Slug:  "/slug2",
 				Title: "title2",
 				Date:  Date(2020, 2, 2),
 			},

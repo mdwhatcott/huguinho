@@ -58,12 +58,12 @@ func (this *ArticleRenderingHandlerFixture) TestFileTemplateRenderedAndWrittenTo
 
 func (this *ArticleRenderingHandlerFixture) assertArticleDataRendered() bool {
 	return this.So(this.renderer.rendered, should.Resemble, contracts.RenderedArticle{
-		Path:        this.article.Metadata.Slug,
-		Title:       this.article.Metadata.Title,
-		Description: this.article.Metadata.Intro,
-		Date:        this.article.Metadata.Date,
-		Tags:        this.article.Metadata.Tags,
-		Content:     this.article.Content.Converted,
+		Slug:    this.article.Metadata.Slug,
+		Title:   this.article.Metadata.Title,
+		Intro:   this.article.Metadata.Intro,
+		Date:    this.article.Metadata.Date,
+		Tags:    this.article.Metadata.Tags,
+		Content: this.article.Content.Converted,
 	})
 }
 

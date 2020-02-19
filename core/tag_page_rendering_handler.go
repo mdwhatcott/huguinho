@@ -33,7 +33,7 @@ func (this *TagPageRenderingHandler) Handle(article *contracts.Article) error {
 		listing.Title = tag
 		listing.Name = tag
 		listing.Pages = append(listing.Pages, contracts.RenderedTagEntry{
-			Path:  article.Metadata.Slug,
+			Slug:  article.Metadata.Slug,
 			Title: article.Metadata.Title,
 			Date:  article.Metadata.Date,
 		})

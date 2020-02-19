@@ -22,21 +22,21 @@ type RenderedHomePage struct {
 }
 
 type RenderedHomePageEntry struct {
-	Path        string
-	Title       string
-	Description string
-	Date        time.Time
+	Slug  string
+	Title string
+	Intro string
+	Date  time.Time
 }
 
 //////////////////////////////////////////////
 
 type RenderedArticle struct {
-	Path        string // TODO: rename to Slug
-	Title       string
-	Description string // TODO: rename to Intro
-	Date        time.Time
-	Tags        []string
-	Content     string
+	Slug    string
+	Title   string
+	Intro   string
+	Date    time.Time
+	Tags    []string
+	Content string
 }
 
 //////////////////////////////////////////////
@@ -48,7 +48,7 @@ type RenderedTagListing struct {
 }
 
 type RenderedTagEntry struct {
-	Path  string
+	Slug  string
 	Title string
 	Date  time.Time
 }

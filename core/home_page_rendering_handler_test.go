@@ -60,22 +60,22 @@ func (this *HomePageRenderingHandlerFixture) assertHandledArticlesRendered() boo
 	return this.So(this.renderer.rendered, should.Resemble, contracts.RenderedHomePage{
 		Pages: []contracts.RenderedHomePageEntry{
 			{
-				Path:        "/slug3",
-				Title:       "title3",
-				Description: "intro3",
-				Date:        Date(2020, 3, 3),
+				Slug:  "/slug3",
+				Title: "title3",
+				Intro: "intro3",
+				Date:  Date(2020, 3, 3),
 			},
 			{
-				Path:        "/slug2",
-				Title:       "title2",
-				Description: "intro2",
-				Date:        Date(2020, 2, 2),
+				Slug:  "/slug2",
+				Title: "title2",
+				Intro: "intro2",
+				Date:  Date(2020, 2, 2),
 			},
 			{
-				Path:        "/slug1",
-				Title:       "title1",
-				Description: "intro1",
-				Date:        Date(2020, 1, 1),
+				Slug:  "/slug1",
+				Title: "title1",
+				Intro: "intro1",
+				Date:  Date(2020, 1, 1),
 			},
 		},
 	})
