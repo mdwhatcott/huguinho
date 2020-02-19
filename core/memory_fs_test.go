@@ -58,9 +58,6 @@ func (this *InMemoryFilesSystemFixture) Test_CreateFile_OpenFile() {
 	this.So(all, should.Resemble, helloWorldBytes)
 }
 
-// TODO: open non-existent file
-// TODO: stat non-existent file
-
 func (this *InMemoryFilesSystemFixture) Test_Stat() {
 	_ = this.fs.WriteFile(rootPath, helloWorldBytes, 0644)
 	info, err := this.fs.Stat(rootPath)
