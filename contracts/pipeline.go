@@ -2,10 +2,6 @@ package contracts
 
 import "errors"
 
-type Listener interface {
-	Listen() error
-}
-
 type Handler interface {
 	Handle(*Article)
 }

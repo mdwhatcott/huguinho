@@ -6,14 +6,6 @@ import (
 	"path/filepath"
 )
 
-type (
-	// Deprecated
-	Path string
-
-	// Deprecated
-	File string
-)
-
 type FileSystem interface {
 	Stat
 	Open
