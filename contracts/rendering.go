@@ -18,10 +18,7 @@ const (
 //////////////////////////////////////////////
 
 type RenderedHomePage struct {
-	Path        string // TODO: populate?
-	Title       string // TODO: populate?
-	Description string // TODO: populate
-	Pages       []RenderedHomePageEntry
+	Pages []RenderedHomePageEntry
 }
 
 type RenderedHomePageEntry struct {
@@ -34,7 +31,7 @@ type RenderedHomePageEntry struct {
 //////////////////////////////////////////////
 
 type RenderedArticle struct {
-	Path        string // TODO: populate from slug
+	Path        string // TODO: rename to Slug
 	Title       string
 	Description string // TODO: rename to Intro
 	Date        time.Time
@@ -45,11 +42,9 @@ type RenderedArticle struct {
 //////////////////////////////////////////////
 
 type RenderedTagListing struct {
-	Path        string // TODO: populate from tag
-	Title       string
-	Name        string
-	Description string // TODO: populate?
-	Pages       []RenderedTagEntry
+	Title string
+	Name  string
+	Pages []RenderedTagEntry
 }
 
 type RenderedTagEntry struct {
@@ -61,7 +56,6 @@ type RenderedTagEntry struct {
 //////////////////////////////////////////////
 
 type RenderedAllTagsListing struct {
-	Path string // TODO: populate
 	Tags []RenderedAllTagsEntry
 }
 

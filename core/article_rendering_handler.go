@@ -31,6 +31,7 @@ func NewArticleRenderingHandler(
 
 func (this *ArticleRenderingHandler) Handle(article *contracts.Article) (err error) {
 	data := contracts.RenderedArticle{
+		Path:        article.Metadata.Slug,
 		Title:       article.Metadata.Title,
 		Description: article.Metadata.Intro,
 		Date:        article.Metadata.Date,
