@@ -61,7 +61,9 @@ func (this *Pipeline) goListen(in chan contracts.Article, handler contracts.Hand
 
 func (this *Pipeline) drain(out chan contracts.Article) {
 	for article := range out {
-		if article.Error != nil {
+		if article.Error == contracts.ErrDropArticle {
+			continue
+		} else if article.Error != nil {
 			log.Println("[WARN] error:", article.Error)
 			this.errors++
 		} else if article.Source.Path != "" {
