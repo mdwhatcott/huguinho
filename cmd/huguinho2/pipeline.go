@@ -10,7 +10,7 @@ import (
 )
 
 type Pipeline struct {
-	config   contracts.Config
+	config   Config
 	disk     contracts.FileSystem
 	renderer contracts.Renderer
 
@@ -19,7 +19,7 @@ type Pipeline struct {
 }
 
 func NewPipeline(
-	config contracts.Config,
+	config Config,
 	disk contracts.FileSystem,
 	renderer contracts.Renderer,
 ) *Pipeline {

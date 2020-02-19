@@ -4,11 +4,18 @@ import (
 	"flag"
 	"os"
 	"strings"
-
-	"github.com/mdwhatcott/huguinho/contracts"
 )
 
-func parseConfig() (config contracts.Config) {
+type Config struct {
+	TemplateDir string
+	StylesDir   string
+	ContentRoot string
+	TargetRoot  string
+	BuildDrafts bool
+	BuildFuture bool
+}
+
+func parseConfig() (config Config) {
 	stringFlag("templates", "Directory with html templates.  ", "templates", &config.TemplateDir)
 	stringFlag("styles   ", "Directory with css stylesheets. ", "css      ", &config.StylesDir)
 	stringFlag("content  ", "Directory with markdown content.", "content  ", &config.ContentRoot)
@@ -25,7 +32,7 @@ func parseConfig() (config contracts.Config) {
 	return config
 }
 
-func Validate(config contracts.Config) bool {
+func Validate(config Config) bool {
 	if config.TemplateDir == "" {
 		return false
 	}

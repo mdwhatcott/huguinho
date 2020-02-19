@@ -5,13 +5,12 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/huguinho/shell"
 )
 
 type Program struct {
 	disk   *shell.Disk
-	config contracts.Config
+	config Config
 	start  time.Time
 }
 
