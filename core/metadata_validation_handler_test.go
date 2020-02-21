@@ -26,12 +26,12 @@ func (this *MetadataValidationHandlerFixture) Setup() {
 	this.handler = NewMetadataValidationHandler()
 	this.article = &contracts.Article{
 		Metadata: contracts.ArticleMetadata{
-			Draft: false,
-			Slug:  "/slug1",
-			Title: "Title",
-			Intro: "Introduction",
-			Tags:  []string{"a", "b", "c"},
-			Date:  Date(2020, 2, 2),
+			Draft:  false,
+			Slug:   "/slug1",
+			Title:  "Title",
+			Intro:  "Introduction",
+			Topics: []string{"a", "b", "c"},
+			Date:   Date(2020, 2, 2),
 		},
 	}
 }

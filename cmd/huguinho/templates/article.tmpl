@@ -1,7 +1,7 @@
-meta-title: {{ .Title }}
-meta-intro: {{ .Intro }}
-meta-date:  {{ .Date.Format "2006-01-02" }}
-meta-tags:  {{ range .Tags }}{{.}} {{ end }}
+meta-title:  {{ .Title }}
+meta-intro:  {{ .Intro }}
+meta-date:   {{ .Date.Format "2006-01-02" }}
+meta-topics: {{ range .Topics }}{{ . }}{{ end }}
 content:
 
 {{ .Content }}

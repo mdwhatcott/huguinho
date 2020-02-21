@@ -2,8 +2,6 @@ package contracts
 
 import "time"
 
-//////////////////////////////////////////////
-
 type Renderer interface {
 	Render(interface{}) (string, error)
 }
@@ -11,58 +9,36 @@ type Renderer interface {
 const (
 	HomePageTemplateName = "home.tmpl"
 	ArticleTemplateName  = "article.tmpl"
-	AllTagsTemplateName  = "all-tags.tmpl"
-	TagTemplateName      = "tag.tmpl"
+	TopicsTemplateName   = "topics.tmpl"
 )
 
-//////////////////////////////////////////////
+type (
+	RenderedHomePage struct {
+		Pages []RenderedArticleSummary
+	}
 
-type RenderedHomePage struct {
-	Pages []RenderedHomePageEntry
-}
+	RenderedArticle struct {
+		Slug    string
+		Title   string
+		Intro   string
+		Date    time.Time
+		Topics  []string
+		Content string
+	}
 
-type RenderedHomePageEntry struct {
-	Slug  string
-	Title string
-	Intro string
-	Date  time.Time
-}
+	RenderedArticleSummary struct {
+		Slug  string
+		Title string
+		Intro string
+		Date  time.Time
+	}
 
-//////////////////////////////////////////////
+	RenderedTopicsListing struct {
+		Topics []RenderedTopicListing
+	}
 
-type RenderedArticle struct {
-	Slug    string
-	Title   string
-	Intro   string
-	Date    time.Time
-	Tags    []string
-	Content string
-}
-
-//////////////////////////////////////////////
-
-type RenderedTagListing struct {
-	Title string
-	Name  string
-	Pages []RenderedTagEntry
-}
-
-type RenderedTagEntry struct {
-	Slug  string
-	Title string
-	Date  time.Time
-}
-
-//////////////////////////////////////////////
-
-type RenderedAllTagsListing struct {
-	Tags []RenderedAllTagsEntry
-}
-
-type RenderedAllTagsEntry struct {
-	Name  string
-	Path  string
-	Count int
-}
-
-//////////////////////////////////////////////
+	RenderedTopicListing struct {
+		Topic    string
+		Articles []RenderedArticleSummary
+	}
+)

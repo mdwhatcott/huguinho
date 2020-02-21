@@ -167,46 +167,46 @@ func (this *MetadataParserFixture) TestDuplicateDate_Err() {
 
 	this.So(errors.Is(this.article.Error, errDuplicateMetadataDate), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestInvalidTags_Err() {
-	this.appendMetadataWithContent("tags: invalid?!")
+func (this *MetadataParserFixture) TestInvalidTopics_Err() {
+	this.appendMetadataWithContent("topics: invalid?!")
 
 	this.parser.Handle(this.article)
 
-	this.So(errors.Is(this.article.Error, errInvalidMetadataTags), should.BeTrue)
+	this.So(errors.Is(this.article.Error, errInvalidMetadataTopics), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestInvalidCasingTags_Err() {
-	this.appendMetadataWithContent("tags: INVALID")
+func (this *MetadataParserFixture) TestInvalidCasingTopics_Err() {
+	this.appendMetadataWithContent("topics: INVALID")
 
 	this.parser.Handle(this.article)
 
-	this.So(errors.Is(this.article.Error, errInvalidMetadataTags), should.BeTrue)
+	this.So(errors.Is(this.article.Error, errInvalidMetadataTopics), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestInvalidRepeatedTags_Err() {
-	this.appendMetadataWithContent("tags: repeated something-else repeated")
+func (this *MetadataParserFixture) TestInvalidRepeatedTopics_Err() {
+	this.appendMetadataWithContent("topics: repeated something-else repeated")
 
 	this.parser.Handle(this.article)
 
-	this.So(errors.Is(this.article.Error, errInvalidMetadataTags), should.BeTrue)
+	this.So(errors.Is(this.article.Error, errInvalidMetadataTopics), should.BeTrue)
 }
-func (this *MetadataParserFixture) TestDuplicateTags_Err() {
+func (this *MetadataParserFixture) TestDuplicateTopics_Err() {
 	this.appendMetadataWithContent(
-		"tags: a b c",
-		"tags: x y z",
+		"topics: a b c",
+		"topics: x y z",
 	)
 
 	this.parser.Handle(this.article)
 
-	this.So(errors.Is(this.article.Error, errDuplicateMetadataTags), should.BeTrue)
+	this.So(errors.Is(this.article.Error, errDuplicateMetadataTopics), should.BeTrue)
 }
 
 func (this *MetadataParserFixture) TestAllValidAttributes() {
 	this.appendMetadataWithContent(
-		"title: This is the title ",
-		"intro: This is the intro ",
-		"slug:  /this/is/the/slug ",
-		"draft: true              ",
-		"date:  2020-02-16        ",
-		"tags:  a-a b c           ",
+		"title:  This is the title ",
+		"intro:  This is the intro ",
+		"slug:   /this/is/the/slug ",
+		"draft:  true              ",
+		"date:   2020-02-16        ",
+		"topics: a-a b c           ",
 	)
 
 	this.parser.Handle(this.article)
@@ -217,5 +217,5 @@ func (this *MetadataParserFixture) TestAllValidAttributes() {
 	this.So(this.article.Metadata.Slug, should.Equal, "/this/is/the/slug")
 	this.So(this.article.Metadata.Draft, should.BeTrue)
 	this.So(this.article.Metadata.Date, should.Resemble, Date(2020, 2, 16))
-	this.So(this.article.Metadata.Tags, should.Resemble, []string{"a-a", "b", "c"})
+	this.So(this.article.Metadata.Topics, should.Resemble, []string{"a-a", "b", "c"})
 }

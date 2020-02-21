@@ -58,7 +58,7 @@ func (this *HomePageRenderingHandlerFixture) handleArticles() {
 
 func (this *HomePageRenderingHandlerFixture) assertHandledArticlesRendered() bool {
 	return this.So(this.renderer.rendered, should.Resemble, contracts.RenderedHomePage{
-		Pages: []contracts.RenderedHomePageEntry{
+		Pages: []contracts.RenderedArticleSummary{
 			{
 				Slug:  "/slug3",
 				Title: "title3",

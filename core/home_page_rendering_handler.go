@@ -11,7 +11,7 @@ type HomePageRenderingHandler struct {
 	disk     RenderingFileSystem
 	renderer contracts.Renderer
 	output   string
-	listing  []contracts.RenderedHomePageEntry
+	listing  []contracts.RenderedArticleSummary
 }
 
 func NewHomePageRenderingHandler(
@@ -27,7 +27,7 @@ func NewHomePageRenderingHandler(
 }
 
 func (this *HomePageRenderingHandler) Handle(article *contracts.Article) {
-	this.listing = append(this.listing, contracts.RenderedHomePageEntry{
+	this.listing = append(this.listing, contracts.RenderedArticleSummary{
 		Slug:  article.Metadata.Slug,
 		Title: article.Metadata.Title,
 		Intro: article.Metadata.Intro,
@@ -50,5 +50,10 @@ func (this *HomePageRenderingHandler) Finalize() error {
 		return contracts.StackTraceError(err)
 	}
 
-	return this.disk.WriteFile(filepath.Join(this.output, "index.html"), []byte(rendered), 0644)
+	err = this.disk.WriteFile(filepath.Join(this.output, "index.html"), []byte(rendered), 0644)
+	if err != nil {
+		return contracts.StackTraceError(err)
+	}
+
+	return nil
 }

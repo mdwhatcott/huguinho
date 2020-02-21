@@ -14,12 +14,12 @@ type MetadataParser struct {
 	lines  []string
 	parsed contracts.ArticleMetadata
 
-	parsedTitle bool
-	parsedIntro bool
-	parsedSlug  bool
-	parsedDraft bool
-	parsedDate  bool
-	parsedTags  bool
+	parsedTitle  bool
+	parsedIntro  bool
+	parsedSlug   bool
+	parsedDraft  bool
+	parsedDate   bool
+	parsedTopics bool
 }
 
 func NewMetadataParser(lines []string) *MetadataParser {
@@ -56,8 +56,8 @@ func (this *MetadataParser) Parse() error {
 			if err != nil {
 				return err
 			}
-		case "tags":
-			err := this.parseTags(value)
+		case "topics":
+			err := this.parseTopics(value)
 			if err != nil {
 				return err
 			}
@@ -138,28 +138,28 @@ func (this *MetadataParser) parseDate(value string) error {
 	this.parsedDate = true
 	return nil
 }
-func (this *MetadataParser) parseTags(value string) error {
-	if this.parsedTags {
-		return contracts.StackTraceError(errDuplicateMetadataTags)
+func (this *MetadataParser) parseTopics(value string) error {
+	if this.parsedTopics {
+		return contracts.StackTraceError(errDuplicateMetadataTopics)
 	}
 	unique := make(map[string]struct{})
-	tags := strings.Fields(value)
-	for _, tag := range tags {
-		if !isValidTag(tag) {
-			return contracts.StackTraceError(fmt.Errorf("%w: [%s]", errInvalidMetadataTags, value))
+	topics := strings.Fields(value)
+	for _, topic := range topics {
+		if !isValidTopic(topic) {
+			return contracts.StackTraceError(fmt.Errorf("%w: [%s]", errInvalidMetadataTopics, value))
 		}
-		unique[tag] = struct{}{}
+		unique[topic] = struct{}{}
 	}
-	if len(unique) != len(tags) {
-		return contracts.StackTraceError(fmt.Errorf("%w: [%s] (repeated values)", errInvalidMetadataTags, value))
+	if len(unique) != len(topics) {
+		return contracts.StackTraceError(fmt.Errorf("%w: [%s] (repeated values)", errInvalidMetadataTopics, value))
 	}
-	this.parsed.Tags = tags
-	this.parsedTags = true
+	this.parsed.Topics = topics
+	this.parsedTopics = true
 	return nil
 }
 
-func isValidTag(tag string) bool {
-	for _, c := range tag {
+func isValidTopic(topic string) bool {
+	for _, c := range topic {
 		if !(isSpace(c) || isDash(c) || isNumber(c) || isLowerAlpha(c)) {
 			return false
 		}
@@ -175,24 +175,22 @@ var (
 	errMissingMetadata        = errors.New("article lacks metadata")
 	errMissingMetadataDivider = errors.New("article lacks metadata divider")
 
-	errDuplicateMetadataTitle = errors.New("duplicate metadata title")
-	errDuplicateMetadataIntro = errors.New("duplicate metadata intro")
-	errDuplicateMetadataSlug  = errors.New("duplicate metadata slug")
-	errDuplicateMetadataDraft = errors.New("duplicate metadata draft")
-	errDuplicateMetadataDate  = errors.New("duplicate metadata date")
-	errDuplicateMetadataTags  = errors.New("duplicate metadata tags")
+	errDuplicateMetadataTitle  = errors.New("duplicate metadata title")
+	errDuplicateMetadataIntro  = errors.New("duplicate metadata intro")
+	errDuplicateMetadataSlug   = errors.New("duplicate metadata slug")
+	errDuplicateMetadataDraft  = errors.New("duplicate metadata draft")
+	errDuplicateMetadataDate   = errors.New("duplicate metadata date")
+	errDuplicateMetadataTopics = errors.New("duplicate metadata topics")
 
-	errInvalidMetadataSlug  = errors.New("invalid metadata slug")
-	errInvalidMetadataDraft = errors.New("invalid metadata draft")
-	errInvalidMetadataDate  = errors.New("invalid metadata date")
-	errInvalidMetadataTags  = errors.New("invalid metadata tags")
+	errInvalidMetadataSlug   = errors.New("invalid metadata slug")
+	errInvalidMetadataDraft  = errors.New("invalid metadata draft")
+	errInvalidMetadataDate   = errors.New("invalid metadata date")
+	errInvalidMetadataTopics = errors.New("invalid metadata topics")
 
 	errRepeatedMetadataSlug = errors.New("repeated metadata slug")
 
 	errBlankMetadataSlug  = errors.New("blank metadata slug")
 	errBlankMetadataDraft = errors.New("blank metadata draft")
 	errBlankMetadataTitle = errors.New("blank metadata title")
-	errBlankMetadataIntro = errors.New("blank metadata intro")
 	errBlankMetadataDate  = errors.New("blank metadata date")
-	errBlankMetadataTags  = errors.New("blank metadata tags")
 )

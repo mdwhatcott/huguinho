@@ -1,8 +1,8 @@
-slug:  /article-b/
-title: Article B
-intro: The introduction for Article B.
-tags:  important
-date:  2021-02-09
+slug:   /article-b/
+title:  Article B
+intro:  The introduction for Article B.
+topics:  important
+date:   2021-02-09
 
 +++
 

@@ -15,12 +15,12 @@ type ArticleSource struct {
 }
 
 type ArticleMetadata struct {
-	Draft bool
-	Slug  string
-	Title string
-	Intro string
-	Tags  []string
-	Date  time.Time
+	Draft  bool
+	Slug   string
+	Title  string
+	Intro  string
+	Topics []string
+	Date   time.Time
 }
 
 const METADATA_CONTENT_DIVIDER = "\n+++\n"

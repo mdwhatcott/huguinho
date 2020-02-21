@@ -1,8 +1,8 @@
-slug:  /article-a/
-title: Article A
-intro: The introduction for Article A.
-tags:  important misc
-date:  2020-02-08
+slug:   /article-a/
+title:  Article A
+intro:  The introduction for Article A.
+topics: important misc
+date:   2020-02-08
 
 +++
 

@@ -32,11 +32,8 @@ func (this *TemplateRenderer) Render(v interface{}) (string, error) {
 	case contracts.RenderedArticle:
 		return this.render(contracts.ArticleTemplateName, v)
 
-	case contracts.RenderedAllTagsListing:
-		return this.render(contracts.AllTagsTemplateName, v)
-
-	case contracts.RenderedTagListing:
-		return this.render(contracts.TagTemplateName, v)
+	case contracts.RenderedTopicsListing:
+		return this.render(contracts.TopicsTemplateName, v)
 
 	case contracts.RenderedHomePage:
 		return this.render(contracts.HomePageTemplateName, v)

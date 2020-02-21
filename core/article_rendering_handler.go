@@ -35,7 +35,7 @@ func (this *ArticleRenderingHandler) Handle(article *contracts.Article) {
 		Title:   article.Metadata.Title,
 		Intro:   article.Metadata.Intro,
 		Date:    article.Metadata.Date,
-		Tags:    article.Metadata.Tags,
+		Topics:  article.Metadata.Topics,
 		Content: article.Content.Converted,
 	}
 
