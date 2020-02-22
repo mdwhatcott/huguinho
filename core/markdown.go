@@ -1,4 +1,4 @@
-package shell
+package core
 
 import (
 	"bytes"
@@ -7,7 +7,6 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 )
 
-// TEST
 type GoldmarkMarkdownConverter struct {
 	buffer    *bytes.Buffer
 	converter goldmark.Markdown
