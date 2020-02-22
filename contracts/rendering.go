@@ -1,6 +1,9 @@
 package contracts
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 type Renderer interface {
 	Render(interface{}) (string, error)
@@ -10,6 +13,11 @@ const (
 	HomePageTemplateName = "home.tmpl"
 	ArticleTemplateName  = "article.tmpl"
 	TopicsTemplateName   = "topics.tmpl"
+)
+
+var (
+	ErrUnsupportedRenderingType = errors.New("unsupported rendering type")
+	ErrRenderingFailure         = errors.New("failed to render template")
 )
 
 type (

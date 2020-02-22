@@ -8,13 +8,13 @@ import (
 )
 
 func TestGoldmarkMarkdownConverterFixture(t *testing.T) {
-    gunit.Run(new(GoldmarkMarkdownConverterFixture), t)
+	gunit.Run(new(GoldmarkMarkdownConverterFixture), t)
 }
 
 type GoldmarkMarkdownConverterFixture struct {
-    *gunit.Fixture
+	*gunit.Fixture
 
-    converter *GoldmarkMarkdownConverter
+	converter *GoldmarkMarkdownConverter
 }
 
 func (this *GoldmarkMarkdownConverterFixture) Setup() {
