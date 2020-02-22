@@ -43,5 +43,5 @@ func (this *DraftFilteringHandlerFixture) TestEnabled_AnyDraftsDropped() {
 
 	draft := this.article(true)
 	handler.Handle(draft)
-	this.So(errors.Is(draft.Error, contracts.ErrDropArticle), should.BeTrue)
+	this.So(errors.Is(draft.Error, contracts.ErrDroppedArticle), should.BeTrue)
 }

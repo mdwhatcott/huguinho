@@ -10,4 +10,4 @@ type Finalizer interface {
 	Finalize() error
 }
 
-var ErrDropArticle = errors.New("dropped article")
+var ErrDroppedArticle = errors.New("dropped article")

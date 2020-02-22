@@ -26,7 +26,7 @@ func (this *DraftFilteringHandler) Handle(article *contracts.Article) {
 	}
 	article.Error = fmt.Errorf(
 		"%w: %s (DRAFT)",
-		contracts.ErrDropArticle,
+		contracts.ErrDroppedArticle,
 		article.Metadata.Slug,
 	)
 }

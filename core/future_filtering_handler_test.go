@@ -62,5 +62,5 @@ func (this *FutureFilteringHandlerFixture) TestEnabled_AnythingAfterNowDropped()
 
 	future := this.article(this.future)
 	enabled.Handle(future)
-	this.So(errors.Is(future.Error, contracts.ErrDropArticle), should.BeTrue)
+	this.So(errors.Is(future.Error, contracts.ErrDroppedArticle), should.BeTrue)
 }

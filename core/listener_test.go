@@ -29,7 +29,7 @@ func (this *ListenerFixture) Setup() {
 
 func (this *ListenerFixture) TestEachArticleHandledIfNotErrantAndPassedOn() {
 	this.input <- contracts.Article{Content: contracts.ArticleContent{Original: "A"}}
-	this.input <- contracts.Article{Content: contracts.ArticleContent{Original: "B"}, Error: contracts.ErrDropArticle}
+	this.input <- contracts.Article{Content: contracts.ArticleContent{Original: "B"}, Error: contracts.ErrDroppedArticle}
 	this.input <- contracts.Article{Content: contracts.ArticleContent{Original: "C"}}
 	close(this.input)
 
@@ -37,7 +37,7 @@ func (this *ListenerFixture) TestEachArticleHandledIfNotErrantAndPassedOn() {
 
 	this.So(gather(this.output), should.Resemble, []contracts.Article{
 		{Content: contracts.ArticleContent{Original: "A", Converted: "A1"}},
-		{Content: contracts.ArticleContent{Original: "B", Converted: ""}, Error: contracts.ErrDropArticle},
+		{Content: contracts.ArticleContent{Original: "B", Converted: ""}, Error: contracts.ErrDroppedArticle},
 		{Content: contracts.ArticleContent{Original: "C", Converted: "C2"}},
 	})
 }
@@ -56,13 +56,13 @@ func (this *ListenerFixture) TestFinalizeErrPassedOnIfNonNil() {
 	close(this.input)
 
 	handler := NewFakeFinalizingHandler()
-	handler.err = contracts.ErrDropArticle
+	handler.err = contracts.ErrDroppedArticle
 
 	Listen(this.input, this.output, handler)
 
 	this.So(handler.called, should.Equal, 1)
 	this.So(len(this.output), should.Equal, 1)
-	this.So(<-this.output, should.Resemble, contracts.Article{Error: contracts.ErrDropArticle})
+	this.So(<-this.output, should.Resemble, contracts.Article{Error: contracts.ErrDroppedArticle})
 }
 
 ///////////////////////////////////////////////////////////////

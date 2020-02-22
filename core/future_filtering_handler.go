@@ -25,7 +25,7 @@ func (this *FutureFilteringHandler) Handle(article *contracts.Article) {
 	}
 	article.Error = fmt.Errorf(
 		"%w: %s (can be published on %s)",
-		contracts.ErrDropArticle,
+		contracts.ErrDroppedArticle,
 		article.Metadata.Slug,
 		article.Metadata.Date.Format("January 2, 2006"),
 	)

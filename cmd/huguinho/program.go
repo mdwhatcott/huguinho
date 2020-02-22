@@ -45,7 +45,7 @@ func (this *Program) receive(out chan contracts.Article) int {
 	)
 
 	for article := range out {
-		if errors.Is(article.Error, contracts.ErrDropArticle) {
+		if errors.Is(article.Error, contracts.ErrDroppedArticle) {
 			log.Println("[INFO]", article.Error)
 			dropped++
 		} else if article.Error != nil {
