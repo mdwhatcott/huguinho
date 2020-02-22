@@ -35,7 +35,7 @@ func (this *ReporterFixture) Test() {
 	reporter.ProcessStream(stream)
 	reporter.RenderFinalReport(stopped)
 
-	this.So(reporter.Errors(), should.Equal, 3)
+	this.So(reporter.Errors(), should.Equal, 1)
 	this.So(reporter.log.Log.String(), should.Equal, strings.Join([]string{
 		"[INFO] published article: /a",
 		"[INFO] dropped article",

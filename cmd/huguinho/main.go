@@ -13,14 +13,26 @@ import (
 
 func main() {
 	log.SetFlags(0)
-	config := parseConfig()
+
+	os.Exit(Run(ParseConfig(os.Args[1:])))
+}
+
+func ParseConfig(args []string) contracts.Config {
+	config, err := contracts.NewCLIParser(args).Parse()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return config
+}
+
+func Run(config contracts.Config) int {
 	reporter := core.NewReporter(time.Now())
 	reporter.ProcessStream(stream(config))
 	reporter.RenderFinalReport(time.Now())
-	os.Exit(reporter.Errors())
+	return reporter.Errors()
 }
 
-func stream(config Config) chan contracts.Article {
+func stream(config contracts.Config) chan contracts.Article {
 	templates := parseTemplates(filepath.Join(config.TemplateDir, "*.tmpl"))
 	pipeline := NewPipeline(config, NewDisk(), templates)
 	return pipeline.Run()

@@ -10,13 +10,13 @@ import (
 
 // TEST (integration)
 type Pipeline struct {
-	config   Config
+	config   contracts.Config
 	disk     contracts.FileSystem
 	renderer contracts.Renderer
 }
 
 func NewPipeline(
-	config Config,
+	config contracts.Config,
 	disk contracts.FileSystem,
 	templates *template.Template,
 ) *Pipeline {
