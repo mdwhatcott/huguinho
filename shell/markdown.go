@@ -7,12 +7,15 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 )
 
+// TEST
 type GoldmarkMarkdownConverter struct {
+	buffer    *bytes.Buffer
 	converter goldmark.Markdown
 }
 
 func NewGoldmarkMarkdownConverter() *GoldmarkMarkdownConverter {
 	return &GoldmarkMarkdownConverter{
+		buffer: new(bytes.Buffer),
 		converter: goldmark.New(
 			goldmark.WithRendererOptions(
 				html.WithUnsafe(),
@@ -22,7 +25,7 @@ func NewGoldmarkMarkdownConverter() *GoldmarkMarkdownConverter {
 }
 
 func (this *GoldmarkMarkdownConverter) Convert(content string) (string, error) {
-	var buffer bytes.Buffer
-	err := this.converter.Convert([]byte(content), &buffer)
-	return buffer.String(), err
+	this.buffer.Reset()
+	err := this.converter.Convert([]byte(content), this.buffer)
+	return this.buffer.String(), err
 }

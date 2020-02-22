@@ -9,6 +9,7 @@ import (
 	"github.com/mdwhatcott/huguinho/shell"
 )
 
+// TEST (integration)
 type Pipeline struct {
 	config   Config
 	disk     contracts.FileSystem

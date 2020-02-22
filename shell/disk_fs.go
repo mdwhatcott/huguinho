@@ -45,6 +45,7 @@ func (this *Disk) Walk(root string, walk filepath.WalkFunc) error {
 	return filepath.Walk(root, walk)
 }
 
+// TEST (integration)?
 func (this *Disk) CopyFile(source, destination string) error {
 	_, err := this.Stat(source)
 	if os.IsNotExist(err) {

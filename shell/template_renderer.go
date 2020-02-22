@@ -18,6 +18,7 @@ func ParseTemplates(glob string) *TemplateRenderer {
 	return NewTemplateRenderer(templates)
 }
 
+// TEST
 type TemplateRenderer struct {
 	templates *template.Template
 }

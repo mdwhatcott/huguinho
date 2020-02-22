@@ -8,6 +8,7 @@ import (
 	"github.com/mdwhatcott/huguinho/shell"
 )
 
+// TEST (integration)
 type Program struct {
 	disk   *shell.Disk
 	config Config
