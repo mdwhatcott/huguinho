@@ -33,7 +33,7 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 	out = this.goListen(out, core.NewMetadataValidationHandler())
 	out = this.goListen(out, core.NewDraftFilteringHandler(!this.config.BuildDrafts))
 	out = this.goListen(out, core.NewFutureFilteringHandler(time.Now(), !this.config.BuildFuture))
-	out = this.goListen(out, core.NewContentParsingHandler(core.NewGoldmarkMarkdownConverter()))
+	out = this.goListen(out, core.NewContentConversionHandler(core.NewGoldmarkMarkdownConverter()))
 	out = this.goListen(out, core.NewArticleRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	out = this.goListen(out, core.NewTopicPageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	out = this.goListen(out, core.NewHomePageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))

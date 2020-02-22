@@ -4,15 +4,19 @@ import (
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
-type ContentParsingHandler struct {
-	inner contracts.ContentConverter
+type ContentConversionHandler struct {
+	inner converter
 }
 
-func NewContentParsingHandler(inner contracts.ContentConverter) *ContentParsingHandler {
-	return &ContentParsingHandler{inner: inner}
+type converter interface {
+	Convert(content string) (string, error)
 }
 
-func (this *ContentParsingHandler) Handle(article *contracts.Article) {
+func NewContentConversionHandler(inner converter) *ContentConversionHandler {
+	return &ContentConversionHandler{inner: inner}
+}
+
+func (this *ContentConversionHandler) Handle(article *contracts.Article) {
 	_, original := divide(article.Source.Data, contracts.METADATA_CONTENT_DIVIDER)
 	converted, err := this.inner.Convert(original)
 	if err != nil {

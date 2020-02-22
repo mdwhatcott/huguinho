@@ -10,29 +10,29 @@ import (
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
-func TestContentParserFixture(t *testing.T) {
-	gunit.Run(new(ContentParserFixture), t)
+func TestContentConversionHandlerFixture(t *testing.T) {
+	gunit.Run(new(ContentConversionHandlerFixture), t)
 }
 
-type ContentParserFixture struct {
+type ContentConversionHandlerFixture struct {
 	*gunit.Fixture
 
-	converter *ContentParsingHandler
+	converter *ContentConversionHandler
 	inner     *FakeConverter
 	input     chan contracts.Article
 	output    chan contracts.Article
 }
 
-func (this *ContentParserFixture) Setup() {
+func (this *ContentConversionHandlerFixture) Setup() {
 	this.inner = NewFakeConverter()
-	this.converter = NewContentParsingHandler(this.inner)
+	this.converter = NewContentConversionHandler(this.inner)
 }
 
-func (this *ContentParserFixture) formatSourceData(original string) string {
+func (this *ContentConversionHandlerFixture) formatSourceData(original string) string {
 	return "\n" + contracts.METADATA_CONTENT_DIVIDER + "\n" + original
 }
 
-func (this *ContentParserFixture) TestValidContentParsedAndConverted() {
+func (this *ContentConversionHandlerFixture) TestValidContentParsedAndConverted() {
 	article := &contracts.Article{Source: contracts.ArticleSource{Data: this.formatSourceData("content1")}}
 
 	this.converter.Handle(article)
@@ -44,7 +44,7 @@ func (this *ContentParserFixture) TestValidContentParsedAndConverted() {
 	})
 }
 
-func (this *ContentParserFixture) TestInvalidContentElicitsError() {
+func (this *ContentConversionHandlerFixture) TestInvalidContentElicitsError() {
 	article := &contracts.Article{Source: contracts.ArticleSource{Data: this.formatSourceData("content1")}}
 	conversionError := errors.New("conversion error")
 	this.inner.err = conversionError
