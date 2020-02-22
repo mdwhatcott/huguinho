@@ -29,7 +29,7 @@ func (this *PathLoaderFixture) Setup() {
 	_ = this.files.WriteFile("/article1.md", []byte("outside of content root"), 0644)
 	_ = this.files.WriteFile("/content/article1.md", []byte("article1"), 0644)
 	_ = this.files.WriteFile("/content/article2.txt", []byte("not an article"), 0644)
-	_ = this.files.Mkdir("/content/folder", 0577)
+	_ = this.files.MkdirAll("/content/folder", 0577)
 	_ = this.files.WriteFile("/content/folder/article3.md", []byte("article3"), 0644)
 }
 

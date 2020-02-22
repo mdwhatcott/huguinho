@@ -4,11 +4,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"text/template"
 	"time"
 
 	"github.com/mdwhatcott/huguinho/contracts"
-	"github.com/mdwhatcott/huguinho/core"
-	"github.com/mdwhatcott/huguinho/shell"
 )
 
 func main() {
@@ -21,7 +20,15 @@ func main() {
 
 func stream() chan contracts.Article {
 	config := parseConfig()
-	template := shell.ParseTemplates(filepath.Join(config.TemplateDir, "*.tmpl"))
-	pipeline := NewPipeline(config, shell.NewDisk(), core.NewTemplateRenderer(template))
+	templates := parseTemplates(filepath.Join(config.TemplateDir, "*.tmpl"))
+	pipeline := NewPipeline(config, NewDisk(), templates)
 	return pipeline.Run()
+}
+
+func parseTemplates(glob string) *template.Template {
+	templates, err := template.ParseGlob(glob)
+	if err != nil {
+		log.Fatalln("Could not parse templates:", err)
+	}
+	return templates
 }
