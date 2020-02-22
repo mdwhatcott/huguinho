@@ -3,13 +3,10 @@ package core
 import (
 	"fmt"
 
-	"github.com/smartystreets/logging"
-
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 type DraftFilteringHandler struct {
-	log     *logging.Logger
 	enabled bool
 }
 

@@ -10,12 +10,12 @@ import (
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
-func ParseTemplates(glob string) *TemplateRenderer {
+func ParseTemplates(glob string) *template.Template {
 	templates, err := template.ParseGlob(glob)
 	if err != nil {
 		log.Fatalln("Could not parse templates:", err)
 	}
-	return NewTemplateRenderer(templates)
+	return templates
 }
 
 // TEST
