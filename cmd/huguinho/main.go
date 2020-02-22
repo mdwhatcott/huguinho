@@ -13,14 +13,14 @@ import (
 
 func main() {
 	log.SetFlags(0)
+	config := parseConfig()
 	reporter := core.NewReporter(time.Now())
-	reporter.ProcessStream(stream())
+	reporter.ProcessStream(stream(config))
 	reporter.RenderFinalReport(time.Now())
 	os.Exit(reporter.Errors())
 }
 
-func stream() chan contracts.Article {
-	config := parseConfig()
+func stream(config Config) chan contracts.Article {
 	templates := parseTemplates(filepath.Join(config.TemplateDir, "*.tmpl"))
 	pipeline := NewPipeline(config, NewDisk(), templates)
 	return pipeline.Run()
