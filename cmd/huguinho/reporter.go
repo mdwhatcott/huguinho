@@ -34,18 +34,15 @@ func (this *Reporter) accountFor(article contracts.Article) {
 	} else if article.Error != nil {
 		this.log.Println("[WARN] error:", article.Error)
 		this.errors++
-	} else if article.Source.Path != "" {
+	} else {
 		this.log.Println("[INFO] published article:", article.Metadata.Slug)
 		this.published++
-	} else {
-		this.log.Printf("[WARN] not sure what this article struct represents: %#v", article)
-		this.errors++
 	}
 }
 
-func (this Reporter) RenderFinalReport(finished time.Time) {
+func (this *Reporter) RenderFinalReport(finished time.Time) {
 	this.log.Println("[INFO] errors encountered: ", this.errors)
-	this.log.Println("[INFO] articles dropped:   ", this.dropped)
-	this.log.Println("[INFO] articles published: ", this.published)
+	this.log.Println("[INFO] dropped articles:   ", this.dropped)
+	this.log.Println("[INFO] published articles: ", this.published)
 	this.log.Println("[INFO] processing duration:", finished.Sub(this.started).Round(time.Millisecond))
 }
