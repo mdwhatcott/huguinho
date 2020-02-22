@@ -8,7 +8,7 @@ import (
 	"github.com/mdwhatcott/huguinho/core"
 )
 
-// TEST (integration)
+// TEST
 type Pipeline struct {
 	config   contracts.Config
 	disk     contracts.FileSystem

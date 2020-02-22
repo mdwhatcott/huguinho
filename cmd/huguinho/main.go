@@ -38,10 +38,12 @@ func stream(config contracts.Config) chan contracts.Article {
 	return pipeline.Run()
 }
 
+// TEST (see core.TemplateLoader)
 func parseTemplates(glob string) *template.Template {
 	templates, err := template.ParseGlob(glob)
 	if err != nil {
 		log.Fatalln("Could not parse templates:", err)
 	}
+	//templates.Lookup(contracts.HomePageTemplateName)
 	return templates
 }
