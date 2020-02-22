@@ -1,6 +1,8 @@
 package core
 
 import (
+	"fmt"
+
 	"github.com/smartystreets/logging"
 
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -16,8 +18,15 @@ func NewDraftFilteringHandler(enabled bool) *DraftFilteringHandler {
 }
 
 func (this *DraftFilteringHandler) Handle(article *contracts.Article) {
-	if this.enabled && article.Metadata.Draft {
-		this.log.Println("[INFO] dropping draft article:", article.Metadata.Slug)
-		article.Error = contracts.ErrDropArticle
+	if !this.enabled {
+		return
 	}
+	if !article.Metadata.Draft {
+		return
+	}
+	article.Error = fmt.Errorf(
+		"%w: %s (DRAFT)",
+		contracts.ErrDropArticle,
+		article.Metadata.Slug,
+	)
 }

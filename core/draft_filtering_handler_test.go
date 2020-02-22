@@ -6,7 +6,6 @@ import (
 
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
-	"github.com/smartystreets/logging"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 )
@@ -23,14 +22,8 @@ func (this *DraftFilteringHandlerFixture) article(draft bool) *contracts.Article
 	return &contracts.Article{Metadata: contracts.ArticleMetadata{Draft: draft}}
 }
 
-func (this *DraftFilteringHandlerFixture) buildHandler(enabled bool) *DraftFilteringHandler {
-	handler := NewDraftFilteringHandler(enabled)
-	handler.log = logging.Capture()
-	return handler
-}
-
 func (this *DraftFilteringHandlerFixture) TestDisabled_LetEverythingThrough() {
-	handler := this.buildHandler(false)
+	handler := NewDraftFilteringHandler(false)
 
 	draft := this.article(true)
 	handler.Handle(draft)
@@ -42,7 +35,7 @@ func (this *DraftFilteringHandlerFixture) TestDisabled_LetEverythingThrough() {
 }
 
 func (this *DraftFilteringHandlerFixture) TestEnabled_AnyDraftsDropped() {
-	handler := this.buildHandler(true)
+	handler := NewDraftFilteringHandler(true)
 
 	nonDraft := this.article(false)
 	handler.Handle(nonDraft)

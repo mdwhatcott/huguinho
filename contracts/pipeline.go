@@ -10,4 +10,4 @@ type Finalizer interface {
 	Finalize() error
 }
 
-var ErrDropArticle = errors.New("do not continue dispatching to handlers")
+var ErrDropArticle = errors.New("dropped article")

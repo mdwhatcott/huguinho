@@ -7,7 +7,6 @@ import (
 
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
-	"github.com/smartystreets/logging"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 )
@@ -34,14 +33,8 @@ func (this *FutureFilteringHandlerFixture) article(date time.Time) *contracts.Ar
 	return &contracts.Article{Metadata: contracts.ArticleMetadata{Date: date}}
 }
 
-func (this *FutureFilteringHandlerFixture) buildHandler(enabled bool) *FutureFilteringHandler {
-	handler := NewFutureFilteringHandler(this.present, enabled)
-	handler.log = logging.Capture()
-	return handler
-}
-
 func (this *FutureFilteringHandlerFixture) TestDisabled_LetEverythingThrough() {
-	disabled := this.buildHandler(false)
+	disabled := NewFutureFilteringHandler(this.present, false)
 
 	past := this.article(this.past)
 	disabled.Handle(past)
@@ -57,7 +50,7 @@ func (this *FutureFilteringHandlerFixture) TestDisabled_LetEverythingThrough() {
 }
 
 func (this *FutureFilteringHandlerFixture) TestEnabled_AnythingAfterNowDropped() {
-	enabled := this.buildHandler(true)
+	enabled := NewFutureFilteringHandler(this.present, true)
 
 	past := this.article(this.past)
 	enabled.Handle(past)

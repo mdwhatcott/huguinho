@@ -1,15 +1,13 @@
 package core
 
 import (
+	"fmt"
 	"time"
-
-	"github.com/smartystreets/logging"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 type FutureFilteringHandler struct {
-	log     *logging.Logger
 	now     time.Time
 	enabled bool
 }
@@ -19,8 +17,16 @@ func NewFutureFilteringHandler(now time.Time, enabled bool) *FutureFilteringHand
 }
 
 func (this *FutureFilteringHandler) Handle(article *contracts.Article) {
-	if this.enabled && article.Metadata.Date.After(this.now) {
-		this.log.Println("[INFO] dropping future article:", article.Metadata.Slug)
-		article.Error = contracts.ErrDropArticle
+	if !this.enabled {
+		return
 	}
+	if !article.Metadata.Date.After(this.now) {
+		return
+	}
+	article.Error = fmt.Errorf(
+		"%w: %s (can be published on %s)",
+		contracts.ErrDropArticle,
+		article.Metadata.Slug,
+		article.Metadata.Date.Format("January 2, 2006"),
+	)
 }
