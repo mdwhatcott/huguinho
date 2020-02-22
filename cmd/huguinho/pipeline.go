@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"time"
 
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -14,9 +13,6 @@ type Pipeline struct {
 	config   Config
 	disk     contracts.FileSystem
 	renderer contracts.Renderer
-
-	published int
-	errors    int
 }
 
 func NewPipeline(
@@ -30,12 +26,7 @@ func NewPipeline(
 		renderer: renderer,
 	}
 }
-func (this *Pipeline) Run() (published, errors int) {
-	final := this.startAll()
-	this.drain(final)
-	return this.published, this.errors
-}
-func (this *Pipeline) startAll() (out chan contracts.Article) {
+func (this *Pipeline) Run() (out chan contracts.Article) {
 	out = this.goLoad()
 	out = this.goListen(out, core.NewFileReadingHandler(this.disk))
 	out = this.goListen(out, core.NewMetadataParsingHandler())
@@ -57,21 +48,4 @@ func (this *Pipeline) goListen(in chan contracts.Article, handler contracts.Hand
 	out = make(chan contracts.Article)
 	go core.Listen(in, out, handler)
 	return out
-}
-
-func (this *Pipeline) drain(out chan contracts.Article) {
-	for article := range out {
-		if article.Error == contracts.ErrDropArticle {
-			continue
-		} else if article.Error != nil {
-			log.Println("[WARN] error:", article.Error)
-			this.errors++
-		} else if article.Source.Path != "" {
-			log.Println("[INFO] published article:", article.Metadata.Slug)
-			this.published++
-		} else {
-			log.Printf("[WARN] not sure what this article struct represents: %#v", article)
-			this.errors++
-		}
-	}
 }

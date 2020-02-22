@@ -1,10 +1,12 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"path/filepath"
 	"time"
 
+	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/huguinho/shell"
 )
 
@@ -26,9 +28,7 @@ func NewProgram(start time.Time) *Program {
 
 func (this *Program) Run() int {
 	pipeline := this.buildPipeline()
-	articles, errs := pipeline.Run()
-	this.report(articles, errs)
-	return errs
+	return this.receive(pipeline.Run())
 }
 
 func (this *Program) buildPipeline() *Pipeline {
@@ -37,9 +37,34 @@ func (this *Program) buildPipeline() *Pipeline {
 	return NewPipeline(this.config, this.disk, renderer)
 }
 
-func (this *Program) report(articles int, errs int) {
-	log.Printf(
-		"[INFO] published %d articles, encountered %d errors, all in %v.",
-		articles, errs, time.Since(this.start).Round(time.Millisecond),
+func (this *Program) receive(out chan contracts.Article) int {
+	var (
+		errs      int
+		published int
+		dropped   int
 	)
+
+	for article := range out {
+		if errors.Is(article.Error, contracts.ErrDropArticle) {
+			log.Println("[INFO]", article.Error)
+			dropped++
+		} else if article.Error != nil {
+			log.Println("[WARN] error:", article.Error)
+			errs++
+		} else if article.Source.Path != "" {
+			log.Println("[INFO] published article:", article.Metadata.Slug)
+			published++
+		} else {
+			log.Printf("[WARN] not sure what this article struct represents: %#v", article)
+			errs++
+		}
+	}
+	this.report(dropped, published, errs)
+	return errs
+}
+func (this *Program) report(dropped, published, errs int) {
+	log.Println("[INFO] errors encountered: ", errs)
+	log.Println("[INFO] articles dropped:   ", dropped)
+	log.Println("[INFO] articles published: ", published)
+	log.Println("[INFO] processing duration:", time.Since(this.start).Round(time.Millisecond))
 }
