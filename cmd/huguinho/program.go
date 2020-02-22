@@ -25,21 +25,10 @@ func NewProgram(start time.Time) *Program {
 }
 
 func (this *Program) Run() int {
-	this.exportCSS()
 	pipeline := this.buildPipeline()
 	articles, errs := pipeline.Run()
 	this.report(articles, errs)
 	return errs
-}
-
-func (this *Program) exportCSS() {
-	err := this.disk.CopyFile(
-		filepath.Join(this.config.StylesDir, "custom.css"),
-		filepath.Join(this.config.TargetRoot, "css", "custom.css"),
-	)
-	if err != nil {
-		log.Fatal("[WARN] failed to copy css:", err)
-	}
 }
 
 func (this *Program) buildPipeline() *Pipeline {

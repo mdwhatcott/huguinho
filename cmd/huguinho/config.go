@@ -8,7 +8,6 @@ import (
 
 type Config struct {
 	TemplateDir string
-	StylesDir   string
 	ContentRoot string
 	TargetRoot  string
 	BuildDrafts bool
@@ -17,7 +16,6 @@ type Config struct {
 
 func parseConfig() (config Config) {
 	stringFlag("templates", "Directory with html templates.  ", "templates", &config.TemplateDir)
-	stringFlag("styles   ", "Directory with css stylesheets. ", "css      ", &config.StylesDir)
 	stringFlag("content  ", "Directory with markdown content.", "content  ", &config.ContentRoot)
 	stringFlag("target   ", "Directory for rendered html.    ", "rendered ", &config.TargetRoot)
 	boolFlag("with-drafts", "When set, include drafts.             ", false, &config.BuildDrafts)
@@ -34,9 +32,6 @@ func parseConfig() (config Config) {
 
 func Validate(config Config) bool {
 	if config.TemplateDir == "" {
-		return false
-	}
-	if config.StylesDir == "" {
 		return false
 	}
 	if config.ContentRoot == "" {
