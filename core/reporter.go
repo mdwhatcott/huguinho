@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"errors"
@@ -45,4 +45,8 @@ func (this *Reporter) RenderFinalReport(finished time.Time) {
 	this.log.Println("[INFO] dropped articles:   ", this.dropped)
 	this.log.Println("[INFO] published articles: ", this.published)
 	this.log.Println("[INFO] processing duration:", finished.Sub(this.started).Round(time.Millisecond))
+}
+
+func (this *Reporter) Errors() int {
+	return this.errors
 }

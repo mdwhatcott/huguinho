@@ -8,14 +8,15 @@ import (
 	"time"
 
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/huguinho/core"
 )
 
 func main() {
 	log.SetFlags(0)
-	reporter := NewReporter(time.Now())
+	reporter := core.NewReporter(time.Now())
 	reporter.ProcessStream(stream())
 	reporter.RenderFinalReport(time.Now())
-	os.Exit(reporter.errors)
+	os.Exit(reporter.Errors())
 }
 
 func stream() chan contracts.Article {
