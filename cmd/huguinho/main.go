@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -11,6 +12,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(0)
 	reporter := NewReporter(time.Now())
 	reporter.ProcessStream(stream())
 	reporter.RenderFinalReport(time.Now())

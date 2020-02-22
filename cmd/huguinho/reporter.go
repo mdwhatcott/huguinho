@@ -22,7 +22,6 @@ func NewReporter(started time.Time) *Reporter {
 }
 
 func (this *Reporter) ProcessStream(out chan contracts.Article) {
-	this.log.SetFlags(0)
 	for article := range out {
 		this.accountFor(article)
 	}
