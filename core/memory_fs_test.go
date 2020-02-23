@@ -65,18 +65,32 @@ func (this *InMemoryFileSystem) MkdirAll(path string, perm os.FileMode) error {
 }
 
 func (this *InMemoryFileSystem) Walk(root string, walk filepath.WalkFunc) error {
+	skips := make(map[string]struct{})
 	root = filepath.Clean(root)
 	var paths []string
 	for path := range this.Files {
-		paths = append(paths, path)
+		if path == root || strings.HasPrefix(path, root+"/") {
+			paths = append(paths, path)
+		}
 	}
 	sort.Strings(paths)
 	for _, path := range paths {
-		file := this.Files[path]
-		if !strings.HasPrefix(path, root+string(os.PathSeparator)) {
+		shouldSkip := false
+		for skip := range skips {
+			if strings.HasPrefix(path, skip) {
+				shouldSkip = true
+				break
+			}
+		}
+		if shouldSkip {
 			continue
 		}
+		file := this.Files[path]
 		err := walk(path, file, this.ErrWalkFunc[path])
+		if err == filepath.SkipDir {
+			skips[path+string(filepath.Separator)] = struct{}{}
+			continue
+		}
 		if err != nil {
 			return err
 		}

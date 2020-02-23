@@ -1,7 +1,6 @@
 package main
 
 import (
-	"text/template"
 	"time"
 
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -18,12 +17,12 @@ type Pipeline struct {
 func NewPipeline(
 	config contracts.Config,
 	disk contracts.FileSystem,
-	templates *template.Template,
+	renderer contracts.Renderer,
 ) *Pipeline {
 	return &Pipeline{
 		config:   config,
 		disk:     disk,
-		renderer: core.NewTemplateRenderer(templates),
+		renderer: renderer,
 	}
 }
 func (this *Pipeline) Run() (out chan contracts.Article) {

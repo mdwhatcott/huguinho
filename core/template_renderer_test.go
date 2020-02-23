@@ -18,25 +18,70 @@ func TestTemplateRendererFixture(t *testing.T) {
 type TemplateRendererFixture struct {
 	*gunit.Fixture
 
-	renderer *TemplateRenderer
+	templates *template.Template
+	renderer  *TemplateRenderer
 }
 
-func (this *TemplateRendererFixture) Setup() {
+func (this *TemplateRendererFixture) Setup() { // TODO: this is getting in the way of the 'Missing' tests
+	this.parseHomePageTemplate()
+	this.parseArticleTemplate()
+	this.parseTopicsTemplate()
+	this.renderer = NewTemplateRenderer(this.templates)
+	this.So(this.renderer.Validate(), should.BeNil)
+}
+
+func (this *TemplateRendererFixture) parseTopicsTemplate() {
 	var err error
+	if this.templates == nil {
+		this.templates = template.New(contracts.TopicsTemplateName)
+	} else {
+		this.templates = this.templates.New(contracts.TopicsTemplateName)
+	}
+	this.templates, err = this.templates.Parse(contracts.TopicsTemplateName)
+	this.So(err, should.BeNil)
+}
 
-	t := template.New(contracts.HomePageTemplateName)
-	t, err = t.Parse(contracts.HomePageTemplateName)
-	this.So(err, should.Equal, nil)
+func (this *TemplateRendererFixture) parseArticleTemplate() {
+	var err error
+	if this.templates == nil {
+		this.templates = template.New(contracts.ArticleTemplateName)
+	} else {
+		this.templates = this.templates.New(contracts.ArticleTemplateName)
+	}
+	this.templates, err = this.templates.Parse(contracts.ArticleTemplateName)
+	this.So(err, should.BeNil)
+}
 
-	t = t.New(contracts.ArticleTemplateName)
-	t, err = t.Parse(contracts.ArticleTemplateName)
-	this.So(err, should.Equal, nil)
+func (this *TemplateRendererFixture) parseHomePageTemplate() {
+	var err error
+	if this.templates == nil {
+		this.templates = template.New(contracts.HomePageTemplateName)
+	} else {
+		this.templates = this.templates.New(contracts.HomePageTemplateName)
+	}
+	this.templates, err = this.templates.Parse(contracts.HomePageTemplateName)
+	this.So(err, should.BeNil)
+}
 
-	t = t.New(contracts.TopicsTemplateName)
-	t, err = t.Parse(contracts.TopicsTemplateName)
-	this.So(err, should.Equal, nil)
+func (this *TemplateRendererFixture) FocusTestMissingHomePageTemplate_ValidateErr() {
+	this.parseArticleTemplate()
+	this.parseTopicsTemplate()
+	this.renderer = NewTemplateRenderer(this.templates)
+	this.So(this.renderer.Validate(), should.NotBeNil)
+}
 
-	this.renderer = NewTemplateRenderer(t)
+func (this *TemplateRendererFixture) TestMissingTopicsTemplate_ValidateErr() {
+	this.parseArticleTemplate()
+	this.parseHomePageTemplate()
+	this.renderer = NewTemplateRenderer(this.templates)
+	this.So(this.renderer.Validate(), should.NotBeNil)
+}
+
+func (this *TemplateRendererFixture) TestMissingArticleTemplate_ValidateErr() {
+	this.parseHomePageTemplate()
+	this.parseTopicsTemplate()
+	this.renderer = NewTemplateRenderer(this.templates)
+	this.So(this.renderer.Validate(), should.NotBeNil)
 }
 
 func (this *TemplateRendererFixture) TestCanRenderTypesCorrespondingToTemplates() {

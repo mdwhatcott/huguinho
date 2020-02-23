@@ -2,6 +2,7 @@ package core
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"reflect"
 	"text/template"
@@ -15,6 +16,37 @@ type TemplateRenderer struct {
 
 func NewTemplateRenderer(templates *template.Template) *TemplateRenderer {
 	return &TemplateRenderer{templates: templates}
+}
+
+func (this *TemplateRenderer) Validate() error {
+	rendered, err := this.Render(contracts.RenderedHomePage{})
+	if err != nil {
+		return err
+	}
+	fmt.Println("HOME:", rendered)
+	if rendered == "" {
+		return errors.New("missing rendered content (template must not have been provided)")
+	}
+
+	rendered, err = this.Render(contracts.RenderedTopicsListing{})
+	if err != nil {
+		return err
+	}
+	fmt.Println("TOPICS:", rendered)
+	if rendered == "" {
+		return errors.New("missing rendered content (template must not have been provided)")
+	}
+
+	rendered, err = this.Render(contracts.RenderedArticle{})
+	if err != nil {
+		return err
+	}
+	fmt.Println("ARTICLE:", rendered)
+	if rendered == "" {
+		return errors.New("missing rendered content (template must not have been provided)")
+	}
+
+	return nil
 }
 
 func (this *TemplateRenderer) Render(v interface{}) (string, error) {

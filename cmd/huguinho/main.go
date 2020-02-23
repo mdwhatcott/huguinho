@@ -3,8 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"path/filepath"
-	"text/template"
 	"time"
 
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -27,23 +25,25 @@ func ParseConfig(args []string) contracts.Config {
 
 func Run(config contracts.Config) int {
 	reporter := core.NewReporter(time.Now())
-	reporter.ProcessStream(stream(config))
+	renderer := BuildTemplateRenderer(config, NewDisk())
+	pipeline := NewPipeline(config, NewDisk(), renderer)
+	reporter.ProcessStream(pipeline.Run())
 	reporter.RenderFinalReport(time.Now())
 	return reporter.Errors()
 }
 
-func stream(config contracts.Config) chan contracts.Article {
-	templates := parseTemplates(filepath.Join(config.TemplateDir, "*.tmpl"))
-	pipeline := NewPipeline(config, NewDisk(), templates)
-	return pipeline.Run()
-}
-
-// TEST (see core.TemplateLoader)
-func parseTemplates(glob string) *template.Template {
-	templates, err := template.ParseGlob(glob)
+func BuildTemplateRenderer(config contracts.Config, disk contracts.FileSystem) *core.TemplateRenderer {
+	loader := core.NewTemplateLoader(disk, config.TemplateDir)
+	templates, err := loader.Load()
 	if err != nil {
-		log.Fatalln("Could not parse templates:", err)
+		log.Fatal(err)
 	}
-	//templates.Lookup(contracts.HomePageTemplateName)
-	return templates
+
+	renderer := core.NewTemplateRenderer(templates)
+	err = renderer.Validate()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return renderer
 }
