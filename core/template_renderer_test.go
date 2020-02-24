@@ -63,7 +63,8 @@ func (this *TemplateRendererFixture) parseHomePageTemplate() {
 	this.So(err, should.BeNil)
 }
 
-func (this *TemplateRendererFixture) FocusTestMissingHomePageTemplate_ValidateErr() {
+func (this *TemplateRendererFixture) TestMissingHomePageTemplate_ValidateErr() {
+	this.templates = nil
 	this.parseArticleTemplate()
 	this.parseTopicsTemplate()
 	this.renderer = NewTemplateRenderer(this.templates)
@@ -71,6 +72,7 @@ func (this *TemplateRendererFixture) FocusTestMissingHomePageTemplate_ValidateEr
 }
 
 func (this *TemplateRendererFixture) TestMissingTopicsTemplate_ValidateErr() {
+	this.templates = nil
 	this.parseArticleTemplate()
 	this.parseHomePageTemplate()
 	this.renderer = NewTemplateRenderer(this.templates)
@@ -78,6 +80,7 @@ func (this *TemplateRendererFixture) TestMissingTopicsTemplate_ValidateErr() {
 }
 
 func (this *TemplateRendererFixture) TestMissingArticleTemplate_ValidateErr() {
+	this.templates = nil
 	this.parseHomePageTemplate()
 	this.parseTopicsTemplate()
 	this.renderer = NewTemplateRenderer(this.templates)
