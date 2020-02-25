@@ -1,4 +1,4 @@
-package core
+package fs
 
 import (
 	"os"
@@ -29,7 +29,11 @@ func NewInMemoryFileSystem() *InMemoryFileSystem {
 }
 
 func (this *InMemoryFileSystem) ReadFile(path string) ([]byte, error) {
-	return this.Files[path].content, this.ErrReadFile[path]
+	err := this.ErrReadFile[path]
+	if err != nil {
+		return nil, err
+	}
+	return this.Files[path].content, nil
 }
 
 func (this *InMemoryFileSystem) WriteFile(path string, content []byte, perm os.FileMode) error {
@@ -38,8 +42,8 @@ func (this *InMemoryFileSystem) WriteFile(path string, content []byte, perm os.F
 		return err
 	}
 	this.Files[path] = &MemoryFile{
-		name:    filepath.Base(path),
 		content: content,
+		name:    filepath.Base(path),
 		mode:    perm,
 		modTime: this.ModTime,
 	}
@@ -101,13 +105,14 @@ func (this *InMemoryFileSystem) Walk(root string, walk filepath.WalkFunc) error 
 ///////////////////////////////////////////////////////////////////
 
 type MemoryFile struct {
-	name    string
 	content []byte
+	name    string
 	mode    os.FileMode
 	modTime time.Time
 	isDir   bool
 }
 
+func (this *MemoryFile) Content() string    { return string(this.content) }
 func (this *MemoryFile) Name() string       { return this.name }
 func (this *MemoryFile) Size() int64        { return int64(len(this.content)) }
 func (this *MemoryFile) Mode() os.FileMode  { return this.mode }

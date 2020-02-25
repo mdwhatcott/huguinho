@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/mdwhatcott/huguinho/fs"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 
@@ -18,13 +19,13 @@ type ArticleRenderingHandlerFixture struct {
 	*gunit.Fixture
 	handler  *ArticleRenderingHandler
 	renderer *FakeRenderer
-	disk     *InMemoryFileSystem
+	disk     *fs.InMemoryFileSystem
 	article  *contracts.Article
 }
 
 func (this *ArticleRenderingHandlerFixture) Setup() {
 	this.renderer = NewFakeRenderer()
-	this.disk = NewInMemoryFileSystem()
+	this.disk = fs.NewInMemoryFileSystem()
 	this.handler = NewArticleRenderingHandler(this.disk, this.renderer, "output/folder")
 
 	this.article = &contracts.Article{
@@ -52,7 +53,7 @@ func (this *ArticleRenderingHandlerFixture) TestFileTemplateRenderedAndWrittenTo
 	this.So(this.disk.Files, should.ContainKey, "output/folder/slug")
 	if this.So(this.disk.Files, should.ContainKey, "output/folder/slug/index.html") {
 		file := this.disk.Files["output/folder/slug/index.html"]
-		this.So(file.content, should.Resemble, []byte("RENDERED"))
+		this.So(file.Content(), should.Resemble, "RENDERED")
 	}
 }
 

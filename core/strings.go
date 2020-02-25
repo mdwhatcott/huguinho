@@ -1,6 +1,8 @@
 package core
 
-import "strings"
+import (
+	"strings"
+)
 
 func divide(full string, split string) (before, after string) {
 	divider := strings.Index(full, split)

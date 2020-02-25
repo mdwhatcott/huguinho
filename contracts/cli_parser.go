@@ -9,14 +9,20 @@ import (
 )
 
 type CLIParser struct {
-	args  []string
-	flags *flag.FlagSet
+	args   []string
+	flags  *flag.FlagSet
+	buffer *bytes.Buffer
 }
 
 func NewCLIParser(args []string) *CLIParser {
+	flags := flag.NewFlagSet("huguinho", flag.ContinueOnError)
+	buffer := new(bytes.Buffer)
+	flags.SetOutput(buffer)
+
 	return &CLIParser{
-		args:  args,
-		flags: flag.NewFlagSet("huguinho", flag.ContinueOnError),
+		args:   args,
+		flags:  flags,
+		buffer: buffer,
 	}
 }
 
@@ -41,13 +47,8 @@ func (this *CLIParser) Parse() (config Config, err error) {
 }
 
 func (this *CLIParser) composeError(err error) error {
-	buffer := new(bytes.Buffer)
-	this.flags.SetOutput(buffer)
-	this.flags.PrintDefaults()
-	return fmt.Errorf("%w: %v\n%s", ErrInvalidConfig, err, buffer.String())
+	return fmt.Errorf("%w: %v\n%s", ErrInvalidConfig, err, this.buffer.String())
 }
-
-var ErrInvalidConfig = errors.New("invalid config")
 
 func (this *CLIParser) stringFlag(name, description, value string, s *string) {
 	this.flags.StringVar(s,
@@ -64,3 +65,5 @@ func (this *CLIParser) boolFlag(name, description string, value bool, b *bool) {
 		strings.TrimSpace(description),
 	)
 }
+
+var ErrInvalidConfig = errors.New("invalid config")

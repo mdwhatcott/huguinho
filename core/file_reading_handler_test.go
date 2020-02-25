@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/mdwhatcott/huguinho/fs"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 
@@ -17,11 +18,11 @@ func TestFileReaderFixture(t *testing.T) {
 type FileReaderFixture struct {
 	*gunit.Fixture
 	reader *FileReadingHandler
-	files  *InMemoryFileSystem
+	files  *fs.InMemoryFileSystem
 }
 
 func (this *FileReaderFixture) Setup() {
-	this.files = NewInMemoryFileSystem()
+	this.files = fs.NewInMemoryFileSystem()
 	this.reader = NewFileReadingHandler(this.files)
 
 	_ = this.files.WriteFile("/file1", []byte("FILE1"), 0644)

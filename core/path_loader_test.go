@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/mdwhatcott/huguinho/fs"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 
@@ -17,12 +18,12 @@ func TestPathLoaderFixture(t *testing.T) {
 type PathLoaderFixture struct {
 	*gunit.Fixture
 	loader *PathLoader
-	files  *InMemoryFileSystem
+	files  *fs.InMemoryFileSystem
 	output chan contracts.Article
 }
 
 func (this *PathLoaderFixture) Setup() {
-	this.files = NewInMemoryFileSystem()
+	this.files = fs.NewInMemoryFileSystem()
 	this.output = make(chan contracts.Article, 10)
 	this.loader = NewPathLoader(this.files, "/content", this.output)
 
