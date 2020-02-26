@@ -14,23 +14,23 @@ func NewMetadataValidationHandler() *MetadataValidationHandler {
 
 func (this *MetadataValidationHandler) Handle(article *contracts.Article) {
 	if article.Metadata.Title == "" {
-		article.Error = contracts.StackTraceError(errBlankMetadataTitle)
+		article.Error = StackTraceError(errBlankMetadataTitle)
 		return
 	}
 
 	if article.Metadata.Slug == "" {
-		article.Error = contracts.StackTraceError(errBlankMetadataSlug)
+		article.Error = StackTraceError(errBlankMetadataSlug)
 		return
 	}
 
 	if article.Metadata.Date.IsZero() {
-		article.Error = contracts.StackTraceError(errBlankMetadataDate)
+		article.Error = StackTraceError(errBlankMetadataDate)
 		return
 	}
 
 	_, found := this.slugs[article.Metadata.Slug]
 	if found {
-		article.Error = contracts.StackTraceError(errRepeatedMetadataSlug)
+		article.Error = StackTraceError(errRepeatedMetadataSlug)
 		return
 	}
 

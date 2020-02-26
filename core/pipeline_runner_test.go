@@ -2,10 +2,10 @@ package core
 
 import (
 	"os"
+	"strings"
 	"testing"
 	"time"
 
-	"github.com/mdwhatcott/huguinho/fs"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/clock"
 	"github.com/smartystreets/gunit"
@@ -22,12 +22,12 @@ type PipelineRunnerFixture struct {
 	started  time.Time
 	finished time.Time
 	args     []string
-	disk     *fs.InMemoryFileSystem
+	disk     *InMemoryFileSystem
 	runner   *PipelineRunner
 }
 
 func (this *PipelineRunnerFixture) Setup() {
-	this.disk = fs.NewInMemoryFileSystem()
+	this.disk = NewInMemoryFileSystem()
 	this.runner = NewPipelineRunner(this.args, this.disk)
 	this.runner.log = logging.Capture()
 	this.runner.log.SetFlags(0)
@@ -36,9 +36,9 @@ func (this *PipelineRunnerFixture) Setup() {
 	this.finished = this.started.Add(time.Millisecond)
 	this.runner.clock = clock.Freeze(this.started, this.finished)
 
-	this.file("content/a", ContentA)
-	this.file("content/b", ContentB)
-	this.file("content/c", ContentC)
+	this.file("content/a.md", ContentA)
+	this.file("content/b.md", ContentB)
+	this.file("content/c.md", ContentC)
 
 	this.file("templates/home.tmpl", TemplateHome)
 	this.file("templates/topics.tmpl", TemplateTopics)
@@ -68,40 +68,39 @@ func (this *PipelineRunnerFixture) assertFolder(path string) {
 func (this *PipelineRunnerFixture) assertFile(path, expectedContent string) {
 	file := this.disk.Files[path]
 	if this.So(file, should.NotBeNil) {
-		this.So(file.Content(), should.Equal, expectedContent)
+		actual := strings.TrimSpace(file.Content())
+		expected := strings.TrimSpace(expectedContent)
+		this.So(actual, should.EqualTrimSpace, expected)
 	}
 }
 
-func (this *PipelineRunnerFixture) TestBadConfigPreventsProcessing_Error() {
+func (this *PipelineRunnerFixture) TODOTestBadConfigPreventsProcessing_Error() {
 	// TODO
 }
 
-func (this *PipelineRunnerFixture) TestTemplateLoadFailurePreventsProcessing_Error() {
+func (this *PipelineRunnerFixture) TODOTestTemplateLoadFailurePreventsProcessing_Error() {
 	// TODO
 }
 
-func (this *PipelineRunnerFixture) TestTemplateValidationFailurePreventsProcessing_Error() {
+func (this *PipelineRunnerFixture) TODOTestTemplateValidationFailurePreventsProcessing_Error() {
 	// TODO
 }
 
 func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
+	this.So(len(this.disk.Files), should.Equal, 6) // 3 articles, 3 templates
+
 	errors := this.runner.Run()
 
 	this.So(errors, should.Equal, 0)
-
-	this.ls("rendered")
+	this.So(len(this.disk.Files), should.Equal, 12) // 3 folders, 3 html files
 
 	this.assertFolder("rendered")
+	this.assertFolder("rendered/topics")
+	this.assertFolder("rendered/article-a")
 
-	// TODO: fix this test...
-	//this.assertFile("rendered/index.html", RenderedHome)
-	//this.assertFile("rendered/topics/index.html", RenderedTopics)
-	//this.assertFile("rendered/article-a/index.html", RenderedArticleA)
-
-	//this.So(this.disk.Files["rendered/article-b"], should.BeNil)
-	//this.So(this.disk.Files["rendered/article-b/index.html"], should.BeNil)
-	//this.So(this.disk.Files["rendered/article-c"], should.BeNil)
-	//this.So(this.disk.Files["rendered/article-c/index.html"], should.BeNil)
+	this.assertFile("rendered/index.html", RenderedHome)
+	this.assertFile("rendered/topics/index.html", RenderedTopics)
+	this.assertFile("rendered/article-a/index.html", RenderedArticleA)
 }
 
 const (
@@ -114,7 +113,8 @@ date:   2020-02-08
 
 +++
 
-This is the first article.`
+This is the first article.
+`
 
 	ContentB = `
 slug:   /article-b/
@@ -125,7 +125,8 @@ date:   2021-02-09
 
 +++
 
-This is the second article.`
+This is the second article.
+`
 
 	ContentC = `
 slug:   /article-c/
@@ -137,7 +138,8 @@ draft:  true
 
 +++
 
-This is the third article.`
+This is the third article.
+`
 
 	TemplateHome = `
 {{ range .Pages }}
@@ -146,7 +148,8 @@ Title: {{ .Title }}
 Date:  {{ .Date.Format "2006-01-02" }}
 Intro: {{ .Intro }}
 ------------------------------------------------------------------
-{{ end }}`
+{{ end }}
+`
 
 	TemplateArticle = `
 Title:  {{ .Title }}
@@ -155,7 +158,8 @@ Date:   {{ .Date.Format "2006-01-02" }}
 Topics: {{ range .Topics }}{{ . }}{{ end }}
 Content:
 
-{{ .Content }}`
+{{ .Content }}
+`
 
 	TemplateTopics = `
 {{ range .Topics }}{{ .Topic }}
@@ -168,7 +172,8 @@ Content:
 {{ end }}
 `
 
-	RenderedArticleA = `Title:  Article A
+	RenderedArticleA = `
+Title:  Article A
 Intro:  The introduction for Article A.
 Date:   2020-02-08
 Topics: importantmisc
@@ -177,7 +182,8 @@ Content:
 <p>This is the first article.</p>
 `
 
-	RenderedTopics = `important
+	RenderedTopics = `
+important
 	
 	Slug:  /article-a/
 	Title: Article A
@@ -190,7 +196,6 @@ misc
 	Title: Article A
 	Intro: The introduction for Article A.
 	Date:  2020-02-08
-	
 
 `
 

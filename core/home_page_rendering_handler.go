@@ -42,17 +42,17 @@ func (this *HomePageRenderingHandler) Finalize() error {
 
 	rendered, err := this.renderer.Render(contracts.RenderedHomePage{Pages: this.listing})
 	if err != nil {
-		return contracts.StackTraceError(err)
+		return StackTraceError(err)
 	}
 
 	err = this.disk.MkdirAll(this.output, 0755)
 	if err != nil {
-		return contracts.StackTraceError(err)
+		return StackTraceError(err)
 	}
 
 	err = this.disk.WriteFile(filepath.Join(this.output, "index.html"), []byte(rendered), 0644)
 	if err != nil {
-		return contracts.StackTraceError(err)
+		return StackTraceError(err)
 	}
 
 	return nil

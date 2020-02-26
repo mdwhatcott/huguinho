@@ -1,4 +1,4 @@
-package contracts
+package core
 
 import (
 	"bytes"
@@ -6,6 +6,8 @@ import (
 	"flag"
 	"fmt"
 	"strings"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 type CLIParser struct {
@@ -26,7 +28,7 @@ func NewCLIParser(args []string) *CLIParser {
 	}
 }
 
-func (this *CLIParser) Parse() (config Config, err error) {
+func (this *CLIParser) Parse() (config contracts.Config, err error) {
 	this.stringFlag("templates", "Directory with html templates.  ", "templates", &config.TemplateDir)
 	this.stringFlag("content  ", "Directory with markdown content.", "content  ", &config.ContentRoot)
 	this.stringFlag("target   ", "Directory for rendered html.    ", "rendered ", &config.TargetRoot)
@@ -35,12 +37,12 @@ func (this *CLIParser) Parse() (config Config, err error) {
 
 	err = this.flags.Parse(this.args)
 	if err != nil {
-		return Config{}, this.composeError(err)
+		return contracts.Config{}, this.composeError(err)
 	}
 
 	err = config.Validate()
 	if err != nil {
-		return Config{}, this.composeError(err)
+		return contracts.Config{}, this.composeError(err)
 	}
 
 	return config, nil

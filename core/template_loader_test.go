@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/fs"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 
@@ -18,12 +17,12 @@ func TestTemplateLoaderFixture(t *testing.T) {
 type TemplateLoaderFixture struct {
 	*gunit.Fixture
 
-	disk   *fs.InMemoryFileSystem
+	disk   *InMemoryFileSystem
 	loader *TemplateLoader
 }
 
 func (this *TemplateLoaderFixture) Setup() {
-	this.disk = fs.NewInMemoryFileSystem()
+	this.disk = NewInMemoryFileSystem()
 	this.loader = NewTemplateLoader(this.disk, "templates")
 	_ = this.disk.MkdirAll("templates", 0755)
 	_ = this.disk.WriteFile("templates/supplemental-template.tmpl", []byte(""), 0644)

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/fs"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 
@@ -19,12 +18,12 @@ type TopicPageRenderingHandlerFixture struct {
 	*gunit.Fixture
 
 	handler  *TopicPageRenderingHandler
-	disk     *fs.InMemoryFileSystem
+	disk     *InMemoryFileSystem
 	renderer *FakeRenderer
 }
 
 func (this *TopicPageRenderingHandlerFixture) Setup() {
-	this.disk = fs.NewInMemoryFileSystem()
+	this.disk = NewInMemoryFileSystem()
 	this.renderer = NewFakeRenderer()
 	this.handler = NewTopicPageRenderingHandler(this.disk, this.renderer, "output/folder")
 	this.handleArticles()

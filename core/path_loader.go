@@ -33,7 +33,7 @@ func (this *PathLoader) Start() {
 
 func (this *PathLoader) walk(path string, info os.FileInfo, err error) error {
 	if err != nil {
-		return contracts.StackTraceError(err)
+		return StackTraceError(err)
 	}
 	if info.IsDir() {
 		return nil

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/fs"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 
@@ -19,13 +18,13 @@ type ArticleRenderingHandlerFixture struct {
 	*gunit.Fixture
 	handler  *ArticleRenderingHandler
 	renderer *FakeRenderer
-	disk     *fs.InMemoryFileSystem
+	disk     *InMemoryFileSystem
 	article  *contracts.Article
 }
 
 func (this *ArticleRenderingHandlerFixture) Setup() {
 	this.renderer = NewFakeRenderer()
-	this.disk = fs.NewInMemoryFileSystem()
+	this.disk = NewInMemoryFileSystem()
 	this.handler = NewArticleRenderingHandler(this.disk, this.renderer, "output/folder")
 
 	this.article = &contracts.Article{

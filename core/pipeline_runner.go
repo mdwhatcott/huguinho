@@ -20,7 +20,7 @@ func NewPipelineRunner(args []string, fs contracts.FileSystem) *PipelineRunner {
 func (this *PipelineRunner) Run() (errors int) {
 	start := this.clock.UTCNow()
 
-	config, err := contracts.NewCLIParser(this.args).Parse()
+	config, err := NewCLIParser(this.args).Parse()
 	if err != nil {
 		this.log.Println(err)
 		return 1

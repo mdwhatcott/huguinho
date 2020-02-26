@@ -1,10 +1,11 @@
-package contracts
+package core
 
 import (
 	"bytes"
 	"errors"
 	"testing"
 
+	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 )
@@ -24,7 +25,7 @@ func (this *CLIParserFixture) Setup() {
 	this.output = new(bytes.Buffer)
 }
 
-func (this *CLIParserFixture) Parse() (Config, error) {
+func (this *CLIParserFixture) Parse() (contracts.Config, error) {
 	parser := NewCLIParser(this.args)
 	parser.flags.SetOutput(this.output)
 	return parser.Parse()
@@ -34,7 +35,7 @@ func (this *CLIParserFixture) TestDefaults() {
 	this.args = []string{}
 	config, err := this.Parse()
 	this.So(err, should.BeNil)
-	this.So(config, should.Resemble, Config{
+	this.So(config, should.Resemble, contracts.Config{
 		TemplateDir: "templates",
 		ContentRoot: "content",
 		TargetRoot:  "rendered",
@@ -53,7 +54,7 @@ func (this *CLIParserFixture) TestCustomValues() {
 	}
 	config, err := this.Parse()
 	this.So(err, should.BeNil)
-	this.So(config, should.Resemble, Config{
+	this.So(config, should.Resemble, contracts.Config{
 		TemplateDir: "other-templates",
 		ContentRoot: "other-content",
 		TargetRoot:  "other-rendered",

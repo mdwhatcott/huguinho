@@ -38,11 +38,11 @@ func (this *TemplateLoader) Load() (templates *template.Template, err error) {
 		}
 		all, err := this.disk.ReadFile(path)
 		if err != nil {
-			return contracts.StackTraceError(err)
+			return StackTraceError(err)
 		}
 		templates, err = templates.Parse(string(all))
 		if err != nil {
-			return contracts.StackTraceError(err)
+			return StackTraceError(err)
 		}
 		return nil
 	})
