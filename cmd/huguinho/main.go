@@ -9,12 +9,12 @@ import (
 	"github.com/mdwhatcott/huguinho/core"
 )
 
+func init() {
+	log.SetFlags(log.Lshortfile)
+}
+
 func main() {
-	log.SetFlags(0)
-	args := os.Args[1:]
-	disk := NewDisk()
-	runner := core.NewPipelineRunner(args, disk)
-	os.Exit(runner.Run())
+	os.Exit(core.NewPipelineRunner(os.Args[1:], NewDisk()).Run())
 }
 
 ////////////////////////////////////////////////////////////
