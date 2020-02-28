@@ -1,9 +1,10 @@
 package core
 
 import (
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/smartystreets/clock"
 	"github.com/smartystreets/logging"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 type PipelineRunner struct {

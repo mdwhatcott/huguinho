@@ -22,7 +22,7 @@ type TemplateRendererFixture struct {
 	renderer  *TemplateRenderer
 }
 
-func (this *TemplateRendererFixture) Setup() { // TODO: this is getting in the way of the 'Missing' tests
+func (this *TemplateRendererFixture) Setup() {
 	this.parseHomePageTemplate()
 	this.parseArticleTemplate()
 	this.parseTopicsTemplate()

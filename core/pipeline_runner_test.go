@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"os"
 	"strings"
 	"testing"
@@ -28,13 +29,6 @@ type PipelineRunnerFixture struct {
 
 func (this *PipelineRunnerFixture) Setup() {
 	this.disk = NewInMemoryFileSystem()
-	this.runner = NewPipelineRunner(this.args, this.disk)
-	this.runner.log = logging.Capture()
-	this.runner.log.SetFlags(0)
-
-	this.started = time.Now()
-	this.finished = this.started.Add(time.Millisecond)
-	this.runner.clock = clock.Freeze(this.started, this.finished)
 
 	this.file("content/a.md", ContentA)
 	this.file("content/b.md", ContentB)
@@ -43,6 +37,17 @@ func (this *PipelineRunnerFixture) Setup() {
 	this.file("templates/home.tmpl", TemplateHome)
 	this.file("templates/topics.tmpl", TemplateTopics)
 	this.file("templates/article.tmpl", TemplateArticle)
+}
+
+func (this *PipelineRunnerFixture) buildRunner() *PipelineRunner {
+	this.runner = NewPipelineRunner(this.args, this.disk)
+	this.runner.log = logging.Capture()
+	this.runner.log.SetFlags(0)
+
+	this.started = time.Now()
+	this.finished = this.started.Add(time.Millisecond)
+	this.runner.clock = clock.Freeze(this.started, this.finished)
+	return this.runner
 }
 
 func (this *PipelineRunnerFixture) arg(values ...string) {
@@ -74,24 +79,37 @@ func (this *PipelineRunnerFixture) assertFile(path, expectedContent string) {
 	}
 }
 
-func (this *PipelineRunnerFixture) TODOTestBadConfigPreventsProcessing_Error() {
-	// TODO
+func (this *PipelineRunnerFixture) TestBadConfigPreventsProcessing_Error() {
+	this.arg("-invalid", "=l2k3j")
+	errs := this.buildRunner().Run()
+	this.So(errs, should.Equal, 1)
+	this.assertOriginalDiskState()
 }
 
-func (this *PipelineRunnerFixture) TODOTestTemplateLoadFailurePreventsProcessing_Error() {
-	// TODO
+func (this *PipelineRunnerFixture) TestTemplateLoadFailurePreventsProcessing_Error() {
+	this.disk.ErrReadFile["templates/home.tmpl"] = errors.New("gophers")
+	errs := this.buildRunner().Run()
+	this.So(errs, should.Equal, 1)
+	this.assertOriginalDiskState()
 }
 
-func (this *PipelineRunnerFixture) TODOTestTemplateValidationFailurePreventsProcessing_Error() {
-	// TODO
+func (this *PipelineRunnerFixture) TestTemplateValidationFailurePreventsProcessing_Error() {
+	this.file("templates/home.tmpl", `{{ .INVALID }}`)
+	errs := this.buildRunner().Run()
+	this.So(errs, should.Equal, 1)
+	this.assertOriginalDiskState()
 }
 
 func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
-	this.So(len(this.disk.Files), should.Equal, 6) // 3 articles, 3 templates
+	this.assertOriginalDiskState()
 
-	errors := this.runner.Run()
+	errs := this.buildRunner().Run()
 
-	this.So(errors, should.Equal, 0)
+	this.So(errs, should.Equal, 0)
+	this.assertRenderedDiskState()
+}
+
+func (this *PipelineRunnerFixture) assertRenderedDiskState() {
 	this.So(len(this.disk.Files), should.Equal, 12) // 3 folders, 3 html files
 
 	this.assertFolder("rendered")
@@ -101,6 +119,10 @@ func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
 	this.assertFile("rendered/index.html", RenderedHome)
 	this.assertFile("rendered/topics/index.html", RenderedTopics)
 	this.assertFile("rendered/article-a/index.html", RenderedArticleA)
+}
+
+func (this *PipelineRunnerFixture) assertOriginalDiskState() {
+	this.So(len(this.disk.Files), should.Equal, 6) // 3 articles, 3 templates
 }
 
 const (

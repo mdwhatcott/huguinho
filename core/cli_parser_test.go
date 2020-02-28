@@ -5,9 +5,10 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestCLIParserFixture(t *testing.T) {
