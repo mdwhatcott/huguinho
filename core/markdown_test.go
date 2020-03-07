@@ -63,6 +63,10 @@ _emphasized_
 
 ---
 
+| foo | bar |
+| --- | --- |
+| baz | bim |
+
 `
 
 const EXPECTED_HTML_OUTPUT = `<h1>H1</h1>
@@ -89,4 +93,18 @@ const EXPECTED_HTML_OUTPUT = `<h1>H1</h1>
 <p><em>emphasized</em></p>
 <p><strong>bolded</strong></p>
 <hr>
+<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
 `
