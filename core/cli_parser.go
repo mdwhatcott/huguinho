@@ -40,7 +40,7 @@ func (this *CLIParser) Parse() (config contracts.Config, err error) {
 		return contracts.Config{}, this.composeError(err)
 	}
 
-	err = config.Validate()
+	err = validateConfig(config)
 	if err != nil {
 		return contracts.Config{}, this.composeError(err)
 	}
@@ -66,6 +66,19 @@ func (this *CLIParser) boolFlag(name, description string, value bool, b *bool) {
 		value,
 		strings.TrimSpace(description),
 	)
+}
+
+func validateConfig(config contracts.Config) error {
+	if config.TemplateDir == "" {
+		return errors.New("template directory is required")
+	}
+	if config.ContentRoot == "" {
+		return errors.New("content directory is required")
+	}
+	if config.TargetRoot == "" {
+		return errors.New("target directory is required")
+	}
+	return nil
 }
 
 var ErrInvalidConfig = errors.New("invalid config")
