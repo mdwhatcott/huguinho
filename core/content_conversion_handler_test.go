@@ -58,8 +58,7 @@ func (this *ContentConversionHandlerFixture) TestInvalidContentElicitsError() {
 ////////////////////////////////////////////////////
 
 type FakeConverter struct {
-	original string
-	err      error
+	err error
 }
 
 func NewFakeConverter() *FakeConverter {
@@ -67,6 +66,5 @@ func NewFakeConverter() *FakeConverter {
 }
 
 func (this *FakeConverter) Convert(content string) (string, error) {
-	this.original = content
 	return content + " (CONVERTED)", this.err
 }
