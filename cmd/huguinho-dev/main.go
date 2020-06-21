@@ -38,7 +38,9 @@ func main() {
 		http.ServeFile(response, request, filepath.Join(config.TargetRoot, request.URL.Path))
 	})
 
-	err = http.ListenAndServe("localhost:8080", nil)
+	address := "localhost:8080"
+	log.Println("Open browser to: http://localhost:8080")
+	err = http.ListenAndServe(address, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
