@@ -40,7 +40,7 @@ func (this *PipelineRunnerFixture) Setup() {
 }
 
 func (this *PipelineRunnerFixture) buildRunner() *PipelineRunner {
-	this.runner = NewPipelineRunner(this.args, this.disk)
+	this.runner = NewPipelineRunner("version", this.args, this.disk)
 	this.runner.log = logging.Capture()
 	this.runner.log.SetFlags(0)
 

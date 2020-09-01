@@ -10,13 +10,15 @@ import (
 	"github.com/mdwhatcott/huguinho/io"
 )
 
+var Version = "dev"
+
 func init() {
 	log.SetFlags(log.Lshortfile)
 }
 
 func main() {
 	args := os.Args[1:]
-	config, err := core.NewCLIParser(args).Parse()
+	config, err := core.NewCLIParser(Version, args).Parse()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,7 +30,7 @@ func main() {
 			return
 		}
 
-		runner := core.NewPipelineRunner(args, io.NewDisk())
+		runner := core.NewPipelineRunner(Version, args, io.NewDisk())
 		errCount := runner.Run()
 		if errCount > 0 {
 			http.Error(response, "Failed to generate site.", http.StatusInternalServerError)

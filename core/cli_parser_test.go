@@ -27,7 +27,7 @@ func (this *CLIParserFixture) Setup() {
 }
 
 func (this *CLIParserFixture) Parse() (contracts.Config, error) {
-	parser := NewCLIParser(this.args)
+	parser := NewCLIParser("version", this.args)
 	parser.flags.SetOutput(this.output)
 	return parser.Parse()
 }

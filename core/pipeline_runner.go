@@ -8,20 +8,21 @@ import (
 )
 
 type PipelineRunner struct {
-	clock *clock.Clock
-	log   *logging.Logger
-	args  []string
-	fs    contracts.FileSystem
+	clock   *clock.Clock
+	log     *logging.Logger
+	version string
+	args    []string
+	fs      contracts.FileSystem
 }
 
-func NewPipelineRunner(args []string, fs contracts.FileSystem) *PipelineRunner {
-	return &PipelineRunner{args: args, fs: fs}
+func NewPipelineRunner(version string, args []string, fs contracts.FileSystem) *PipelineRunner {
+	return &PipelineRunner{version: version, args: args, fs: fs}
 }
 
 func (this *PipelineRunner) Run() (errors int) {
 	start := this.clock.UTCNow()
 
-	config, err := NewCLIParser(this.args).Parse()
+	config, err := NewCLIParser(this.version, this.args).Parse()
 	if err != nil {
 		this.log.Println(err)
 		return 1
