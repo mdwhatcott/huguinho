@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"errors"
 	"os"
 	"strings"
@@ -73,8 +74,8 @@ func (this *PipelineRunnerFixture) assertFolder(path string) {
 func (this *PipelineRunnerFixture) assertFile(path, expectedContent string) {
 	file := this.disk.Files[path]
 	if this.So(file, should.NotBeNil) {
-		actual := strings.TrimSpace(file.Content())
-		expected := strings.TrimSpace(expectedContent)
+		actual := strings.ReplaceAll(strings.TrimSpace(file.Content()), "\n", `\n`)
+		expected := strings.ReplaceAll(strings.TrimSpace(expectedContent), "\n", `\n`)
 		this.So(actual, should.EqualTrimSpace, expected)
 	}
 }
@@ -100,7 +101,7 @@ func (this *PipelineRunnerFixture) TestTemplateValidationFailurePreventsProcessi
 	this.assertOriginalDiskState()
 }
 
-func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
+func (this *PipelineRunnerFixture) FocusTestValidConfigAndTemplates_PipelineRuns() {
 	this.assertOriginalDiskState()
 
 	errs := this.buildRunner().Run()
@@ -110,11 +111,14 @@ func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
 }
 
 func (this *PipelineRunnerFixture) assertRenderedDiskState() {
-	this.So(len(this.disk.Files), should.Equal, 12) // 3 folders, 3 html files
+	this.So(len(this.disk.Files), should.Equal, 14)
+	files, _ := json.MarshalIndent(this.disk.Files, "", "  ")
+	this.Println("FILES:", string(files))
 
 	this.assertFolder("rendered")
 	this.assertFolder("rendered/topics")
 	this.assertFolder("rendered/article-a")
+	this.assertFolder("rendered/article-b")
 
 	this.assertFile("rendered/index.html", RenderedHome)
 	this.assertFile("rendered/topics/index.html", RenderedTopics)
@@ -185,12 +189,12 @@ Content:
 
 	TemplateTopics = `
 {{ range .Topics }}{{ .Topic }}
-	{{ range .Articles }}
+{{ range .Articles }}
 	Slug:  {{ .Slug }}
 	Title: {{ .Title }}
 	Intro: {{ .Intro }}
 	Date:  {{ .Date.Format "2006-01-02" }}
-	{{ end }}
+{{ end }}
 {{ end }}
 `
 
@@ -206,22 +210,32 @@ Content:
 
 	RenderedTopics = `
 important
-	
-	Slug:  /article-a/
-	Title: Article A
-	Intro: The introduction for Article A.
-	Date:  2020-02-08
-	
-misc
-	
+
+	Slug:  /article-b/
+	Title: Article B
+	Intro: The introduction for Article B.
+	Date:  2021-02-09
+
 	Slug:  /article-a/
 	Title: Article A
 	Intro: The introduction for Article A.
 	Date:  2020-02-08
 
+misc
+
+	Slug:  /article-a/
+	Title: Article A
+	Intro: The introduction for Article A.
+	Date:  2020-02-08
 `
 
 	RenderedHome = `
+Slug:  /article-b/
+Title: Article B
+Date:  2021-02-09
+Intro: The introduction for Article B.
+------------------------------------------------------------------
+
 Slug:  /article-a/
 Title: Article A
 Date:  2020-02-08
