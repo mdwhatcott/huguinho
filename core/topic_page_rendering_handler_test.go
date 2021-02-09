@@ -63,17 +63,6 @@ func (this *TopicPageRenderingHandlerFixture) assertHandledArticlesRendered() bo
 	return this.So(this.renderer.rendered, should.Resemble, contracts.RenderedTopicsListing{
 		Topics: []contracts.RenderedTopicListing{
 			{
-				Topic: "a",
-				Articles: []contracts.RenderedArticleSummary{
-					{
-						Slug:  "/slug1",
-						Title: "title1",
-						Intro: "intro1",
-						Date:  Date(2020, 1, 1),
-					},
-				},
-			},
-			{
 				Topic: "b",
 				Articles: []contracts.RenderedArticleSummary{
 					{
@@ -104,6 +93,17 @@ func (this *TopicPageRenderingHandlerFixture) assertHandledArticlesRendered() bo
 						Title: "title2",
 						Intro: "intro2",
 						Date:  Date(2020, 2, 2),
+					},
+				},
+			},
+			{
+				Topic: "a",
+				Articles: []contracts.RenderedArticleSummary{
+					{
+						Slug:  "/slug1",
+						Title: "title1",
+						Intro: "intro1",
+						Date:  Date(2020, 1, 1),
 					},
 				},
 			},
