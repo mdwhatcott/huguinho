@@ -1,26 +1,35 @@
 package core
 
 import (
-	"github.com/smartystreets/clock"
-	"github.com/smartystreets/logging"
-
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 type PipelineRunner struct {
-	clock   *clock.Clock
-	log     *logging.Logger
 	version string
 	args    []string
 	fs      contracts.FileSystem
+	now     contracts.Clock
+	log     contracts.Logger
 }
 
-func NewPipelineRunner(version string, args []string, fs contracts.FileSystem) *PipelineRunner {
-	return &PipelineRunner{version: version, args: args, fs: fs}
+func NewPipelineRunner(
+	version string,
+	args []string,
+	fs contracts.FileSystem,
+	now contracts.Clock,
+	log contracts.Logger,
+) *PipelineRunner {
+	return &PipelineRunner{
+		version: version,
+		args:    args,
+		fs:      fs,
+		now:     now,
+		log:     log,
+	}
 }
 
 func (this *PipelineRunner) Run() (errors int) {
-	start := this.clock.UTCNow()
+	start := this.now()
 
 	config, err := NewCLIParser(this.version, this.args).Parse()
 	if err != nil {
@@ -43,9 +52,8 @@ func (this *PipelineRunner) Run() (errors int) {
 	}
 
 	pipeline := NewPipeline(config, this.fs, renderer)
-	reporter := NewReporter(start)
-	reporter.log = this.log
+	reporter := NewReporter(start, this.log)
 	reporter.ProcessStream(pipeline.Run())
-	reporter.RenderFinalReport(this.clock.UTCNow())
+	reporter.RenderFinalReport(this.now())
 	return reporter.Errors()
 }

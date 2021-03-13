@@ -1,14 +1,15 @@
 package core
 
 import (
+	"bytes"
 	"errors"
+	"log"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
-	"github.com/smartystreets/logging"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 )
@@ -28,15 +29,13 @@ func (this *ReporterFixture) Test() {
 	stream := make(chan contracts.Article)
 	go this.load(stream)
 
-	reporter := NewReporter(started)
-	reporter.log = logging.Capture()
-	reporter.log.SetFlags(0)
-
+	logger := new(bytes.Buffer)
+	reporter := NewReporter(started, log.New(logger, "", 0))
 	reporter.ProcessStream(stream)
 	reporter.RenderFinalReport(stopped)
 
 	this.So(reporter.Errors(), should.Equal, 1)
-	this.So(reporter.log.Log.String(), should.Equal, strings.Join([]string{
+	this.So(logger.String(), should.Equal, strings.Join([]string{
 		"[INFO] published article: /a",
 		"[INFO] dropped article",
 		"[INFO] published article: /c",

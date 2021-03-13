@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/mdwhatcott/huguinho/core"
 	"github.com/mdwhatcott/huguinho/io"
@@ -30,7 +31,7 @@ func main() {
 			return
 		}
 
-		runner := core.NewPipelineRunner(Version, args, io.NewDisk())
+		runner := core.NewPipelineRunner(Version, args, io.NewDisk(), time.Now, log.Default())
 		errCount := runner.Run()
 		if errCount > 0 {
 			http.Error(response, "Failed to generate site.", http.StatusInternalServerError)

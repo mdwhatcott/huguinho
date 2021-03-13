@@ -4,21 +4,22 @@ import (
 	"errors"
 	"time"
 
-	"github.com/smartystreets/logging"
-
 	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 type Reporter struct {
-	log       *logging.Logger
+	log       contracts.Logger
 	started   time.Time
 	errors    int
 	dropped   int
 	published int
 }
 
-func NewReporter(started time.Time) *Reporter {
-	return &Reporter{started: started}
+func NewReporter(started time.Time, log contracts.Logger) *Reporter {
+	return &Reporter{
+		started: started,
+		log:     log,
+	}
 }
 
 func (this *Reporter) ProcessStream(out chan contracts.Article) {

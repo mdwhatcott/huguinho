@@ -1,17 +1,17 @@
 package core
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"log"
 	"os"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/clock"
 	"github.com/smartystreets/gunit"
-	"github.com/smartystreets/logging"
 )
 
 func TestPipelineRunnerFixture(t *testing.T) {
@@ -21,6 +21,7 @@ func TestPipelineRunnerFixture(t *testing.T) {
 type PipelineRunnerFixture struct {
 	*gunit.Fixture
 
+	log      *bytes.Buffer
 	started  time.Time
 	finished time.Time
 	args     []string
@@ -29,6 +30,7 @@ type PipelineRunnerFixture struct {
 }
 
 func (this *PipelineRunnerFixture) Setup() {
+	this.log = new(bytes.Buffer)
 	this.disk = NewInMemoryFileSystem()
 
 	this.file("content/a.md", ContentA)
@@ -41,14 +43,16 @@ func (this *PipelineRunnerFixture) Setup() {
 }
 
 func (this *PipelineRunnerFixture) buildRunner() *PipelineRunner {
-	this.runner = NewPipelineRunner("version", this.args, this.disk)
-	this.runner.log = logging.Capture()
-	this.runner.log.SetFlags(0)
-
 	this.started = time.Now()
 	this.finished = this.started.Add(time.Millisecond)
-	this.runner.clock = clock.Freeze(this.started, this.finished)
+	this.runner = NewPipelineRunner("version", this.args, this.disk, time.Now, log.New(this.log, "", 0))
 	return this.runner
+}
+func (this *PipelineRunnerFixture) Now() time.Time {
+	defer func() {
+		this.started = this.finished
+	}()
+	return this.started
 }
 
 func (this *PipelineRunnerFixture) arg(values ...string) {
