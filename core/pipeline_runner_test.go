@@ -101,7 +101,7 @@ func (this *PipelineRunnerFixture) TestTemplateValidationFailurePreventsProcessi
 	this.assertOriginalDiskState()
 }
 
-func (this *PipelineRunnerFixture) FocusTestValidConfigAndTemplates_PipelineRuns() {
+func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
 	this.assertOriginalDiskState()
 
 	errs := this.buildRunner().Run()
