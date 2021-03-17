@@ -16,5 +16,12 @@ func init() {
 }
 
 func main() {
-	os.Exit(core.NewPipelineRunner(Version, os.Args[1:], io.NewDisk(), time.Now, log.Default()).Run())
+	runner := core.NewPipelineRunner(
+		Version,
+		os.Args[1:],
+		io.NewDisk(),
+		time.Now,
+		log.Default(),
+	)
+	os.Exit(runner.Run())
 }
