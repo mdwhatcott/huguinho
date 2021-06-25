@@ -11,17 +11,13 @@ import (
 
 var Version = "dev"
 
-func init() {
-	log.SetFlags(log.Lshortfile)
-}
-
 func main() {
 	runner := core.NewPipelineRunner(
 		Version,
 		os.Args[1:],
 		io.NewDisk(),
 		time.Now,
-		log.Default(),
+		log.New(os.Stderr, "", log.Lshortfile),
 	)
 	os.Exit(runner.Run())
 }
