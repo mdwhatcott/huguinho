@@ -1,6 +1,6 @@
 module github.com/mdwhatcott/huguinho
 
-go 1.13
+go 1.16
 
 require (
 	github.com/smartystreets/assertions v1.2.0

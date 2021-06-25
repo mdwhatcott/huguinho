@@ -1,7 +1,6 @@
 package io
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -13,11 +12,11 @@ func NewDisk() *Disk {
 }
 
 func (this *Disk) ReadFile(path string) ([]byte, error) {
-	return ioutil.ReadFile(path)
+	return os.ReadFile(path)
 }
 
 func (this *Disk) WriteFile(path string, content []byte, perm os.FileMode) error {
-	return ioutil.WriteFile(path, content, perm)
+	return os.WriteFile(path, content, perm)
 }
 
 func (this *Disk) MkdirAll(path string, perm os.FileMode) error {
