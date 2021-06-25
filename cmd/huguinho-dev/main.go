@@ -13,15 +13,13 @@ import (
 
 var Version = "dev"
 
-func init() {
-	log.SetFlags(log.Lshortfile)
-}
-
 func main() {
+	disk := io.NewDisk()
+	logger := log.New(os.Stderr, "", log.Lshortfile)
 	args := os.Args[1:]
 	config, err := core.NewCLIParser(Version, args).Parse()
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	http.HandleFunc("/", func(response http.ResponseWriter, request *http.Request) {
@@ -31,7 +29,7 @@ func main() {
 			return
 		}
 
-		runner := core.NewPipelineRunner(Version, args, io.NewDisk(), time.Now, log.Default())
+		runner := core.NewPipelineRunner(Version, args, disk, time.Now, logger)
 		errCount := runner.Run()
 		if errCount > 0 {
 			http.Error(response, "Failed to generate site.", http.StatusInternalServerError)
@@ -42,9 +40,9 @@ func main() {
 	})
 
 	address := "localhost:8080"
-	log.Println("Open browser to: http://localhost:8080")
+	logger.Println("Open browser to:", address)
 	err = http.ListenAndServe(address, nil)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 }
