@@ -4,18 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestTemplateLoaderFixture(t *testing.T) {
-	gunit.Run(new(TemplateLoaderFixture), t)
+	suite.Run(&TemplateLoaderFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type TemplateLoaderFixture struct {
-	*gunit.Fixture
+	*suite.T
 
 	disk   *InMemoryFileSystem
 	loader *TemplateLoader
@@ -33,47 +32,58 @@ func (this *TemplateLoaderFixture) Setup() {
 
 func (this *TemplateLoaderFixture) TestLoadsEachTemplate() {
 	templates, err := this.loader.Load()
+
 	this.So(err, should.BeNil)
-	this.So(templates.Lookup("supplemental-template.tmpl"), should.NotBeNil)
-	this.So(templates.Lookup(contracts.HomePageTemplateName), should.NotBeNil)
-	this.So(templates.Lookup(contracts.TopicsTemplateName), should.NotBeNil)
-	this.So(templates.Lookup(contracts.ArticleTemplateName), should.NotBeNil)
+	this.So(templates.Lookup("supplemental-template.tmpl"), should.NOT.BeNil)
+	this.So(templates.Lookup(contracts.HomePageTemplateName), should.NOT.BeNil)
+	this.So(templates.Lookup(contracts.TopicsTemplateName), should.NOT.BeNil)
+	this.So(templates.Lookup(contracts.ArticleTemplateName), should.NOT.BeNil)
 }
 
 func (this *TemplateLoaderFixture) TestNonTemplateFilesIgnored() {
 	_ = this.disk.WriteFile("templates/not-a-template", []byte(ValidHomePageTemplate), 0644)
+
 	templates, err := this.loader.Load()
+
 	this.So(err, should.BeNil)
 	this.So(templates.Lookup("not-a-template"), should.BeNil)
-	this.So(templates.Lookup(contracts.HomePageTemplateName), should.NotBeNil)
-	this.So(templates.Lookup(contracts.TopicsTemplateName), should.NotBeNil)
-	this.So(templates.Lookup(contracts.ArticleTemplateName), should.NotBeNil)
+	this.So(templates.Lookup(contracts.HomePageTemplateName), should.NOT.BeNil)
+	this.So(templates.Lookup(contracts.TopicsTemplateName), should.NOT.BeNil)
+	this.So(templates.Lookup(contracts.ArticleTemplateName), should.NOT.BeNil)
 }
 
 func (this *TemplateLoaderFixture) TestInvalidTemplateFiles_Error() {
 	_ = this.disk.WriteFile("templates/invalid-template.tmpl", []byte("{{ .invalid {{{}{{{})"), 0644)
+
 	templates, err := this.loader.Load()
-	this.So(err, should.NotBeNil)
+
+	this.So(err, should.NOT.BeNil)
 	this.So(templates, should.BeNil)
 }
 
 func (this *TemplateLoaderFixture) TestReadFileErr() {
 	gophers := errors.New("GOPHERS")
 	this.disk.ErrReadFile["templates/"+contracts.HomePageTemplateName] = gophers
+
 	templates, err := this.loader.Load()
-	this.So(errors.Is(err, gophers), should.BeTrue)
+
+	this.So(err, should.WrapError, gophers)
 	this.So(templates, should.BeNil)
 }
 
 func (this *TemplateLoaderFixture) TestNestedDirectoriesSkipped() {
 	_ = this.disk.MkdirAll("templates/nested", 0755)
 	_ = this.disk.WriteFile("templates/nested/template.tmpl", []byte(""), 0644)
+
 	templates, err := this.loader.Load()
+
 	this.So(err, should.BeNil)
 	this.So(templates.Lookup("nested/template.tmpl"), should.BeNil)
 	this.So(templates.Lookup("template.tmpl"), should.BeNil)
 }
 
-const ValidHomePageTemplate = ``
-const ValidTopicsPageTemplate = ``
-const ValidArticlePageTemplate = ``
+const (
+	ValidHomePageTemplate    = ``
+	ValidTopicsPageTemplate  = ``
+	ValidArticlePageTemplate = ``
+)

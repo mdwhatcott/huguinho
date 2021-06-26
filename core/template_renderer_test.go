@@ -1,22 +1,20 @@
 package core
 
 import (
-	"errors"
 	"testing"
 	"text/template"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestTemplateRendererFixture(t *testing.T) {
-	gunit.Run(new(TemplateRendererFixture), t)
+	suite.Run(&TemplateRendererFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type TemplateRendererFixture struct {
-	*gunit.Fixture
+	*suite.T
 
 	templates *template.Template
 	renderer  *TemplateRenderer
@@ -68,7 +66,7 @@ func (this *TemplateRendererFixture) TestMissingHomePageTemplate_ValidateErr() {
 	this.parseArticleTemplate()
 	this.parseTopicsTemplate()
 	this.renderer = NewTemplateRenderer(this.templates)
-	this.So(this.renderer.Validate(), should.NotBeNil)
+	this.So(this.renderer.Validate(), should.NOT.BeNil)
 }
 
 func (this *TemplateRendererFixture) TestMissingTopicsTemplate_ValidateErr() {
@@ -76,7 +74,7 @@ func (this *TemplateRendererFixture) TestMissingTopicsTemplate_ValidateErr() {
 	this.parseArticleTemplate()
 	this.parseHomePageTemplate()
 	this.renderer = NewTemplateRenderer(this.templates)
-	this.So(this.renderer.Validate(), should.NotBeNil)
+	this.So(this.renderer.Validate(), should.NOT.BeNil)
 }
 
 func (this *TemplateRendererFixture) TestMissingArticleTemplate_ValidateErr() {
@@ -84,7 +82,7 @@ func (this *TemplateRendererFixture) TestMissingArticleTemplate_ValidateErr() {
 	this.parseHomePageTemplate()
 	this.parseTopicsTemplate()
 	this.renderer = NewTemplateRenderer(this.templates)
-	this.So(this.renderer.Validate(), should.NotBeNil)
+	this.So(this.renderer.Validate(), should.NOT.BeNil)
 }
 
 func (this *TemplateRendererFixture) TestCanRenderTypesCorrespondingToTemplates() {
@@ -103,16 +101,16 @@ func (this *TemplateRendererFixture) TestCanRenderTypesCorrespondingToTemplates(
 
 func (this *TemplateRendererFixture) TestCannotRenderUnknownTypes() {
 	home, homeErr := this.renderer.Render(42)
-	this.So(errors.Is(homeErr, contracts.ErrUnsupportedRenderingType), should.BeTrue)
-	this.So(home, should.BeBlank)
+	this.So(homeErr, should.WrapError, contracts.ErrUnsupportedRenderingType)
+	this.So(home, should.BeEmpty)
 }
 
 func (this *TemplateRendererFixture) TestRenderError() {
 	this.prepareRendererWithBadTemplate()
 
 	rendered, err := this.renderer.Render(contracts.RenderedTopicsListing{})
-	this.So(errors.Is(err, contracts.ErrRenderingFailure), should.BeTrue)
-	this.So(rendered, should.BeBlank)
+	this.So(err, should.WrapError, contracts.ErrRenderingFailure)
+	this.So(rendered, should.BeEmpty)
 }
 
 func (this *TemplateRendererFixture) prepareRendererWithBadTemplate() {

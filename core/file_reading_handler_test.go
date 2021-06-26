@@ -4,18 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestFileReaderFixture(t *testing.T) {
-	gunit.Run(new(FileReaderFixture), t)
+	suite.Run(&FileReaderFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type FileReaderFixture struct {
-	*gunit.Fixture
+	*suite.T
 	reader *FileReadingHandler
 	files  *InMemoryFileSystem
 }
@@ -30,7 +29,7 @@ func (this *FileReaderFixture) Setup() {
 func (this *FileReaderFixture) TestRead() {
 	article := &contracts.Article{Source: contracts.ArticleSource{Path: "/file1"}}
 	this.reader.Handle(article)
-	this.So(article, should.Resemble, &contracts.Article{
+	this.So(article, should.Equal, &contracts.Article{
 		Source: contracts.ArticleSource{Path: "/file1", Data: "FILE1"},
 	})
 }
@@ -41,8 +40,8 @@ func (this *FileReaderFixture) TestReadError() {
 
 	this.reader.Handle(article)
 
-	this.So(errors.Is(article.Error, readError), should.BeTrue)
-	this.So(article, should.Resemble, &contracts.Article{
+	this.So(article.Error, should.WrapError, readError)
+	this.So(article, should.Equal, &contracts.Article{
 		Error:  article.Error,
 		Source: contracts.ArticleSource{Path: "/file1"},
 	})

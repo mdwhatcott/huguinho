@@ -3,16 +3,16 @@ package core
 import (
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestGoldmarkMarkdownConverterFixture(t *testing.T) {
-	gunit.Run(new(GoldmarkMarkdownConverterFixture), t)
+	suite.Run(&GoldmarkMarkdownConverterFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type GoldmarkMarkdownConverterFixture struct {
-	*gunit.Fixture
+	*suite.T
 
 	converter *GoldmarkMarkdownConverter
 }

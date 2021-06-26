@@ -2,21 +2,19 @@ package core
 
 import (
 	"bytes"
-	"errors"
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestCLIParserFixture(t *testing.T) {
-	gunit.Run(new(CLIParserFixture), t)
+	suite.Run(&CLIParserFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type CLIParserFixture struct {
-	*gunit.Fixture
+	*suite.T
 
 	output *bytes.Buffer
 	args   []string
@@ -36,7 +34,7 @@ func (this *CLIParserFixture) TestDefaults() {
 	this.args = []string{}
 	config, err := this.Parse()
 	this.So(err, should.BeNil)
-	this.So(config, should.Resemble, contracts.Config{
+	this.So(config, should.Equal, contracts.Config{
 		TemplateDir: "templates",
 		ContentRoot: "content",
 		TargetRoot:  "rendered",
@@ -55,7 +53,7 @@ func (this *CLIParserFixture) TestCustomValues() {
 	}
 	config, err := this.Parse()
 	this.So(err, should.BeNil)
-	this.So(config, should.Resemble, contracts.Config{
+	this.So(config, should.Equal, contracts.Config{
 		TemplateDir: "other-templates",
 		ContentRoot: "other-content",
 		TargetRoot:  "other-rendered",
@@ -67,27 +65,27 @@ func (this *CLIParserFixture) TestCustomValues() {
 func (this *CLIParserFixture) TestMissingTemplatesFolder() {
 	this.args = []string{"-templates", ""}
 	config, err := this.Parse()
-	this.So(errors.Is(err, ErrInvalidConfig), should.BeTrue)
-	this.So(config, should.BeZeroValue)
+	this.So(err, should.WrapError, ErrInvalidConfig)
+	this.So(config, should.Equal, contracts.Config{})
 }
 
 func (this *CLIParserFixture) TestMissingContentFolder() {
 	this.args = []string{"-content", ""}
 	config, err := this.Parse()
-	this.So(errors.Is(err, ErrInvalidConfig), should.BeTrue)
-	this.So(config, should.BeZeroValue)
+	this.So(err, should.WrapError, ErrInvalidConfig)
+	this.So(config, should.Equal, contracts.Config{})
 }
 
 func (this *CLIParserFixture) TestMissingTargetFolder() {
 	this.args = []string{"-target", ""}
 	config, err := this.Parse()
-	this.So(errors.Is(err, ErrInvalidConfig), should.BeTrue)
-	this.So(config, should.BeZeroValue)
+	this.So(err, should.WrapError, ErrInvalidConfig)
+	this.So(config, should.Equal, contracts.Config{})
 }
 
 func (this *CLIParserFixture) TestBogusValue() {
 	this.args = []string{"-bogus"}
 	config, err := this.Parse()
-	this.So(errors.Is(err, ErrInvalidConfig), should.BeTrue)
-	this.So(config, should.BeZeroValue)
+	this.So(err, should.WrapError, ErrInvalidConfig)
+	this.So(config, should.Equal, contracts.Config{})
 }

@@ -1,21 +1,19 @@
 package core
 
 import (
-	"errors"
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestDraftFilteringHandlerFixture(t *testing.T) {
-	gunit.Run(new(DraftFilteringHandlerFixture), t)
+	suite.Run(&DraftFilteringHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type DraftFilteringHandlerFixture struct {
-	*gunit.Fixture
+	*suite.T
 }
 
 func (this *DraftFilteringHandlerFixture) article(draft bool) *contracts.Article {
@@ -43,5 +41,5 @@ func (this *DraftFilteringHandlerFixture) TestEnabled_AnyDraftsDropped() {
 
 	draft := this.article(true)
 	handler.Handle(draft)
-	this.So(errors.Is(draft.Error, contracts.ErrDroppedArticle), should.BeTrue)
+	this.So(draft.Error, should.WrapError, contracts.ErrDroppedArticle)
 }

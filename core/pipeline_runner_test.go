@@ -10,16 +10,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestPipelineRunnerFixture(t *testing.T) {
-	gunit.Run(new(PipelineRunnerFixture), t)
+	suite.Run(&PipelineRunnerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type PipelineRunnerFixture struct {
-	*gunit.Fixture
+	*suite.T
 
 	log      *bytes.Buffer
 	started  time.Time
@@ -63,7 +63,7 @@ func (this *PipelineRunnerFixture) file(path, content string) {
 }
 func (this *PipelineRunnerFixture) ls(root string) {
 	err := this.disk.Walk(root, func(path string, info os.FileInfo, err error) error {
-		this.Println(path)
+		this.Log(path)
 		return nil
 	})
 
@@ -71,16 +71,16 @@ func (this *PipelineRunnerFixture) ls(root string) {
 }
 func (this *PipelineRunnerFixture) assertFolder(path string) {
 	dir := this.disk.Files[path]
-	if this.So(dir, should.NotBeNil) {
+	if this.So(dir, should.NOT.BeNil) {
 		this.So(dir.IsDir(), should.BeTrue)
 	}
 }
 func (this *PipelineRunnerFixture) assertFile(path, expectedContent string) {
 	file := this.disk.Files[path]
-	if this.So(file, should.NotBeNil) {
+	if this.So(file, should.NOT.BeNil) {
 		actual := strings.ReplaceAll(strings.TrimSpace(file.Content()), "\n", `\n`)
 		expected := strings.ReplaceAll(strings.TrimSpace(expectedContent), "\n", `\n`)
-		this.So(actual, should.EqualTrimSpace, expected)
+		this.So(actual, should.Equal, expected)
 	}
 }
 
@@ -117,7 +117,7 @@ func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
 func (this *PipelineRunnerFixture) assertRenderedDiskState() {
 	this.So(len(this.disk.Files), should.Equal, 14)
 	files, _ := json.MarshalIndent(this.disk.Files, "", "  ")
-	this.Println("FILES:", string(files))
+	this.Log("FILES:", string(files))
 
 	this.assertFolder("rendered")
 	this.assertFolder("rendered/topics")

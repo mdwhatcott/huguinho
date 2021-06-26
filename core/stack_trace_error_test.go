@@ -4,24 +4,24 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestTraceErrorFixture(t *testing.T) {
-	gunit.Run(new(StackTraceErrorFixture), t)
+	suite.Run(&StackTraceErrorFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type StackTraceErrorFixture struct {
-	*gunit.Fixture
+	*suite.T
 }
 
 func (this *StackTraceErrorFixture) Test() {
 	gopherErr := errors.New("gophers")
 	err := StackTraceError(gopherErr)
-	this.So(errors.Is(err, gopherErr), should.BeTrue)
-	this.So(err.Error(), should.ContainSubstring, "gophers")
-	this.So(err.Error(), should.ContainSubstring, "stack:")
+	this.FatalSo(err, should.WrapError, gopherErr)
+	this.So(err.Error(), should.Contain, "gophers")
+	this.So(err.Error(), should.Contain, "stack:")
 }
 
 func (this *StackTraceErrorFixture) TestNil() {

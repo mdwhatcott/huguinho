@@ -4,18 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestContentConversionHandlerFixture(t *testing.T) {
-	gunit.Run(new(ContentConversionHandlerFixture), t)
+	suite.Run(&ContentConversionHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type ContentConversionHandlerFixture struct {
-	*gunit.Fixture
+	*suite.T
 
 	converter *ContentConversionHandler
 	inner     *FakeConverter
@@ -37,7 +36,7 @@ func (this *ContentConversionHandlerFixture) TestValidContentParsedAndConverted(
 
 	this.converter.Handle(article)
 
-	this.So(article, should.Resemble, &contracts.Article{
+	this.So(article, should.Equal, &contracts.Article{
 		Error:   nil,
 		Source:  contracts.ArticleSource{Data: this.formatSourceData("content1")},
 		Content: contracts.ArticleContent{Original: "content1", Converted: "content1 (CONVERTED)"},
@@ -51,8 +50,8 @@ func (this *ContentConversionHandlerFixture) TestInvalidContentElicitsError() {
 
 	this.converter.Handle(article)
 
-	this.So(errors.Is(article.Error, conversionError), should.BeTrue)
-	this.So(article.Content, should.BeZeroValue)
+	this.So(article.Error, should.WrapError, conversionError)
+	this.So(article.Content, should.Equal, contracts.ArticleContent{})
 }
 
 ////////////////////////////////////////////////////

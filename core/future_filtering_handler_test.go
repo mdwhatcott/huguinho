@@ -1,22 +1,20 @@
 package core
 
 import (
-	"errors"
 	"testing"
 	"time"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestFutureFilteringHandlerFixture(t *testing.T) {
-	gunit.Run(new(FutureFilteringHandlerFixture), t)
+	suite.Run(&FutureFilteringHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type FutureFilteringHandlerFixture struct {
-	*gunit.Fixture
+	*suite.T
 
 	present time.Time
 	past    time.Time
@@ -62,5 +60,5 @@ func (this *FutureFilteringHandlerFixture) TestEnabled_AnythingAfterNowDropped()
 
 	future := this.article(this.future)
 	enabled.Handle(future)
-	this.So(errors.Is(future.Error, contracts.ErrDroppedArticle), should.BeTrue)
+	this.So(future.Error, should.WrapError, contracts.ErrDroppedArticle)
 }

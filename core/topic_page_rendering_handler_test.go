@@ -4,18 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestTopicPageRenderingHandlerFixture(t *testing.T) {
-	gunit.Run(new(TopicPageRenderingHandlerFixture), t)
+	suite.Run(&TopicPageRenderingHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type TopicPageRenderingHandlerFixture struct {
-	*gunit.Fixture
+	*suite.T
 
 	handler  *TopicPageRenderingHandler
 	disk     *InMemoryFileSystem
@@ -59,8 +58,8 @@ func (this *TopicPageRenderingHandlerFixture) handleArticles() {
 	})
 }
 
-func (this *TopicPageRenderingHandlerFixture) assertHandledArticlesRendered() bool {
-	return this.So(this.renderer.rendered, should.Resemble, contracts.RenderedTopicsListing{
+func (this *TopicPageRenderingHandlerFixture) assertHandledArticlesRendered() {
+	this.So(this.renderer.rendered, should.Equal, contracts.RenderedTopicsListing{
 		Topics: []contracts.RenderedTopicListing{
 			{
 				Topic: "b",
@@ -118,11 +117,10 @@ func (this *TopicPageRenderingHandlerFixture) TestFileTemplateRenderedAndWritten
 
 	this.So(err, should.BeNil)
 	this.assertHandledArticlesRendered()
-	this.So(this.disk.Files, should.ContainKey, "output/folder")
-	if this.So(this.disk.Files, should.ContainKey, "output/folder/topics/index.html") {
-		file := this.disk.Files["output/folder/topics/index.html"]
-		this.So(file.Content(), should.Resemble, "RENDERED")
-	}
+	this.So(this.disk.Files, should.Contain, "output/folder")
+	this.FatalSo(this.disk.Files, should.Contain, "output/folder/topics/index.html")
+	file := this.disk.Files["output/folder/topics/index.html"]
+	this.So(file.Content(), should.Equal, "RENDERED")
 }
 
 func (this *TopicPageRenderingHandlerFixture) TestRenderErrorReturned() {
@@ -131,7 +129,7 @@ func (this *TopicPageRenderingHandlerFixture) TestRenderErrorReturned() {
 
 	err := this.handler.Finalize()
 
-	this.So(errors.Is(err, renderErr), should.BeTrue)
+	this.So(err, should.WrapError, renderErr)
 	this.So(this.disk.Files, should.BeEmpty)
 }
 
@@ -142,7 +140,7 @@ func (this *TopicPageRenderingHandlerFixture) TestMkdirAllErrorReturned() {
 
 	err := this.handler.Finalize()
 
-	this.So(errors.Is(err, mkdirErr), should.BeTrue)
+	this.So(err, should.WrapError, mkdirErr)
 	this.So(this.disk.Files, should.BeEmpty)
 }
 
@@ -153,6 +151,6 @@ func (this *TopicPageRenderingHandlerFixture) TestWriteFileErrorReturned() {
 
 	err := this.handler.Finalize()
 
-	this.So(errors.Is(err, writeFileErr), should.BeTrue)
-	this.So(this.disk.Files, should.NotContainKey, "output/folder/topics/index.html")
+	this.So(err, should.WrapError, writeFileErr)
+	this.So(this.disk.Files, should.NOT.Contain, "output/folder/topics/index.html")
 }

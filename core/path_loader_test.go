@@ -4,18 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestPathLoaderFixture(t *testing.T) {
-	gunit.Run(new(PathLoaderFixture), t)
+	suite.Run(&PathLoaderFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type PathLoaderFixture struct {
-	*gunit.Fixture
+	*suite.T
 	loader *PathLoader
 	files  *InMemoryFileSystem
 	output chan contracts.Article
@@ -38,7 +37,7 @@ func (this *PathLoaderFixture) Test() {
 	err := this.loader.Finalize()
 
 	this.So(err, should.BeNil)
-	this.So(gather(this.output), should.Resemble, []contracts.Article{
+	this.So(gather(this.output), should.Equal, []contracts.Article{
 		{Source: contracts.ArticleSource{Path: "/content/article1.md"}},
 		{Source: contracts.ArticleSource{Path: "/content/folder/article3.md"}},
 	})
@@ -50,8 +49,8 @@ func (this *PathLoaderFixture) TestErrWalkFunc() {
 	this.loader.Start()
 	err := this.loader.Finalize()
 
-	this.So(errors.Is(err, walkFuncErr), should.BeTrue)
-	this.So(gather(this.output), should.Resemble, []contracts.Article{
+	this.So(err, should.WrapError, walkFuncErr)
+	this.So(gather(this.output), should.Equal, []contracts.Article{
 		{Source: contracts.ArticleSource{Path: "/content/article1.md"}},
 	})
 }

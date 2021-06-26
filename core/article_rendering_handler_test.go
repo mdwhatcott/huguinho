@@ -4,18 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestArticleRenderingHandlerFixture(t *testing.T) {
-	gunit.Run(new(ArticleRenderingHandlerFixture), t)
+	suite.Run(&ArticleRenderingHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type ArticleRenderingHandlerFixture struct {
-	*gunit.Fixture
+	*suite.T
 	handler  *ArticleRenderingHandler
 	renderer *FakeRenderer
 	disk     *InMemoryFileSystem
@@ -49,15 +48,15 @@ func (this *ArticleRenderingHandlerFixture) TestFileTemplateRenderedAndWrittenTo
 
 	this.So(this.article.Error, should.BeNil)
 	this.assertArticleDataRendered()
-	this.So(this.disk.Files, should.ContainKey, "output/folder/slug")
-	if this.So(this.disk.Files, should.ContainKey, "output/folder/slug/index.html") {
+	this.So(this.disk.Files, should.Contain, "output/folder/slug")
+	if !this.So(this.disk.Files, should.Contain, "output/folder/slug/index.html") {
 		file := this.disk.Files["output/folder/slug/index.html"]
-		this.So(file.Content(), should.Resemble, "RENDERED")
+		this.So(file.Content(), should.Equal, "RENDERED")
 	}
 }
 
-func (this *ArticleRenderingHandlerFixture) assertArticleDataRendered() bool {
-	return this.So(this.renderer.rendered, should.Resemble, contracts.RenderedArticle{
+func (this *ArticleRenderingHandlerFixture) assertArticleDataRendered() {
+	this.So(this.renderer.rendered, should.Equal, contracts.RenderedArticle{
 		Slug:    this.article.Metadata.Slug,
 		Title:   this.article.Metadata.Title,
 		Intro:   this.article.Metadata.Intro,
@@ -73,7 +72,7 @@ func (this *ArticleRenderingHandlerFixture) TestRenderErrorReturned() {
 
 	this.handler.Handle(this.article)
 
-	this.So(errors.Is(this.article.Error, renderErr), should.BeTrue)
+	this.So(this.article.Error, should.WrapError, renderErr)
 	this.assertArticleDataRendered()
 	this.So(this.disk.Files, should.BeEmpty)
 }
@@ -85,7 +84,7 @@ func (this *ArticleRenderingHandlerFixture) TestMkdirAllErrorReturned() {
 
 	this.handler.Handle(this.article)
 
-	this.So(errors.Is(this.article.Error, mkdirErr), should.BeTrue)
+	this.So(this.article.Error, should.WrapError, mkdirErr)
 	this.assertArticleDataRendered()
 	this.So(this.disk.Files, should.BeEmpty)
 }
@@ -97,9 +96,9 @@ func (this *ArticleRenderingHandlerFixture) TestWriteFileErrorReturned() {
 
 	this.handler.Handle(this.article)
 
-	this.So(errors.Is(this.article.Error, writeFileErr), should.BeTrue)
+	this.So(this.article.Error, should.WrapError, writeFileErr)
 	this.assertArticleDataRendered()
-	this.So(this.disk.Files, should.NotContainKey, "output/folder/slug/index.html")
+	this.So(this.disk.Files, should.NOT.Contain, "output/folder/slug/index.html")
 }
 
 ///////////////////////////////////////////////////////////////////

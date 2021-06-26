@@ -4,18 +4,17 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestListenerFixture(t *testing.T) {
-	gunit.Run(new(ListenerFixture), t)
+	suite.Run(&ListenerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type ListenerFixture struct {
-	*gunit.Fixture
+	*suite.T
 	input   chan contracts.Article
 	output  chan contracts.Article
 	handler *FakeHandler
@@ -35,7 +34,7 @@ func (this *ListenerFixture) TestEachArticleHandledIfNotErrantAndPassedOn() {
 
 	Listen(this.input, this.output, this.handler)
 
-	this.So(gather(this.output), should.Resemble, []contracts.Article{
+	this.So(gather(this.output), should.Equal, []contracts.Article{
 		{Content: contracts.ArticleContent{Original: "A", Converted: "A1"}},
 		{Content: contracts.ArticleContent{Original: "B", Converted: ""}, Error: contracts.ErrDroppedArticle},
 		{Content: contracts.ArticleContent{Original: "C", Converted: "C2"}},
@@ -62,7 +61,7 @@ func (this *ListenerFixture) TestFinalizeErrPassedOnIfNonNil() {
 
 	this.So(handler.called, should.Equal, 1)
 	this.So(len(this.output), should.Equal, 1)
-	this.So(<-this.output, should.Resemble, contracts.Article{Error: contracts.ErrDroppedArticle})
+	this.So(<-this.output, should.Equal, contracts.Article{Error: contracts.ErrDroppedArticle})
 }
 
 ///////////////////////////////////////////////////////////////

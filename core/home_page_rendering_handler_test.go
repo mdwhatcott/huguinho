@@ -4,18 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/smartystreets/assertions/should"
-	"github.com/smartystreets/gunit"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
+	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestHomePageRenderingHandlerFixture(t *testing.T) {
-	gunit.Run(new(HomePageRenderingHandlerFixture), t)
+	suite.Run(&HomePageRenderingHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type HomePageRenderingHandlerFixture struct {
-	*gunit.Fixture
+	*suite.T
 
 	handler  *HomePageRenderingHandler
 	disk     *InMemoryFileSystem
@@ -56,8 +55,8 @@ func (this *HomePageRenderingHandlerFixture) handleArticles() {
 	})
 }
 
-func (this *HomePageRenderingHandlerFixture) assertHandledArticlesRendered() bool {
-	return this.So(this.renderer.rendered, should.Resemble, contracts.RenderedHomePage{
+func (this *HomePageRenderingHandlerFixture) assertHandledArticlesRendered() {
+	this.So(this.renderer.rendered, should.Equal, contracts.RenderedHomePage{
 		Pages: []contracts.RenderedArticleSummary{
 			{
 				Slug:  "/slug3",
@@ -88,10 +87,10 @@ func (this *HomePageRenderingHandlerFixture) TestFileTemplateRenderedAndWrittenT
 
 	this.So(err, should.BeNil)
 	this.assertHandledArticlesRendered()
-	this.So(this.disk.Files, should.ContainKey, "output/folder")
-	if this.So(this.disk.Files, should.ContainKey, "output/folder/index.html") {
+	this.So(this.disk.Files, should.Contain, "output/folder")
+	if this.So(this.disk.Files, should.Contain, "output/folder/index.html") {
 		file := this.disk.Files["output/folder/index.html"]
-		this.So(file.Content(), should.Resemble, "RENDERED")
+		this.So(file.Content(), should.Equal, "RENDERED")
 	}
 }
 
@@ -101,7 +100,7 @@ func (this *HomePageRenderingHandlerFixture) TestRenderErrorReturned() {
 
 	err := this.handler.Finalize()
 
-	this.So(errors.Is(err, renderErr), should.BeTrue)
+	this.So(err, should.WrapError, renderErr)
 	this.So(this.disk.Files, should.BeEmpty)
 }
 
@@ -112,7 +111,7 @@ func (this *HomePageRenderingHandlerFixture) TestMkdirAllErrorReturned() {
 
 	err := this.handler.Finalize()
 
-	this.So(errors.Is(err, mkdirErr), should.BeTrue)
+	this.So(err, should.WrapError, mkdirErr)
 	this.So(this.disk.Files, should.BeEmpty)
 }
 
@@ -123,6 +122,6 @@ func (this *HomePageRenderingHandlerFixture) TestWriteFileErrorReturned() {
 
 	err := this.handler.Finalize()
 
-	this.So(errors.Is(err, writeFileErr), should.BeTrue)
-	this.So(this.disk.Files, should.NotContainKey, "output/folder/index.html")
+	this.So(err, should.WrapError, writeFileErr)
+	this.So(this.disk.Files, should.NOT.Contain, "output/folder/index.html")
 }
