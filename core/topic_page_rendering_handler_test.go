@@ -95,17 +95,7 @@ func (this *TopicPageRenderingHandlerFixture) assertHandledArticlesRendered() {
 					},
 				},
 			},
-			{
-				Topic: "a",
-				Articles: []contracts.RenderedArticleSummary{
-					{
-						Slug:  "/slug1",
-						Title: "title1",
-						Intro: "intro1",
-						Date:  Date(2020, 1, 1),
-					},
-				},
-			},
+			//{Topic: "a"}, // This topic only has one article and will be omitted from the listing.
 		},
 	})
 }

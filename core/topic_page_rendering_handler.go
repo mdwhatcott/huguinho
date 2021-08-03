@@ -74,15 +74,13 @@ func (this *TopicPageRenderingHandler) prepareRendering() (full contracts.Render
 
 func (this *TopicPageRenderingHandler) sortTopics() (topics []string) {
 	for topic := range this.topics {
+		if len(this.topics[topic]) == 1 {
+			continue
+		}
 		topics = append(topics, topic)
 	}
 	sort.Slice(topics, func(i, j int) bool {
-		I := len(this.topics[topics[i]])
-		J := len(this.topics[topics[j]])
-		if I == J {
-			return topics[i] < topics[j] // break ties alphabetically
-		}
-		return I > J
+		return topics[i] < topics[j]
 	})
 	return topics
 }

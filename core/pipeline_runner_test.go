@@ -225,12 +225,6 @@ important
 	Intro: The introduction for Article A.
 	Date:  2020-02-08
 
-misc
-
-	Slug:  /article-a/
-	Title: Article A
-	Intro: The introduction for Article A.
-	Date:  2020-02-08
 `
 
 	RenderedHome = `
