@@ -15,7 +15,7 @@ func main() {
 	runner := core.NewPipelineRunner(
 		Version,
 		os.Args[1:],
-		io.NewDisk(),
+		io.Disk{},
 		time.Now,
 		log.New(os.Stderr, "", log.Lshortfile),
 	)

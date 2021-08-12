@@ -14,7 +14,7 @@ import (
 var Version = "dev"
 
 func main() {
-	disk := io.NewDisk()
+	disk := io.Disk{}
 	logger := log.New(os.Stderr, "", log.Lshortfile)
 	args := os.Args[1:]
 	config, err := core.NewCLIParser(Version, args).Parse()
