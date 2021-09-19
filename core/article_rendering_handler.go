@@ -37,7 +37,6 @@ func (this *ArticleRenderingHandler) Handle(article *contracts.Article) {
 		Date:    article.Metadata.Date,
 		Topics:  article.Metadata.Topics,
 		Content: article.Content.Converted,
-		IsDraft: article.Metadata.Draft,
 	}
 
 	rendered, err := this.renderer.Render(data)

@@ -28,7 +28,7 @@ func (this *ArticleRenderingHandlerFixture) Setup() {
 
 	this.article = &contracts.Article{
 		Metadata: contracts.ArticleMetadata{
-			Draft:  true,
+			Draft:  false,
 			Slug:   "/slug",
 			Title:  "Title",
 			Intro:  "Intro",
@@ -62,7 +62,6 @@ func (this *ArticleRenderingHandlerFixture) assertArticleDataRendered() {
 		Intro:   this.article.Metadata.Intro,
 		Date:    this.article.Metadata.Date,
 		Topics:  this.article.Metadata.Topics,
-		IsDraft: this.article.Metadata.Draft,
 		Content: this.article.Content.Converted,
 	})
 }

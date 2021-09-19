@@ -32,7 +32,6 @@ type (
 		Date    time.Time
 		Topics  []string
 		Content string
-		IsDraft bool
 	}
 
 	RenderedArticleSummary struct {
