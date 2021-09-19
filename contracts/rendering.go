@@ -39,6 +39,7 @@ type (
 		Title string
 		Intro string
 		Date  time.Time
+		Draft bool
 	}
 
 	RenderedTopicsListing struct {

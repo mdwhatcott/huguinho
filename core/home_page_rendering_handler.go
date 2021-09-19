@@ -32,6 +32,7 @@ func (this *HomePageRenderingHandler) Handle(article *contracts.Article) {
 		Title: article.Metadata.Title,
 		Intro: article.Metadata.Intro,
 		Date:  article.Metadata.Date,
+		Draft: article.Metadata.Draft,
 	})
 }
 

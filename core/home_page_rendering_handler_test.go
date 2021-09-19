@@ -43,6 +43,7 @@ func (this *HomePageRenderingHandlerFixture) handleArticles() {
 			Title: "title2",
 			Intro: "intro2",
 			Date:  Date(2020, 2, 2),
+			Draft: true,
 		},
 	})
 	this.handler.Handle(&contracts.Article{
@@ -63,18 +64,21 @@ func (this *HomePageRenderingHandlerFixture) assertHandledArticlesRendered() {
 				Title: "title3",
 				Intro: "intro3",
 				Date:  Date(2020, 3, 3),
+				Draft: false,
 			},
 			{
 				Slug:  "/slug2",
 				Title: "title2",
 				Intro: "intro2",
 				Date:  Date(2020, 2, 2),
+				Draft: true,
 			},
 			{
 				Slug:  "/slug1",
 				Title: "title1",
 				Intro: "intro1",
 				Date:  Date(2020, 1, 1),
+				Draft: false,
 			},
 		},
 	})
