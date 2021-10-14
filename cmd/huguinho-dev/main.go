@@ -39,7 +39,7 @@ func main() {
 		http.ServeFile(response, request, filepath.Join(config.TargetRoot, request.URL.Path))
 	})
 
-	address := "localhost:8080"
+	address := "localhost:7070"
 	logger.Println("Open browser to:", address)
 	err = http.ListenAndServe(address, nil)
 	if err != nil {
