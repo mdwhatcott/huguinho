@@ -28,11 +28,12 @@ func NewHomePageRenderingHandler(
 
 func (this *HomePageRenderingHandler) Handle(article *contracts.Article) {
 	this.listing = append(this.listing, contracts.RenderedArticleSummary{
-		Slug:  article.Metadata.Slug,
-		Title: article.Metadata.Title,
-		Intro: article.Metadata.Intro,
-		Date:  article.Metadata.Date,
-		Draft: article.Metadata.Draft,
+		Slug:   article.Metadata.Slug,
+		Title:  article.Metadata.Title,
+		Intro:  article.Metadata.Intro,
+		Date:   article.Metadata.Date,
+		Topics: article.Metadata.Topics,
+		Draft:  article.Metadata.Draft,
 	})
 }
 

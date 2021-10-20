@@ -35,11 +35,12 @@ type (
 	}
 
 	RenderedArticleSummary struct {
-		Slug  string
-		Title string
-		Intro string
-		Date  time.Time
-		Draft bool
+		Slug   string
+		Title  string
+		Intro  string
+		Date   time.Time
+		Topics []string
+		Draft  bool
 	}
 
 	RenderedTopicsListing struct {

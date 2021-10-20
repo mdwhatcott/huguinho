@@ -173,10 +173,11 @@ This is the third article.
 
 	TemplateHome = `
 {{ range .Pages }}
-Slug:  {{ .Slug }}
-Title: {{ .Title }}
-Date:  {{ .Date.Format "2006-01-02" }}
-Intro: {{ .Intro }}
+Slug:   {{ .Slug }}
+Title:  {{ .Title }}
+Date:   {{ .Date.Format "2006-01-02" }}
+Intro:  {{ .Intro }}
+Topics: {{ range .Topics }}{{ . }} {{ end }}
 ------------------------------------------------------------------
 {{ end }}
 `
@@ -228,16 +229,18 @@ important
 `
 
 	RenderedHome = `
-Slug:  /article-b/
-Title: Article B
-Date:  2021-02-09
-Intro: The introduction for Article B.
+Slug:   /article-b/
+Title:  Article B
+Date:   2021-02-09
+Intro:  The introduction for Article B.
+Topics: important 
 ------------------------------------------------------------------
 
-Slug:  /article-a/
-Title: Article A
-Date:  2020-02-08
-Intro: The introduction for Article A.
+Slug:   /article-a/
+Title:  Article A
+Date:   2020-02-08
+Intro:  The introduction for Article A.
+Topics: important misc 
 ------------------------------------------------------------------
 `
 )

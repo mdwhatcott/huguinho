@@ -31,27 +31,30 @@ func (this *HomePageRenderingHandlerFixture) Setup() {
 func (this *HomePageRenderingHandlerFixture) handleArticles() {
 	this.handler.Handle(&contracts.Article{
 		Metadata: contracts.ArticleMetadata{
-			Slug:  "/slug1",
-			Title: "title1",
-			Intro: "intro1",
-			Date:  Date(2020, 1, 1),
+			Slug:   "/slug1",
+			Title:  "title1",
+			Intro:  "intro1",
+			Date:   Date(2020, 1, 1),
+			Topics: []string{"topic-a", "topic-b"},
 		},
 	})
 	this.handler.Handle(&contracts.Article{
 		Metadata: contracts.ArticleMetadata{
-			Slug:  "/slug2",
-			Title: "title2",
-			Intro: "intro2",
-			Date:  Date(2020, 2, 2),
-			Draft: true,
+			Slug:   "/slug2",
+			Title:  "title2",
+			Intro:  "intro2",
+			Date:   Date(2020, 2, 2),
+			Topics: []string{"topic-b", "topic-c"},
+			Draft:  true,
 		},
 	})
 	this.handler.Handle(&contracts.Article{
 		Metadata: contracts.ArticleMetadata{
-			Slug:  "/slug3",
-			Title: "title3",
-			Intro: "intro3",
-			Date:  Date(2020, 3, 3),
+			Slug:   "/slug3",
+			Title:  "title3",
+			Intro:  "intro3",
+			Date:   Date(2020, 3, 3),
+			Topics: []string{"topic-c", "topic-d"},
 		},
 	})
 }
@@ -60,25 +63,28 @@ func (this *HomePageRenderingHandlerFixture) assertHandledArticlesRendered() {
 	this.So(this.renderer.rendered, should.Equal, contracts.RenderedHomePage{
 		Pages: []contracts.RenderedArticleSummary{
 			{
-				Slug:  "/slug3",
-				Title: "title3",
-				Intro: "intro3",
-				Date:  Date(2020, 3, 3),
-				Draft: false,
+				Slug:   "/slug3",
+				Title:  "title3",
+				Intro:  "intro3",
+				Date:   Date(2020, 3, 3),
+				Topics: []string{"topic-c", "topic-d"},
+				Draft:  false,
 			},
 			{
-				Slug:  "/slug2",
-				Title: "title2",
-				Intro: "intro2",
-				Date:  Date(2020, 2, 2),
-				Draft: true,
+				Slug:   "/slug2",
+				Title:  "title2",
+				Intro:  "intro2",
+				Date:   Date(2020, 2, 2),
+				Topics: []string{"topic-b", "topic-c"},
+				Draft:  true,
 			},
 			{
-				Slug:  "/slug1",
-				Title: "title1",
-				Intro: "intro1",
-				Date:  Date(2020, 1, 1),
-				Draft: false,
+				Slug:   "/slug1",
+				Title:  "title1",
+				Intro:  "intro1",
+				Date:   Date(2020, 1, 1),
+				Topics: []string{"topic-a", "topic-b"},
+				Draft:  false,
 			},
 		},
 	})
