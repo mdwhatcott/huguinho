@@ -1,7 +1,7 @@
 package contracts
 
 type Logger interface {
-	Print(...interface{})
-	Printf(string, ...interface{})
-	Println(...interface{})
+	Print(...any)
+	Printf(string, ...any)
+	Println(...any)
 }

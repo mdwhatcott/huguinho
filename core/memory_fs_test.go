@@ -118,4 +118,4 @@ func (this *MemoryFile) Size() int64        { return int64(len(this.content)) }
 func (this *MemoryFile) Mode() os.FileMode  { return this.mode }
 func (this *MemoryFile) ModTime() time.Time { return this.modTime }
 func (this *MemoryFile) IsDir() bool        { return this.isDir }
-func (this *MemoryFile) Sys() interface{}   { panic("NOT NEEDED") }
+func (this *MemoryFile) Sys() any           { panic("NOT NEEDED") }

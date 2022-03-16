@@ -1,8 +1,8 @@
 module github.com/mdwhatcott/huguinho
 
-go 1.16
+go 1.18
 
 require (
-	github.com/mdwhatcott/testing v0.14.1
-	github.com/yuin/goldmark v1.4.3
+	github.com/mdwhatcott/testing v0.14.2
+	github.com/yuin/goldmark v1.4.10
 )

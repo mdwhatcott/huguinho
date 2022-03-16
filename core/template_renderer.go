@@ -36,7 +36,7 @@ func (this *TemplateRenderer) Validate() error {
 	return nil
 }
 
-func (this *TemplateRenderer) Render(v interface{}) (string, error) {
+func (this *TemplateRenderer) Render(v any) (string, error) {
 	switch v.(type) {
 
 	case contracts.RenderedArticle:
@@ -57,7 +57,7 @@ func (this *TemplateRenderer) Render(v interface{}) (string, error) {
 	}
 }
 
-func (this *TemplateRenderer) render(name string, data interface{}) (string, error) {
+func (this *TemplateRenderer) render(name string, data any) (string, error) {
 	buffer := new(bytes.Buffer)
 	err := this.templates.ExecuteTemplate(buffer, name, data)
 	if err != nil {

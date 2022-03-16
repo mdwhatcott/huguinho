@@ -6,7 +6,7 @@ import (
 )
 
 type Renderer interface {
-	Render(interface{}) (string, error)
+	Render(any) (string, error)
 }
 
 const (
