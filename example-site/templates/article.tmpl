@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Your Name Here - {{ .Title }}</title>
+{{ template "header.tmpl" . }}
+{{ template "highlight-js.tmpl" . }}
+        <meta name="description" content="{{ .Intro }}">
+        <link rel="canonical" href="https://your-domain-here.com{{ .Slug }}">
+        <style>
+{{ template "css.tmpl" }}
+        </style>
+    </head>
+
+    <body>
+{{ if ne (.Date.Format "2006-01-02") "2000-01-01" }}
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+  {{ range .Topics }}
+                <li><a href="/topics/#{{ . }}">{{ . }}</a></li>
+{{ end }}
+            </ul>
+            <div class="clear"></div>
+        </nav>
+{{ end }}
+
+        <h1>{{ .Title }}</h1>
+        <h2 class="tldr">{{ .Intro }}</h2>
+
+        <div>
+{{ if ne (.Date.Format "2006-01-02") "2000-01-01" }}
+            <h4>{{ .Date.Format "January 2, 2006" }}</h4>
+{{ end }}
+
+            <div>
+{{ .Content }}
+            </div>
+        </div>
+
+        <br>
+        <br>
+
+{{ if ne (.Date.Format "2006-01-02") "2000-01-01" }}
+        <footer>
+  {{ template "footer.tmpl" . }}
+        </footer>
+{{ end }}
+    </body>
+</html>

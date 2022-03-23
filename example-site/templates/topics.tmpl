@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Your Name Here - Topics</title>
+{{ template "header.tmpl" . }}
+        <meta name="description" content="Topic Listing">
+        <link rel="canonical" href="https://your-domain-here.com/topics/">
+        <style>
+{{ template "css.tmpl" }}
+        </style>
+    </head>
+
+<body>
+    <nav><a href="/">Home</a></nav>
+
+    <main>
+        <article>
+            <header><h1>Topics</h1></header>
+        </article>
+        {{ range .Topics }}
+        <h3 id="{{ .Topic }}">{{ .Topic }} <small>({{ (len .Articles) }})</small></h2>
+        <table>
+        {{ range .Articles }}
+            <tr>
+                <td><small class="date">{{ .Date.Format "2006.01.02" }}</small></td>
+                <td><a href="{{ .Slug }}">{{ .Title }}</a></td>
+            </tr>
+        {{ end }}
+        </table>
+        {{ end }}
+    </main>
+
+    <br>
+    <br>
+
+    <footer>
+{{ template "footer.tmpl" . }}
+    </footer>
+</body>
+</html>
