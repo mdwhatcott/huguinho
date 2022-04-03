@@ -67,6 +67,12 @@ _emphasized_
 | --- | --- |
 | baz | bim |
 
+Apple
+:   Pomaceous fruit of plants of the genus Malus in the family Rosaceae.
+
+Orange
+:   The fruit of an evergreen tree of the genus Citrus.
+
 `
 
 const EXPECTED_HTML_OUTPUT = `<h1>H1</h1>
@@ -107,4 +113,10 @@ const EXPECTED_HTML_OUTPUT = `<h1>H1</h1>
 </tr>
 </tbody>
 </table>
+<dl>
+<dt>Apple</dt>
+<dd>Pomaceous fruit of plants of the genus Malus in the family Rosaceae.</dd>
+<dt>Orange</dt>
+<dd>The fruit of an evergreen tree of the genus Citrus.</dd>
+</dl>
 `

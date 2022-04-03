@@ -22,6 +22,7 @@ func NewGoldmarkMarkdownConverter() *GoldmarkMarkdownConverter {
 			),
 			goldmark.WithExtensions(
 				extension.GFM,
+				extension.DefinitionList,
 			),
 		),
 	}
