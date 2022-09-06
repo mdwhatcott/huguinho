@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestListenerFixture(t *testing.T) {
-	suite.Run(&ListenerFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&ListenerFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type ListenerFixture struct {
-	*suite.T
+	*should.T
 	input   chan contracts.Article
 	output  chan contracts.Article
 	handler *FakeHandler

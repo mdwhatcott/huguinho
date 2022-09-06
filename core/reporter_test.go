@@ -8,17 +8,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestReporterFixture(t *testing.T) {
-	suite.Run(&ReporterFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&ReporterFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type ReporterFixture struct {
-	*suite.T
+	*should.T
 }
 
 func (this *ReporterFixture) Test() {

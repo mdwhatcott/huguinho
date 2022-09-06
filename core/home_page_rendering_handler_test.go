@@ -4,17 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestHomePageRenderingHandlerFixture(t *testing.T) {
-	suite.Run(&HomePageRenderingHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&HomePageRenderingHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type HomePageRenderingHandlerFixture struct {
-	*suite.T
+	*should.T
 
 	handler  *HomePageRenderingHandler
 	disk     *InMemoryFileSystem

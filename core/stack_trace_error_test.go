@@ -5,15 +5,14 @@ import (
 	"testing"
 
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestTraceErrorFixture(t *testing.T) {
-	suite.Run(&StackTraceErrorFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&StackTraceErrorFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type StackTraceErrorFixture struct {
-	*suite.T
+	*should.T
 }
 
 func (this *StackTraceErrorFixture) Test() {

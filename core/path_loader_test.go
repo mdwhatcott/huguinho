@@ -4,17 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestPathLoaderFixture(t *testing.T) {
-	suite.Run(&PathLoaderFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&PathLoaderFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type PathLoaderFixture struct {
-	*suite.T
+	*should.T
 	loader *PathLoader
 	files  *InMemoryFileSystem
 	output chan contracts.Article

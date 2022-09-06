@@ -4,17 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestFileReaderFixture(t *testing.T) {
-	suite.Run(&FileReaderFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&FileReaderFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type FileReaderFixture struct {
-	*suite.T
+	*should.T
 	reader *FileReadingHandler
 	files  *InMemoryFileSystem
 }

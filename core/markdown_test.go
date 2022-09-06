@@ -4,15 +4,14 @@ import (
 	"testing"
 
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestGoldmarkMarkdownConverterFixture(t *testing.T) {
-	suite.Run(&GoldmarkMarkdownConverterFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&GoldmarkMarkdownConverterFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type GoldmarkMarkdownConverterFixture struct {
-	*suite.T
+	*should.T
 
 	converter *GoldmarkMarkdownConverter
 }

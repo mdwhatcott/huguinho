@@ -3,17 +3,17 @@ package core
 import (
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestDraftFilteringHandlerFixture(t *testing.T) {
-	suite.Run(&DraftFilteringHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&DraftFilteringHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type DraftFilteringHandlerFixture struct {
-	*suite.T
+	*should.T
 }
 
 func (this *DraftFilteringHandlerFixture) article(draft bool) *contracts.Article {

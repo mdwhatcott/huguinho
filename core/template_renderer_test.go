@@ -4,17 +4,17 @@ import (
 	"testing"
 	"text/template"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestTemplateRendererFixture(t *testing.T) {
-	suite.Run(&TemplateRendererFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&TemplateRendererFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type TemplateRendererFixture struct {
-	*suite.T
+	*should.T
 
 	templates *template.Template
 	renderer  *TemplateRenderer

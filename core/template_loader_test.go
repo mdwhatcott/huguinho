@@ -4,17 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestTemplateLoaderFixture(t *testing.T) {
-	suite.Run(&TemplateLoaderFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&TemplateLoaderFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type TemplateLoaderFixture struct {
-	*suite.T
+	*should.T
 
 	disk   *InMemoryFileSystem
 	loader *TemplateLoader

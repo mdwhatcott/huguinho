@@ -4,17 +4,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestFutureFilteringHandlerFixture(t *testing.T) {
-	suite.Run(&FutureFilteringHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&FutureFilteringHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type FutureFilteringHandlerFixture struct {
-	*suite.T
+	*should.T
 
 	present time.Time
 	past    time.Time

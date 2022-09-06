@@ -4,17 +4,17 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestCLIParserFixture(t *testing.T) {
-	suite.Run(&CLIParserFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&CLIParserFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type CLIParserFixture struct {
-	*suite.T
+	*should.T
 
 	output *bytes.Buffer
 	args   []string

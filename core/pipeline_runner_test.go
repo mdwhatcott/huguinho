@@ -11,15 +11,14 @@ import (
 	"time"
 
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
 )
 
 func TestPipelineRunnerFixture(t *testing.T) {
-	suite.Run(&PipelineRunnerFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&PipelineRunnerFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type PipelineRunnerFixture struct {
-	*suite.T
+	*should.T
 
 	log      *bytes.Buffer
 	started  time.Time

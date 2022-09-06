@@ -4,17 +4,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestMetadataValidationHandlerFixture(t *testing.T) {
-	suite.Run(&MetadataValidationHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&MetadataValidationHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type MetadataValidationHandlerFixture struct {
-	*suite.T
+	*should.T
 
 	handler *MetadataValidationHandler
 	article *contracts.Article

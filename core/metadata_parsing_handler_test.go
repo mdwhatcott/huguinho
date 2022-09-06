@@ -3,17 +3,17 @@ package core
 import (
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestMetadataParserFixture(t *testing.T) {
-	suite.Run(&MetadataParserFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&MetadataParserFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type MetadataParserFixture struct {
-	*suite.T
+	*should.T
 	parser  *MetadataParsingHandler
 	article *contracts.Article
 }

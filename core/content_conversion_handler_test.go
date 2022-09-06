@@ -4,17 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestContentConversionHandlerFixture(t *testing.T) {
-	suite.Run(&ContentConversionHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&ContentConversionHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type ContentConversionHandlerFixture struct {
-	*suite.T
+	*should.T
 
 	converter *ContentConversionHandler
 	inner     *FakeConverter

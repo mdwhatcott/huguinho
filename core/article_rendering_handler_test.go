@@ -4,17 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestArticleRenderingHandlerFixture(t *testing.T) {
-	suite.Run(&ArticleRenderingHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&ArticleRenderingHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type ArticleRenderingHandlerFixture struct {
-	*suite.T
+	*should.T
 	handler  *ArticleRenderingHandler
 	renderer *FakeRenderer
 	disk     *InMemoryFileSystem

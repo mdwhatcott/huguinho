@@ -4,17 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
 	"github.com/mdwhatcott/testing/should"
-	"github.com/mdwhatcott/testing/suite"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 func TestTopicPageRenderingHandlerFixture(t *testing.T) {
-	suite.Run(&TopicPageRenderingHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
+	should.Run(&TopicPageRenderingHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
 }
 
 type TopicPageRenderingHandlerFixture struct {
-	*suite.T
+	*should.T
 
 	handler  *TopicPageRenderingHandler
 	disk     *InMemoryFileSystem
