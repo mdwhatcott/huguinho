@@ -62,7 +62,7 @@ func (this *PipelineRunnerFixture) file(path, content string) {
 }
 func (this *PipelineRunnerFixture) ls(root string) {
 	err := this.disk.Walk(root, func(path string, info os.FileInfo, err error) error {
-		this.Log(path)
+		this.Println(path)
 		return nil
 	})
 
@@ -116,7 +116,7 @@ func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
 func (this *PipelineRunnerFixture) assertRenderedDiskState() {
 	this.So(len(this.disk.Files), should.Equal, 14)
 	files, _ := json.MarshalIndent(this.disk.Files, "", "  ")
-	this.Log("FILES:", string(files))
+	this.Println("FILES:", string(files))
 
 	this.assertFolder("rendered")
 	this.assertFolder("rendered/topics")

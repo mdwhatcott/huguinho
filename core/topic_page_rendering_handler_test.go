@@ -108,9 +108,10 @@ func (this *TopicPageRenderingHandlerFixture) TestFileTemplateRenderedAndWritten
 	this.So(err, should.BeNil)
 	this.assertHandledArticlesRendered()
 	this.So(this.disk.Files, should.Contain, "output/folder")
-	this.FatalSo(this.disk.Files, should.Contain, "output/folder/topics/index.html")
-	file := this.disk.Files["output/folder/topics/index.html"]
-	this.So(file.Content(), should.Equal, "RENDERED")
+	if this.So(this.disk.Files, should.Contain, "output/folder/topics/index.html") {
+		file := this.disk.Files["output/folder/topics/index.html"]
+		this.So(file.Content(), should.Equal, "RENDERED")
+	}
 }
 
 func (this *TopicPageRenderingHandlerFixture) TestRenderErrorReturned() {

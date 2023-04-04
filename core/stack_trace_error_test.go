@@ -18,9 +18,10 @@ type StackTraceErrorFixture struct {
 func (this *StackTraceErrorFixture) Test() {
 	gopherErr := errors.New("gophers")
 	err := StackTraceError(gopherErr)
-	this.FatalSo(err, should.WrapError, gopherErr)
-	this.So(err.Error(), should.Contain, "gophers")
-	this.So(err.Error(), should.Contain, "stack:")
+	if this.So(err, should.WrapError, gopherErr) {
+		this.So(err.Error(), should.Contain, "gophers")
+		this.So(err.Error(), should.Contain, "stack:")
+	}
 }
 
 func (this *StackTraceErrorFixture) TestNil() {
