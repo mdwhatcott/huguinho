@@ -125,13 +125,13 @@ const EXPECTED_HTML_OUTPUT = `<h1>H1</h1>
 <dd>The fruit of an evergreen tree of the genus Citrus.</dd>
 </dl>
 <p>That's some text with a footnote.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
+<li id="fn:1">
 <p>And that's the footnote.</p>
 <p>That's the second paragraph.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 `
