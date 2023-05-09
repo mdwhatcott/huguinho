@@ -1,4 +1,4 @@
-github.com/mdwhatcott/testing v0.21.4 h1:D20eKh7zdVxFvlg6wBTMXNNk7B82GcQGEN9EhBk98hM=
-github.com/mdwhatcott/testing v0.21.4/go.mod h1:DKbNObO+bditG0r27w3ZZmgcwOZiy6Yh6kFUKwvAGeI=
+github.com/mdwhatcott/testing v1.0.0 h1:1pR648cMmslWuEfhVPKsGHhKmCbbA05bzlSSVVpvv4U=
+github.com/mdwhatcott/testing v1.0.0/go.mod h1:DKbNObO+bditG0r27w3ZZmgcwOZiy6Yh6kFUKwvAGeI=
 github.com/yuin/goldmark v1.5.4 h1:2uY/xC0roWy8IBEGLgB1ywIoEJFGmRrX21YQcvGZzjU=
 github.com/yuin/goldmark v1.5.4/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
