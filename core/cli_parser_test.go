@@ -38,6 +38,7 @@ func (this *CLIParserFixture) TestDefaults() {
 		TemplateDir: "templates",
 		ContentRoot: "content",
 		TargetRoot:  "rendered",
+		BasePath:    "/",
 		BuildDrafts: false,
 		BuildFuture: false,
 	})
@@ -48,6 +49,7 @@ func (this *CLIParserFixture) TestCustomValues() {
 		"-templates", "other-templates",
 		"-content", "other-content",
 		"-target", "other-rendered",
+		"-base-path", "/path",
 		"-with-drafts",
 		"-with-future",
 	}
@@ -57,6 +59,7 @@ func (this *CLIParserFixture) TestCustomValues() {
 		TemplateDir: "other-templates",
 		ContentRoot: "other-content",
 		TargetRoot:  "other-rendered",
+		BasePath:    "/path",
 		BuildDrafts: true,
 		BuildFuture: true,
 	})
