@@ -8,6 +8,7 @@ import (
 )
 
 type HomePageRenderingHandler struct {
+	clock    contracts.Clock
 	disk     RenderingFileSystem
 	renderer contracts.Renderer
 	output   string
@@ -15,11 +16,13 @@ type HomePageRenderingHandler struct {
 }
 
 func NewHomePageRenderingHandler(
+	clock contracts.Clock,
 	disk RenderingFileSystem,
 	renderer contracts.Renderer,
 	output string,
 ) *HomePageRenderingHandler {
 	return &HomePageRenderingHandler{
+		clock:    clock,
 		disk:     disk,
 		renderer: renderer,
 		output:   output,
@@ -27,6 +30,10 @@ func NewHomePageRenderingHandler(
 }
 
 func (this *HomePageRenderingHandler) Handle(article *contracts.Article) {
+	threshold := this.clock().AddDate(-1, 0, 0)
+	if !article.Metadata.Date.After(threshold) {
+		return
+	}
 	this.listing = append(this.listing, contracts.RenderedArticleSummary{
 		Slug:   article.Metadata.Slug,
 		Title:  article.Metadata.Title,

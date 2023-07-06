@@ -7,17 +7,15 @@ import (
 )
 
 type Pipeline struct {
+	clock    contracts.Clock
 	config   contracts.Config
 	disk     contracts.FileSystem
 	renderer contracts.Renderer
 }
 
-func NewPipeline(
-	config contracts.Config,
-	disk contracts.FileSystem,
-	renderer contracts.Renderer,
-) *Pipeline {
+func NewPipeline(clock contracts.Clock, config contracts.Config, disk contracts.FileSystem, renderer contracts.Renderer) *Pipeline {
 	return &Pipeline{
+		clock:    clock,
 		config:   config,
 		disk:     disk,
 		renderer: renderer,
@@ -33,7 +31,7 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 	out = this.goListen(out, NewContentConversionHandler(NewGoldmarkMarkdownConverter()))
 	out = this.goListen(out, NewArticleRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	out = this.goListen(out, NewTopicPageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
-	out = this.goListen(out, NewHomePageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
+	out = this.goListen(out, NewHomePageRenderingHandler(this.clock, this.disk, this.renderer, this.config.TargetRoot))
 	return out
 }
 func (this *Pipeline) goLoad() (out chan contracts.Article) {

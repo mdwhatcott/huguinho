@@ -42,9 +42,9 @@ func (this *PipelineRunnerFixture) Setup() {
 }
 
 func (this *PipelineRunnerFixture) buildRunner() *PipelineRunner {
-	this.started = time.Now()
+	this.started = Date(2021, 2, 11)
 	this.finished = this.started.Add(time.Millisecond)
-	this.runner = NewPipelineRunner("version", this.args, this.disk, time.Now, log.New(this.log, "", 0))
+	this.runner = NewPipelineRunner("version", this.args, this.disk, this.Now, log.New(this.log, "", 0))
 	return this.runner
 }
 func (this *PipelineRunnerFixture) Now() time.Time {
@@ -138,7 +138,7 @@ slug:   /article-a/
 title:  Article A
 intro:  The introduction for Article A.
 topics: important misc
-date:   2020-02-08
+date:   2021-02-08
 
 +++
 
@@ -162,7 +162,7 @@ slug:   /article-c/
 title:  Article C
 intro:  The introduction for Article C.
 topics: important
-date:   2020-02-10
+date:   2021-02-10
 draft:  true
 
 +++
@@ -205,7 +205,7 @@ Content:
 	RenderedArticleA = `
 Title:  Article A
 Intro:  The introduction for Article A.
-Date:   2020-02-08
+Date:   2021-02-08
 Topics: importantmisc
 Content:
 
@@ -223,7 +223,7 @@ important
 	Slug:  /article-a/
 	Title: Article A
 	Intro: The introduction for Article A.
-	Date:  2020-02-08
+	Date:  2021-02-08
 
 `
 
@@ -237,7 +237,7 @@ Topics: important
 
 Slug:   /article-a/
 Title:  Article A
-Date:   2020-02-08
+Date:   2021-02-08
 Intro:  The introduction for Article A.
 Topics: important misc 
 ------------------------------------------------------------------

@@ -3,6 +3,7 @@ package core
 import (
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/mdwhatcott/testing/should"
 
@@ -16,18 +17,22 @@ func TestHomePageRenderingHandlerFixture(t *testing.T) {
 type HomePageRenderingHandlerFixture struct {
 	*should.T
 
+	now      time.Time
 	handler  *HomePageRenderingHandler
 	disk     *InMemoryFileSystem
 	renderer *FakeRenderer
 }
 
+func (this *HomePageRenderingHandlerFixture) Now() time.Time {
+	return this.now
+}
 func (this *HomePageRenderingHandlerFixture) Setup() {
+	this.now = Date(2021, 2, 1)
 	this.disk = NewInMemoryFileSystem()
 	this.renderer = NewFakeRenderer()
-	this.handler = NewHomePageRenderingHandler(this.disk, this.renderer, "output/folder")
+	this.handler = NewHomePageRenderingHandler(this.Now, this.disk, this.renderer, "output/folder")
 	this.handleArticles()
 }
-
 func (this *HomePageRenderingHandlerFixture) handleArticles() {
 	this.handler.Handle(&contracts.Article{
 		Metadata: contracts.ArticleMetadata{
@@ -78,14 +83,15 @@ func (this *HomePageRenderingHandlerFixture) assertHandledArticlesRendered() {
 				Topics: []string{"topic-b", "topic-c"},
 				Draft:  true,
 			},
-			{
-				Slug:   "/slug1",
-				Title:  "title1",
-				Intro:  "intro1",
-				Date:   Date(2020, 1, 1),
-				Topics: []string{"topic-a", "topic-b"},
-				Draft:  false,
-			},
+			// TOO OLD:
+			//{
+			//	Slug:   "/slug1",
+			//	Title:  "title1",
+			//	Intro:  "intro1",
+			//	Date:   Date(2020, 1, 1),
+			//	Topics: []string{"topic-a", "topic-b"},
+			//	Draft:  false,
+			//},
 		},
 	})
 }
