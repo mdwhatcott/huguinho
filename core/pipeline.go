@@ -33,9 +33,18 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 		"Michael Whatcott",
 		"Here's what I've been working on lately:",
 	)
-	var calendar []*ListRenderingHandler
+	archive := NewListRenderingHandler(
+		this.filterAll,
+		this.sortByDateDescending,
+		this.renderer,
+		this.disk,
+		filepath.Join(this.config.TargetRoot, "archives"),
+		fmt.Sprintf("Michael Whatcott - Archives"),
+		"Here's a complete history of my writings:",
+	)
+	var years []*ListRenderingHandler
 	for year := 2000; year < this.clock().Year(); year++ {
-		calendar = append(calendar, NewListRenderingHandler(
+		years = append(years, NewListRenderingHandler(
 			this.filterCalendarYear(year),
 			this.sortByDate,
 			this.renderer,
@@ -55,7 +64,8 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 	out = this.goListen(out, NewArticleRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	out = this.goListen(out, NewTopicPageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	out = this.goListen(out, home)
-	for _, handler := range calendar {
+	out = this.goListen(out, archive)
+	for _, handler := range years {
 		out = this.goListen(out, handler)
 	}
 	return out
@@ -70,6 +80,7 @@ func (this *Pipeline) goListen(in chan contracts.Article, handler contracts.Hand
 	go Listen(in, out, handler)
 	return out
 }
+func (this *Pipeline) filterAll(*contracts.Article) bool { return true }
 func (this *Pipeline) filterLastYear(a *contracts.Article) bool {
 	return a.Metadata.Date.After(this.clock().AddDate(-1, 0, 0))
 }
