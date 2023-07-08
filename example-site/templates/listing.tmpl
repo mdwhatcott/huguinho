@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Your Name Here</title>
+{{ template "header.tmpl" . }}
+        <meta name="description" content="description">
+        <link rel="canonical" href="https://your-domain-here.com">
+        <style>
+{{ template "css.tmpl" }}
+        </style>
+    </head>
+
+    <body>
+        <nav>
+            <a href="/topics/">Index</a> ~
+            <a href="/about/">About</a>
+        </nav>
+        <h1>{{ .Title }}</h1>
+        <p>{{ .Intro }}</p>
+        <dl>
+            {{ range .Pages }}{{ if ne (.Date.Format "2006-01-02") "2000-01-01" }}
+                <dt>{{ if .Draft }}[DRAFT]{{ end }}<a href="{{ .Slug }}">{{ .Title }}</a></dt>
+                <dd>{{ if (ne .Intro "") }}<i>{{ .Intro }}</i>{{ end }}</dd><br>
+            {{ end }}{{ end }}
+        </dl>
+        <br>
+        <br>
+    </body>
+</html>

@@ -10,7 +10,7 @@ type Renderer interface {
 }
 
 const (
-	HomePageTemplateName = "home.tmpl"
+	HomePageTemplateName = "listing.tmpl"
 	ArticleTemplateName  = "article.tmpl"
 	TopicsTemplateName   = "topics.tmpl"
 )
@@ -21,7 +21,9 @@ var (
 )
 
 type (
-	RenderedHomePage struct {
+	RenderedListPage struct {
+		Title string
+		Intro string
 		Pages []RenderedArticleSummary
 	}
 

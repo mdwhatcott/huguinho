@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>Your Name Here - {{ .Title }}</title>
+        <title>Your Site Here - {{ .Title }}</title>
 {{ template "header.tmpl" . }}
 {{ template "highlight-js.tmpl" . }}
         <meta name="description" content="{{ .Intro }}">
@@ -14,13 +14,10 @@
     <body>
 {{ if ne (.Date.Format "2006-01-02") "2000-01-01" }}
         <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
   {{ range .Topics }}
-                <li><a href="/topics/#{{ . }}">{{ . }}</a></li>
-{{ end }}
-            </ul>
-            <div class="clear"></div>
+            <a href="/topics/#{{ . }}">{{ . }}</a> ~
+  {{ end }}
+            <a href="/">Home</a>
         </nav>
 {{ end }}
 
@@ -34,16 +31,14 @@
 
             <div>
 {{ .Content }}
+
+{{ if ne (.Date.Format "2006-01-02") "2000-01-01" }}
+            <p><i>-Author Name Here</i></p>
+{{ end }}
             </div>
         </div>
 
         <br>
         <br>
-
-{{ if ne (.Date.Format "2006-01-02") "2000-01-01" }}
-        <footer>
-  {{ template "footer.tmpl" . }}
-        </footer>
-{{ end }}
     </body>
 </html>

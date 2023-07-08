@@ -61,7 +61,9 @@ func (this *ListRenderingHandlerSuite) sorter(i, j contracts.RenderedArticleSumm
 	return strings.Compare(i.Title, j.Title)
 }
 func (this *ListRenderingHandlerSuite) assertHandledArticlesRendered() {
-	this.So(this.renderer.rendered, should.Equal, contracts.RenderedHomePage{
+	this.So(this.renderer.rendered, should.Equal, contracts.RenderedListPage{
+		Title: "TITLE",
+		Intro: "INTRO",
 		Pages: []contracts.RenderedArticleSummary{
 			{
 				Slug:   "/a",
@@ -85,15 +87,24 @@ func (this *ListRenderingHandlerSuite) assertHandledArticlesRendered() {
 func (this *ListRenderingHandlerSuite) Setup() {
 	this.renderer = NewFakeRenderer()
 	this.disk = NewInMemoryFileSystem()
-	this.handler = NewListRenderingHandler(this.filter, this.sorter, this.renderer, this.disk, "output/folder")
+	this.handler = NewListRenderingHandler(this.filter, this.sorter, this.renderer, this.disk, "output/folder", "TITLE", "INTRO")
+}
+func (this *ListRenderingHandlerSuite) handleAndFinalize() error {
 	this.handler.Handle(articleC)
 	this.handler.Handle(articleB)
 	this.handler.Handle(articleA)
+	return this.handler.Finalize()
+}
+func (this *ListRenderingHandlerSuite) TestNoArticles_NothingToRender() {
+	this.handler.Handle(articleC) // will be filtered out
+	err := this.handler.Finalize()
+	this.So(err, should.BeNil)
+	this.So(this.disk.Files, should.BeEmpty)
 }
 func (this *ListRenderingHandlerSuite) TestFileTemplateRenderedAndWrittenToDisk() {
 	this.renderer.result = "RENDERED"
 
-	err := this.handler.Finalize()
+	err := this.handleAndFinalize()
 
 	this.So(err, should.BeNil)
 	this.assertHandledArticlesRendered()
@@ -107,7 +118,7 @@ func (this *ListRenderingHandlerSuite) TestRenderErrorReturned() {
 	renderErr := errors.New("boink")
 	this.renderer.err = renderErr
 
-	err := this.handler.Finalize()
+	err := this.handleAndFinalize()
 
 	this.So(err, should.WrapError, renderErr)
 	this.So(this.disk.Files, should.BeEmpty)
@@ -117,7 +128,7 @@ func (this *ListRenderingHandlerSuite) TestMkdirAllErrorReturned() {
 	mkdirErr := errors.New("boink")
 	this.disk.ErrMkdirAll["output/folder"] = mkdirErr
 
-	err := this.handler.Finalize()
+	err := this.handleAndFinalize()
 
 	this.So(err, should.WrapError, mkdirErr)
 	this.So(this.disk.Files, should.BeEmpty)
@@ -127,7 +138,7 @@ func (this *ListRenderingHandlerSuite) TestWriteFileErrorReturned() {
 	writeFileErr := errors.New("boink")
 	this.disk.ErrWriteFile["output/folder/index.html"] = writeFileErr
 
-	err := this.handler.Finalize()
+	err := this.handleAndFinalize()
 
 	this.So(err, should.WrapError, writeFileErr)
 	this.So(this.disk.Files, should.NOT.Contain, "output/folder/index.html")

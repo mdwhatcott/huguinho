@@ -36,13 +36,13 @@ func (this *PipelineRunnerFixture) Setup() {
 	this.file("content/b.md", ContentB)
 	this.file("content/c.md", ContentC)
 
-	this.file("templates/home.tmpl", TemplateHome)
+	this.file("templates/listing.tmpl", TemplateHome)
 	this.file("templates/topics.tmpl", TemplateTopics)
 	this.file("templates/article.tmpl", TemplateArticle)
 }
 
 func (this *PipelineRunnerFixture) buildRunner() *PipelineRunner {
-	this.started = Date(2021, 2, 11)
+	this.started = Date(2022, 1, 1)
 	this.finished = this.started.Add(time.Millisecond)
 	this.runner = NewPipelineRunner("version", this.args, this.disk, this.Now, log.New(this.log, "", 0))
 	return this.runner
@@ -62,7 +62,7 @@ func (this *PipelineRunnerFixture) file(path, content string) {
 }
 func (this *PipelineRunnerFixture) ls(root string) {
 	err := this.disk.Walk(root, func(path string, info os.FileInfo, err error) error {
-		this.Println(path)
+		this.Println("Path:", path)
 		return nil
 	})
 
@@ -75,6 +75,7 @@ func (this *PipelineRunnerFixture) assertFolder(path string) {
 	}
 }
 func (this *PipelineRunnerFixture) assertFile(path, expectedContent string) {
+	this.Println("Path:", path)
 	file := this.disk.Files[path]
 	if this.So(file, should.NOT.BeNil) {
 		actual := strings.ReplaceAll(strings.TrimSpace(file.Content()), "\n", `\n`)
@@ -91,14 +92,14 @@ func (this *PipelineRunnerFixture) TestBadConfigPreventsProcessing_Error() {
 }
 
 func (this *PipelineRunnerFixture) TestTemplateLoadFailurePreventsProcessing_Error() {
-	this.disk.ErrReadFile["templates/home.tmpl"] = errors.New("gophers")
+	this.disk.ErrReadFile["templates/listing.tmpl"] = errors.New("gophers")
 	errs := this.buildRunner().Run()
 	this.So(errs, should.Equal, 1)
 	this.assertOriginalDiskState()
 }
 
 func (this *PipelineRunnerFixture) TestTemplateValidationFailurePreventsProcessing_Error() {
-	this.file("templates/home.tmpl", `{{ .INVALID }}`)
+	this.file("templates/listing.tmpl", `{{ .INVALID }}`)
 	errs := this.buildRunner().Run()
 	this.So(errs, should.Equal, 1)
 	this.assertOriginalDiskState()
@@ -114,7 +115,7 @@ func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
 }
 
 func (this *PipelineRunnerFixture) assertRenderedDiskState() {
-	this.So(len(this.disk.Files), should.Equal, 14)
+	this.So(len(this.disk.Files), should.Equal, 16)
 	files, _ := json.MarshalIndent(this.disk.Files, "", "  ")
 	this.Println("FILES:", string(files))
 
@@ -122,8 +123,10 @@ func (this *PipelineRunnerFixture) assertRenderedDiskState() {
 	this.assertFolder("rendered/topics")
 	this.assertFolder("rendered/article-a")
 	this.assertFolder("rendered/article-b")
+	this.assertFolder("rendered/2021")
 
-	this.assertFile("rendered/index.html", RenderedHome)
+	this.assertFile("rendered/index.html", RenderedListDescending)
+	this.assertFile("rendered/2021/index.html", RenderedListAscending)
 	this.assertFile("rendered/topics/index.html", RenderedTopics)
 	this.assertFile("rendered/article-a/index.html", RenderedArticleA)
 }
@@ -149,7 +152,7 @@ This is the first article.
 slug:   /article-b/
 title:  Article B
 intro:  The introduction for Article B.
-topics:  important
+topics: important
 date:   2021-02-09
 
 +++
@@ -185,7 +188,7 @@ Topics: {{ range .Topics }}{{ . }} {{ end }}
 Title:  {{ .Title }}
 Intro:  {{ .Intro }}
 Date:   {{ .Date.Format "2006-01-02" }}
-Topics: {{ range .Topics }}{{ . }}{{ end }}
+Topics: {{ range .Topics }}{{ . }} {{ end }}
 Content:
 
 {{ .Content }}
@@ -206,7 +209,7 @@ Content:
 Title:  Article A
 Intro:  The introduction for Article A.
 Date:   2021-02-08
-Topics: importantmisc
+Topics: important misc 
 Content:
 
 <p>This is the first article.</p>
@@ -227,7 +230,23 @@ important
 
 `
 
-	RenderedHome = `
+	RenderedListAscending = `
+Slug:   /article-a/
+Title:  Article A
+Date:   2021-02-08
+Intro:  The introduction for Article A.
+Topics: important misc 
+------------------------------------------------------------------
+
+Slug:   /article-b/
+Title:  Article B
+Date:   2021-02-09
+Intro:  The introduction for Article B.
+Topics: important 
+------------------------------------------------------------------
+`
+
+	RenderedListDescending = `
 Slug:   /article-b/
 Title:  Article B
 Date:   2021-02-09
