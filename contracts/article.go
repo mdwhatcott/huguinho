@@ -29,3 +29,8 @@ type ArticleContent struct {
 	Original  string
 	Converted string
 }
+
+type (
+	Filter func(*Article) bool
+	Sorter func(i, j RenderedArticleSummary) int
+)
