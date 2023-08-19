@@ -106,6 +106,7 @@ func (this *PipelineRunnerFixture) TestTemplateValidationFailurePreventsProcessi
 }
 
 func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
+	this.arg("-base-path", "/base-path")
 	this.assertOriginalDiskState()
 
 	errs := this.buildRunner().Run()
