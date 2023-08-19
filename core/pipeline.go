@@ -30,7 +30,7 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 		this.renderer,
 		this.disk,
 		this.config.TargetRoot,
-		"Michael Whatcott",
+		this.config.Author,
 		"Here's what I've been working on lately:",
 	)
 	archive := NewListRenderingHandler(
@@ -39,7 +39,7 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 		this.renderer,
 		this.disk,
 		filepath.Join(this.config.TargetRoot, "archives"),
-		fmt.Sprintf("Michael Whatcott - Archives"),
+		fmt.Sprintf("%s - Archives", this.config.Author),
 		"Here's a complete history of my writings:",
 	)
 	var years []*ListRenderingHandler
@@ -50,7 +50,7 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 			this.renderer,
 			this.disk,
 			filepath.Join(this.config.TargetRoot, fmt.Sprint(year)),
-			fmt.Sprintf("Michael Whatcott - %d", year),
+			fmt.Sprintf("%s - %d", this.config.Author, year),
 			fmt.Sprintf("Here's what I wrote in %d:", year),
 		))
 	}
