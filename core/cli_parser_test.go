@@ -39,7 +39,7 @@ func (this *CLIParserFixture) TestDefaults() {
 		TemplateDir: "templates",
 		ContentRoot: "content",
 		TargetRoot:  "rendered",
-		BasePath:    "/",
+		BasePath:    "",
 		BuildDrafts: false,
 		BuildFuture: false,
 	})

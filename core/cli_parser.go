@@ -33,7 +33,7 @@ func (this *CLIParser) Parse() (config contracts.Config, err error) {
 	this.stringFlag("templates", "Directory with html templates.     ", "templates", &config.TemplateDir)
 	this.stringFlag("content  ", "Directory with markdown content.   ", "content  ", &config.ContentRoot)
 	this.stringFlag("target   ", "Directory for rendered html.       ", "rendered ", &config.TargetRoot)
-	this.stringFlag("base-path", "Initial path of rendered html.     ", "/        ", &config.BasePath)
+	this.stringFlag("base-path", "Initial path of rendered html.     ", "         ", &config.BasePath)
 	this.boolFlag("with-drafts", "When set, include drafts.             ", false, &config.BuildDrafts)
 	this.boolFlag("with-future", "When set, include future articles.    ", false, &config.BuildFuture)
 
