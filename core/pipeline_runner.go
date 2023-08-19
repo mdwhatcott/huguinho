@@ -51,7 +51,7 @@ func (this *PipelineRunner) Run() (errors int) {
 		return 1
 	}
 
-	pipeline := NewPipeline(this.now, config, this.fs, renderer)
+	pipeline := NewPipeline(this.now, config, this.fs, NewBasePathRenderer(renderer, config.BasePath))
 	reporter := NewReporter(start, this.log)
 	reporter.ProcessStream(pipeline.Run())
 	reporter.RenderFinalReport(this.now())
