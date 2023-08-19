@@ -44,14 +44,18 @@ func (this *PipelineRunner) Run() (errors int) {
 		return 1
 	}
 
-	renderer := NewTemplateRenderer(templates)
-	err = renderer.Validate()
+	templateRenderer := NewTemplateRenderer(templates)
+	err = templateRenderer.Validate()
 	if err != nil {
 		this.log.Println(err)
 		return 1
 	}
 
-	pipeline := NewPipeline(this.now, config, this.fs, NewBasePathRenderer(renderer, config.BasePath))
+	var renderer contracts.Renderer = templateRenderer
+	if len(config.BasePath) > 0 {
+		renderer = NewBasePathRenderer(templateRenderer, config.BasePath)
+	}
+	pipeline := NewPipeline(this.now, config, this.fs, renderer)
 	reporter := NewReporter(start, this.log)
 	reporter.ProcessStream(pipeline.Run())
 	reporter.RenderFinalReport(this.now())
