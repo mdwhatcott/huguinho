@@ -4,9 +4,8 @@ import (
 	"testing"
 	"text/template"
 
-	"github.com/mdwhatcott/testing/should"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
 )
 
 func TestTemplateRendererFixture(t *testing.T) {

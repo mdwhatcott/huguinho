@@ -3,9 +3,8 @@ package core
 import (
 	"testing"
 
-	"github.com/mdwhatcott/testing/should"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
 )
 
 func TestDraftFilteringHandlerFixture(t *testing.T) {

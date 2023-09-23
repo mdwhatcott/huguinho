@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/mdwhatcott/testing/should"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
 )
 
 func TestListenerFixture(t *testing.T) {

@@ -8,9 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdwhatcott/testing/should"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
 )
 
 func TestReporterFixture(t *testing.T) {

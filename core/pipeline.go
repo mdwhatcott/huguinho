@@ -15,7 +15,12 @@ type Pipeline struct {
 	renderer contracts.Renderer
 }
 
-func NewPipeline(clock contracts.Clock, config contracts.Config, disk contracts.FileSystem, renderer contracts.Renderer) *Pipeline {
+func NewPipeline(
+	clock contracts.Clock,
+	config contracts.Config,
+	disk contracts.FileSystem,
+	renderer contracts.Renderer,
+) *Pipeline {
 	return &Pipeline{
 		clock:    clock,
 		config:   config,

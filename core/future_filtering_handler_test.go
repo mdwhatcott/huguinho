@@ -4,9 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdwhatcott/testing/should"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
 )
 
 func TestFutureFilteringHandlerFixture(t *testing.T) {

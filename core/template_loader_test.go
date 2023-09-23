@@ -4,9 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/testing/should"
-
 	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdwhatcott/testing/should"
 )
 
 func TestTemplateLoaderFixture(t *testing.T) {
