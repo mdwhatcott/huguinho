@@ -3,7 +3,6 @@ package core
 import (
 	"fmt"
 	"path/filepath"
-	"time"
 
 	"github.com/mdwhatcott/huguinho/contracts"
 )
@@ -64,7 +63,7 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 	out = this.goListen(out, NewMetadataParsingHandler())
 	out = this.goListen(out, NewMetadataValidationHandler())
 	out = this.goListen(out, NewDraftFilteringHandler(!this.config.BuildDrafts))
-	out = this.goListen(out, NewFutureFilteringHandler(time.Now(), !this.config.BuildFuture))
+	out = this.goListen(out, NewFutureFilteringHandler(this.clock(), !this.config.BuildFuture))
 	out = this.goListen(out, NewContentConversionHandler(NewGoldmarkMarkdownConverter()))
 	out = this.goListen(out, NewArticleRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	out = this.goListen(out, NewTopicPageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))

@@ -1,8 +1,6 @@
 package core
 
-import (
-	"github.com/mdwhatcott/huguinho/contracts"
-)
+import "github.com/mdwhatcott/huguinho/contracts"
 
 type PipelineRunner struct {
 	version string
