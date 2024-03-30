@@ -47,7 +47,7 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 		"Here's a complete history of my writings:",
 	)
 	var years []*ListRenderingHandler
-	for year := 2000; year < this.clock().Year(); year++ {
+	for year := 2000; year <= this.clock().Year(); year++ {
 		years = append(years, NewListRenderingHandler(
 			this.filterCalendarYear(year),
 			this.sortByDate,
