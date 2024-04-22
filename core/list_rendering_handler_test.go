@@ -63,7 +63,6 @@ func (this *ListRenderingHandlerSuite) sorter(i, j contracts.RenderedArticleSumm
 func (this *ListRenderingHandlerSuite) assertHandledArticlesRendered() {
 	this.So(this.renderer.rendered, should.Equal, contracts.RenderedListPage{
 		Title: "TITLE",
-		Intro: "INTRO",
 		Pages: []contracts.RenderedArticleSummary{
 			{
 				Slug:   "/a",
@@ -87,7 +86,7 @@ func (this *ListRenderingHandlerSuite) assertHandledArticlesRendered() {
 func (this *ListRenderingHandlerSuite) Setup() {
 	this.renderer = NewFakeRenderer()
 	this.disk = NewInMemoryFileSystem()
-	this.handler = NewListRenderingHandler(this.filter, this.sorter, this.renderer, this.disk, "output/folder", "TITLE", "INTRO")
+	this.handler = NewListRenderingHandler(this.filter, this.sorter, this.renderer, this.disk, "output/folder", "TITLE")
 }
 func (this *ListRenderingHandlerSuite) handleAndFinalize() error {
 	this.handler.Handle(articleC)

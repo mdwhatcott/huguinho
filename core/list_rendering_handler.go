@@ -15,7 +15,6 @@ type ListRenderingHandler struct {
 	disk     RenderingFileSystem
 	output   string
 	title    string
-	intro    string
 }
 
 func NewListRenderingHandler(
@@ -23,7 +22,7 @@ func NewListRenderingHandler(
 	sorter contracts.Sorter,
 	renderer contracts.Renderer,
 	disk RenderingFileSystem,
-	output, title, intro string,
+	output, title string,
 ) *ListRenderingHandler {
 	return &ListRenderingHandler{
 		filter:   filter,
@@ -32,7 +31,6 @@ func NewListRenderingHandler(
 		disk:     disk,
 		output:   output,
 		title:    title,
-		intro:    intro,
 	}
 }
 func (this *ListRenderingHandler) Handle(article *contracts.Article) {
@@ -59,7 +57,6 @@ func (this *ListRenderingHandler) Finalize() error {
 
 	rendered, err := this.renderer.Render(contracts.RenderedListPage{
 		Title: this.title,
-		Intro: this.intro,
 		Pages: this.listing,
 	})
 	if err != nil {

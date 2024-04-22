@@ -116,7 +116,7 @@ func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
 }
 
 func (this *PipelineRunnerFixture) assertRenderedDiskState() {
-	this.So(len(this.disk.Files), should.Equal, 18)
+	this.So(len(this.disk.Files), should.Equal, 14)
 	files, _ := json.MarshalIndent(this.disk.Files, "", "  ")
 	this.Println("FILES:", string(files))
 
@@ -124,12 +124,8 @@ func (this *PipelineRunnerFixture) assertRenderedDiskState() {
 	this.assertFolder("rendered/topics")
 	this.assertFolder("rendered/article-a")
 	this.assertFolder("rendered/article-b")
-	this.assertFolder("rendered/2021")
-	this.assertFolder("rendered/archives")
 
 	this.assertFile("rendered/index.html", RenderedListDescending)
-	this.assertFile("rendered/2021/index.html", RenderedListAscending)
-	this.assertFile("rendered/archives/index.html", RenderedListDescending)
 	this.assertFile("rendered/topics/index.html", RenderedTopics)
 	this.assertFile("rendered/article-a/index.html", RenderedArticleA)
 }
