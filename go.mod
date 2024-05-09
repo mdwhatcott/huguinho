@@ -1,6 +1,6 @@
 module github.com/mdwhatcott/huguinho
 
-go 1.21.0
+go 1.22
 
 require (
 	github.com/mdwhatcott/testing v1.3.0
