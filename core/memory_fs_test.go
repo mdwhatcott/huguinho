@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -13,6 +14,7 @@ import (
 
 type InMemoryFileSystem struct {
 	ModTime      time.Time
+	lock         *sync.RWMutex
 	Files        map[string]*MemoryFile
 	ErrReadFile  map[string]error
 	ErrWriteFile map[string]error
@@ -23,6 +25,7 @@ type InMemoryFileSystem struct {
 func NewInMemoryFileSystem() *InMemoryFileSystem {
 	return &InMemoryFileSystem{
 		ModTime:      time.Now(),
+		lock:         new(sync.RWMutex),
 		Files:        make(map[string]*MemoryFile),
 		ErrReadFile:  make(map[string]error),
 		ErrWriteFile: make(map[string]error),
@@ -32,6 +35,8 @@ func NewInMemoryFileSystem() *InMemoryFileSystem {
 }
 
 func (this *InMemoryFileSystem) ReadFile(path string) ([]byte, error) {
+	this.lock.RLock()
+	defer this.lock.RUnlock()
 	err := this.ErrReadFile[path]
 	if err != nil {
 		return nil, err
@@ -40,6 +45,8 @@ func (this *InMemoryFileSystem) ReadFile(path string) ([]byte, error) {
 }
 
 func (this *InMemoryFileSystem) WriteFile(path string, content []byte, perm os.FileMode) error {
+	this.lock.Lock()
+	defer this.lock.Unlock()
 	err := this.ErrWriteFile[path]
 	if err != nil {
 		return err
@@ -54,6 +61,8 @@ func (this *InMemoryFileSystem) WriteFile(path string, content []byte, perm os.F
 }
 
 func (this *InMemoryFileSystem) MkdirAll(path string, perm os.FileMode) error {
+	this.lock.Lock()
+	defer this.lock.Unlock()
 	err := this.ErrMkdirAll[path]
 	if err != nil {
 		return err
@@ -74,6 +83,8 @@ func (this *InMemoryFileSystem) MkdirAll(path string, perm os.FileMode) error {
 func (this *InMemoryFileSystem) Walk(root string) (result chan contracts.FileSystemEntry) {
 	result = make(chan contracts.FileSystemEntry)
 	go func() {
+		this.lock.RLock()
+		defer this.lock.RUnlock()
 		defer close(result)
 		root = filepath.Clean(root)
 		var paths []string
