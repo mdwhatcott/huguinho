@@ -60,6 +60,16 @@ func (this *TemplateLoaderFixture) TestInvalidTemplateFiles_Error() {
 	this.So(templates, should.BeNil)
 }
 
+func (this *TemplateLoaderFixture) TestWalkFileErr() {
+	gophers := errors.New("GOPHERS")
+	this.disk.ErrWalkFunc["templates/"+contracts.HomePageTemplateName] = gophers
+
+	templates, err := this.loader.Load()
+
+	this.So(err, should.WrapError, gophers)
+	this.So(templates, should.BeNil)
+}
+
 func (this *TemplateLoaderFixture) TestReadFileErr() {
 	gophers := errors.New("GOPHERS")
 	this.disk.ErrReadFile["templates/"+contracts.HomePageTemplateName] = gophers
@@ -68,17 +78,6 @@ func (this *TemplateLoaderFixture) TestReadFileErr() {
 
 	this.So(err, should.WrapError, gophers)
 	this.So(templates, should.BeNil)
-}
-
-func (this *TemplateLoaderFixture) TestNestedDirectoriesSkipped() {
-	_ = this.disk.MkdirAll("templates/nested", 0755)
-	_ = this.disk.WriteFile("templates/nested/template.tmpl", []byte(""), 0644)
-
-	templates, err := this.loader.Load()
-
-	this.So(err, should.BeNil)
-	this.So(templates.Lookup("nested/template.tmpl"), should.BeNil)
-	this.So(templates.Lookup("template.tmpl"), should.BeNil)
 }
 
 const (

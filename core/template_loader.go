@@ -1,8 +1,6 @@
 package core
 
 import (
-	"os"
-	"path/filepath"
 	"strings"
 	"text/template"
 
@@ -24,30 +22,26 @@ func NewTemplateLoader(disk TemplateLoaderFileSystem, folder string) *TemplateLo
 }
 
 func (this *TemplateLoader) Load() (templates *template.Template, err error) {
-	err = this.disk.Walk(this.folder, func(path string, info os.FileInfo, err error) error {
-		if path != this.folder && info.IsDir() {
-			return filepath.SkipDir
+	for entry := range this.disk.Walk(this.folder) {
+		if entry.Error != nil {
+			return nil, StackTraceError(entry.Error)
 		}
 		if templates == nil {
-			templates = template.New(info.Name())
+			templates = template.New(entry.Name())
 		} else {
-			templates = templates.New(info.Name())
+			templates = templates.New(entry.Name())
 		}
-		if !strings.HasSuffix(info.Name(), ".tmpl") {
-			return nil
+		if !strings.HasSuffix(entry.Name(), ".tmpl") {
+			continue
 		}
-		all, err := this.disk.ReadFile(path)
+		all, err := this.disk.ReadFile(entry.Path)
 		if err != nil {
-			return StackTraceError(err)
+			return nil, StackTraceError(err)
 		}
 		templates, err = templates.Parse(string(all))
 		if err != nil {
-			return StackTraceError(err)
+			return nil, StackTraceError(err)
 		}
-		return nil
-	})
-	if err != nil {
-		return nil, err
 	}
 	return templates, nil
 }

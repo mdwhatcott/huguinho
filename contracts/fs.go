@@ -1,8 +1,8 @@
 package contracts
 
 import (
+	"io/fs"
 	"os"
-	"path/filepath"
 )
 
 type FileSystem interface {
@@ -26,6 +26,13 @@ type (
 	}
 
 	Walk interface {
-		Walk(root string, walk filepath.WalkFunc) error
+		Walk(root string) chan FileSystemEntry
 	}
 )
+
+type FileSystemEntry struct {
+	Root string
+	Path string
+	fs.DirEntry
+	Error error
+}

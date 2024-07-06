@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
-	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -61,12 +61,10 @@ func (this *PipelineRunnerFixture) file(path, content string) {
 	_ = this.disk.WriteFile(path, []byte(content), 0644)
 }
 func (this *PipelineRunnerFixture) ls(root string) {
-	err := this.disk.Walk(root, func(path string, info os.FileInfo, err error) error {
-		this.Println("Path:", path)
-		return nil
-	})
-
-	this.So(err, should.BeNil)
+	files := this.disk.Walk(root)
+	for file := range files {
+		this.Println("Path:", filepath.Join(root, file.Path))
+	}
 }
 func (this *PipelineRunnerFixture) assertFolder(path string) {
 	dir := this.disk.Files[path]

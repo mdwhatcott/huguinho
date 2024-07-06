@@ -1,8 +1,11 @@
 package io
 
 import (
+	"io/fs"
 	"os"
 	"path/filepath"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 type Disk struct{}
@@ -16,6 +19,19 @@ func (Disk) WriteFile(path string, content []byte, perm os.FileMode) error {
 func (Disk) MkdirAll(path string, perm os.FileMode) error {
 	return os.MkdirAll(path, perm)
 }
-func (Disk) Walk(root string, walk filepath.WalkFunc) error {
-	return filepath.Walk(root, walk)
+func (Disk) Walk(root string) (result chan contracts.FileSystemEntry) {
+	result = make(chan contracts.FileSystemEntry)
+	go func() {
+		defer close(result)
+		_ = filepath.WalkDir(root, func(path string, entry fs.DirEntry, err error) error {
+			result <- contracts.FileSystemEntry{
+				Root:     root,
+				Path:     path,
+				DirEntry: entry,
+				Error:    err,
+			}
+			return err
+		})
+	}()
+	return result
 }

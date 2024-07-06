@@ -1,7 +1,6 @@
 package core
 
 import (
-	"os"
 	"strings"
 
 	"github.com/mdwhatcott/huguinho/contracts"
@@ -28,23 +27,22 @@ func NewPathLoader(
 
 func (this *PathLoader) Start() {
 	defer close(this.output)
-	this.err = this.files.Walk(this.root, this.walk)
-}
-
-func (this *PathLoader) walk(path string, info os.FileInfo, err error) error {
-	if err != nil {
-		return StackTraceError(err)
+	files := this.files.Walk(this.root)
+	for file := range files {
+		if file.Error != nil {
+			this.err = StackTraceError(file.Error)
+			return
+		}
+		if file.IsDir() {
+			continue
+		}
+		if !strings.HasSuffix(file.Name(), ".md") {
+			continue
+		}
+		this.output <- contracts.Article{
+			Source: contracts.ArticleSource{Path: file.Path},
+		}
 	}
-	if info.IsDir() {
-		return nil
-	}
-	if !strings.HasSuffix(path, ".md") {
-		return nil
-	}
-	this.output <- contracts.Article{
-		Source: contracts.ArticleSource{Path: path},
-	}
-	return nil
 }
 
 func (this *PathLoader) Finalize() error {

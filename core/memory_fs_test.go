@@ -1,11 +1,14 @@
 package core
 
 import (
+	"io/fs"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/mdwhatcott/huguinho/contracts"
 )
 
 type InMemoryFileSystem struct {
@@ -68,38 +71,28 @@ func (this *InMemoryFileSystem) MkdirAll(path string, perm os.FileMode) error {
 	return nil
 }
 
-func (this *InMemoryFileSystem) Walk(root string, walk filepath.WalkFunc) error {
-	skips := make(map[string]struct{})
-	root = filepath.Clean(root)
-	var paths []string
-	for path := range this.Files {
-		if path == root || strings.HasPrefix(path, root+"/") {
-			paths = append(paths, path)
-		}
-	}
-	sort.Strings(paths)
-	for _, path := range paths {
-		shouldSkip := false
-		for skip := range skips {
-			if strings.HasPrefix(path, skip) {
-				shouldSkip = true
-				break
+func (this *InMemoryFileSystem) Walk(root string) (result chan contracts.FileSystemEntry) {
+	result = make(chan contracts.FileSystemEntry)
+	go func() {
+		defer close(result)
+		root = filepath.Clean(root)
+		var paths []string
+		for path := range this.Files {
+			if path == root || strings.HasPrefix(path, root+"/") {
+				paths = append(paths, path)
 			}
 		}
-		if shouldSkip {
-			continue
+		sort.Strings(paths)
+		for _, path := range paths {
+			result <- contracts.FileSystemEntry{
+				Root:     root,
+				Path:     path,
+				DirEntry: this.Files[path],
+				Error:    this.ErrWalkFunc[path],
+			}
 		}
-		file := this.Files[path]
-		err := walk(path, file, this.ErrWalkFunc[path])
-		if err == filepath.SkipDir {
-			skips[path+string(filepath.Separator)] = struct{}{}
-			continue
-		}
-		if err != nil {
-			return err
-		}
-	}
-	return nil
+	}()
+	return result
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -112,10 +105,12 @@ type MemoryFile struct {
 	isDir   bool
 }
 
-func (this *MemoryFile) Content() string    { return string(this.content) }
-func (this *MemoryFile) Name() string       { return this.name }
-func (this *MemoryFile) Size() int64        { return int64(len(this.content)) }
-func (this *MemoryFile) Mode() os.FileMode  { return this.mode }
-func (this *MemoryFile) ModTime() time.Time { return this.modTime }
-func (this *MemoryFile) IsDir() bool        { return this.isDir }
-func (this *MemoryFile) Sys() any           { panic("NOT NEEDED") }
+func (this *MemoryFile) Content() string            { return string(this.content) }
+func (this *MemoryFile) Name() string               { return this.name }
+func (this *MemoryFile) Size() int64                { return int64(len(this.content)) }
+func (this *MemoryFile) Mode() os.FileMode          { return this.mode }
+func (this *MemoryFile) ModTime() time.Time         { return this.modTime }
+func (this *MemoryFile) IsDir() bool                { return this.isDir }
+func (this *MemoryFile) Sys() any                   { panic("NOT NEEDED") }
+func (this *MemoryFile) Type() fs.FileMode          { return this.mode }
+func (this *MemoryFile) Info() (fs.FileInfo, error) { return this, nil }
