@@ -23,14 +23,6 @@ func NewPipeline(
 	}
 }
 func (this *Pipeline) Run() (out chan contracts.Article) {
-	home := NewListRenderingHandler(
-		filterAll,
-		sortByDateDescending,
-		this.renderer,
-		this.disk,
-		this.config.TargetRoot,
-		this.config.Author,
-	)
 	out = this.goLoad()
 	out = this.goListen(out, NewFileReadingHandler(this.disk))
 	out = this.goListen(out, NewMetadataParsingHandler())
@@ -40,7 +32,14 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 	out = this.goListen(out, NewContentConversionHandler(NewGoldmarkMarkdownConverter()))
 	out = this.goListen(out, NewArticleRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	out = this.goListen(out, NewTopicPageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
-	out = this.goListen(out, home)
+	out = this.goListen(out, NewListRenderingHandler(
+		filterAll,
+		sortByDateDescending,
+		this.renderer,
+		this.disk,
+		this.config.TargetRoot,
+		this.config.Author,
+	))
 	return out
 }
 func (this *Pipeline) goLoad() (out chan contracts.Article) {
