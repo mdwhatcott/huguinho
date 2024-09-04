@@ -17,8 +17,6 @@ type ContentConversionHandlerFixture struct {
 
 	converter *ContentConversionHandler
 	inner     *FakeConverter
-	input     chan contracts.Article
-	output    chan contracts.Article
 }
 
 func (this *ContentConversionHandlerFixture) Setup() {
