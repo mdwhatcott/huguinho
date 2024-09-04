@@ -1,17 +1,13 @@
 package core
 
-import (
-	"strings"
-)
+import "strings"
 
 func divide(full string, split string) (before, after string) {
-	divider := strings.Index(full, split)
-	if divider < 0 {
+	before, after, ok := strings.Cut(full, split)
+	if !ok {
 		return "", ""
 	}
-	before = strings.TrimSpace(full[:divider])
-	after = strings.TrimSpace(full[divider+len(split):])
-	return before, after
+	return strings.TrimSpace(before), strings.TrimSpace(after)
 }
 
 func isSpace(c rune) bool      { return c == ' ' }
