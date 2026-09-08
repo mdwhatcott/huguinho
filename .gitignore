@@ -4,6 +4,9 @@
 # Allow directories:
 !*/
 
+# Ignore:
+.idea/
+
 # Keep:
 !.gitignore
 !Makefile
