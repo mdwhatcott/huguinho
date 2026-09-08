@@ -1,5 +1,10 @@
 # Ignore everything except what we want to keep:
 *
+
+# Allow directories:
+!*/
+
+# Keep:
 !.gitignore
 !Makefile
 !go.*
