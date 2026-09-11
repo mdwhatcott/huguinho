@@ -28,12 +28,13 @@ func (this *ArticleRenderingHandlerFixture) Setup() {
 
 	this.article = &contracts.Article{
 		Metadata: contracts.ArticleMetadata{
-			Draft:  false,
-			Slug:   "/slug",
-			Title:  "Title",
-			Intro:  "Intro",
-			Topics: []string{"a", "b"},
-			Date:   Date(2020, 2, 8),
+			Draft:     false,
+			Slug:      "/slug",
+			Title:     "Title",
+			Intro:     "Intro",
+			Topics:    []string{"a", "b"},
+			Date:      Date(2020, 2, 8),
+			Canonical: "https://example.com/hi",
 		},
 		Content: contracts.ArticleContent{
 			Converted: "CONTENT",
@@ -57,12 +58,13 @@ func (this *ArticleRenderingHandlerFixture) TestFileTemplateRenderedAndWrittenTo
 
 func (this *ArticleRenderingHandlerFixture) assertArticleDataRendered() {
 	this.So(this.renderer.rendered, should.Equal, contracts.RenderedArticle{
-		Slug:    this.article.Metadata.Slug,
-		Title:   this.article.Metadata.Title,
-		Intro:   this.article.Metadata.Intro,
-		Date:    this.article.Metadata.Date,
-		Topics:  this.article.Metadata.Topics,
-		Content: this.article.Content.Converted,
+		Slug:      this.article.Metadata.Slug,
+		Title:     this.article.Metadata.Title,
+		Intro:     this.article.Metadata.Intro,
+		Date:      this.article.Metadata.Date,
+		Topics:    this.article.Metadata.Topics,
+		Canonical: this.article.Metadata.Canonical,
+		Content:   this.article.Content.Converted,
 	})
 }
 

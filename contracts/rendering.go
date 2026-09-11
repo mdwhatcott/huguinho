@@ -32,12 +32,13 @@ type (
 	}
 
 	RenderedArticle struct {
-		Slug    string
-		Title   string
-		Intro   string
-		Date    time.Time
-		Topics  []string
-		Content string
+		Slug      string
+		Title     string
+		Intro     string
+		Date      time.Time
+		Topics    []string
+		Canonical string
+		Content   string
 	}
 
 	RenderedArticleSummary struct {

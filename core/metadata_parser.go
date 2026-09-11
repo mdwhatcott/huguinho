@@ -15,12 +15,13 @@ type MetadataParser struct {
 	lines  []string
 	parsed contracts.ArticleMetadata
 
-	parsedTitle  bool
-	parsedIntro  bool
-	parsedSlug   bool
-	parsedDraft  bool
-	parsedDate   bool
-	parsedTopics bool
+	parsedTitle     bool
+	parsedIntro     bool
+	parsedSlug      bool
+	parsedDraft     bool
+	parsedDate      bool
+	parsedTopics    bool
+	parsedCanonical bool
 }
 
 func NewMetadataParser(lines []string) *MetadataParser {
@@ -59,6 +60,11 @@ func (this *MetadataParser) Parse() error {
 			}
 		case "topics":
 			err := this.parseTopics(value)
+			if err != nil {
+				return err
+			}
+		case "canon":
+			err := this.parseCanonical(value)
 			if err != nil {
 				return err
 			}
@@ -173,6 +179,18 @@ func (this *MetadataParser) parseTopics(value string) error {
 	this.parsedTopics = true
 	return nil
 }
+func (this *MetadataParser) parseCanonical(value string) error {
+	if this.parsedCanonical {
+		return errDuplicateMetadataCanonical
+	}
+	address, err := url.Parse(value)
+	if err != nil {
+		return fmt.Errorf("%w: [%s] (%w)", errInvalidMetadataCanonical, value, err)
+	}
+	this.parsed.Canonical = address.String()
+	this.parsedCanonical = true
+	return nil
+}
 
 func isValidTopic(topic string) bool {
 	for _, c := range topic {
@@ -191,17 +209,19 @@ var (
 	errMissingMetadata        = errors.New("article lacks metadata")
 	errMissingMetadataDivider = errors.New("article lacks metadata divider")
 
-	errDuplicateMetadataTitle  = errors.New("duplicate metadata title")
-	errDuplicateMetadataIntro  = errors.New("duplicate metadata intro")
-	errDuplicateMetadataSlug   = errors.New("duplicate metadata slug")
-	errDuplicateMetadataDraft  = errors.New("duplicate metadata draft")
-	errDuplicateMetadataDate   = errors.New("duplicate metadata date")
-	errDuplicateMetadataTopics = errors.New("duplicate metadata topics")
+	errDuplicateMetadataTitle     = errors.New("duplicate metadata title")
+	errDuplicateMetadataIntro     = errors.New("duplicate metadata intro")
+	errDuplicateMetadataSlug      = errors.New("duplicate metadata slug")
+	errDuplicateMetadataDraft     = errors.New("duplicate metadata draft")
+	errDuplicateMetadataDate      = errors.New("duplicate metadata date")
+	errDuplicateMetadataTopics    = errors.New("duplicate metadata topics")
+	errDuplicateMetadataCanonical = errors.New("duplicate metadata canonical address")
 
-	errInvalidMetadataSlug   = errors.New("invalid metadata slug")
-	errInvalidMetadataDraft  = errors.New("invalid metadata draft")
-	errInvalidMetadataDate   = errors.New("invalid metadata date")
-	errInvalidMetadataTopics = errors.New("invalid metadata topics")
+	errInvalidMetadataSlug      = errors.New("invalid metadata slug")
+	errInvalidMetadataDraft     = errors.New("invalid metadata draft")
+	errInvalidMetadataDate      = errors.New("invalid metadata date")
+	errInvalidMetadataTopics    = errors.New("invalid metadata topics")
+	errInvalidMetadataCanonical = errors.New("invalid metadata canonical address")
 
 	errRepeatedMetadataSlug = errors.New("repeated metadata slug")
 

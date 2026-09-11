@@ -247,15 +247,33 @@ func (this *MetadataParserFixture) TestDuplicateTopics_Err() {
 
 	this.So(this.article.Error, should.WrapError, errDuplicateMetadataTopics)
 }
+func (this *MetadataParserFixture) TestCanonical_Err() {
+	this.appendMetadataWithContent("canon: %%%%%%")
+
+	this.parser.Handle(this.article)
+
+	this.So(this.article.Error, should.WrapError, errInvalidMetadataCanonical)
+}
+func (this *MetadataParserFixture) TestDuplicateCanonical_Err() {
+	this.appendMetadataWithContent(
+		"canon: https://example.com/hi",
+		"canon: https://example.com/hi",
+	)
+
+	this.parser.Handle(this.article)
+
+	this.So(this.article.Error, should.WrapError, errDuplicateMetadataCanonical)
+}
 
 func (this *MetadataParserFixture) TestAllValidAttributes() {
 	this.appendMetadataWithContent(
-		"title:  This is the title ",
-		"intro:  This is the intro ",
-		"slug:   /this/is/the/slug ",
-		"draft:  true              ",
-		"date:   2020-02-16        ",
-		"topics: a-a b c           ",
+		"title:  This is the title     ",
+		"intro:  This is the intro     ",
+		"slug:   /this/is/the/slug     ",
+		"draft:  true                  ",
+		"date:   2020-02-16            ",
+		"topics: a-a b c               ",
+		"canon:  https://example.com/hi",
 	)
 
 	this.parser.Handle(this.article)
@@ -267,4 +285,5 @@ func (this *MetadataParserFixture) TestAllValidAttributes() {
 	this.So(this.article.Metadata.Draft, should.BeTrue)
 	this.So(this.article.Metadata.Date, should.Equal, Date(2020, 2, 16))
 	this.So(this.article.Metadata.Topics, should.Equal, []string{"a-a", "b", "c"})
+	this.So(this.article.Metadata.Canonical, should.Equal, "https://example.com/hi")
 }

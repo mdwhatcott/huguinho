@@ -31,12 +31,13 @@ func NewArticleRenderingHandler(
 
 func (this *ArticleRenderingHandler) Handle(article *contracts.Article) {
 	data := contracts.RenderedArticle{
-		Slug:    article.Metadata.Slug,
-		Title:   article.Metadata.Title,
-		Intro:   article.Metadata.Intro,
-		Date:    article.Metadata.Date,
-		Topics:  article.Metadata.Topics,
-		Content: article.Content.Converted,
+		Slug:      article.Metadata.Slug,
+		Title:     article.Metadata.Title,
+		Intro:     article.Metadata.Intro,
+		Date:      article.Metadata.Date,
+		Topics:    article.Metadata.Topics,
+		Canonical: article.Metadata.Canonical,
+		Content:   article.Content.Converted,
 	}
 
 	rendered, err := this.renderer.Render(data)
